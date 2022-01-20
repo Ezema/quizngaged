@@ -11,6 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+//import Stack from '@mui/material/Stack';
 
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
@@ -34,6 +35,11 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
+
+
+
+
+import QuestionAnswers from './questionAnswer.js';
 
 import Autocomplete from '@mui/material/Autocomplete';
 
@@ -68,6 +74,8 @@ export default function AddQuestion(props){
     const questionType = [
         'Multiple Choice','Text response'
     ]
+
+    const arrayOfQuestionAnswers = [{id:1,parentQuestionId:'123',body:'Option A'},{id:2,parentQuestionId:'123',body:'Option B'},{id:3,parentQuestionId:'123',body:'Option C'},{id:4,parentQuestionId:'123',body:'Option D'}];
     
     return(
         <div>   
@@ -96,15 +104,15 @@ export default function AddQuestion(props){
                     </Box>
                     <Box marginTop="1em">
                         <Box marginBottom="1em">
-                            <Typography variant='subtitle1' padding={0.5}>
+                            {/* <Typography variant='subtitle1' padding={0.5} style={{color:'gray'}}>
                                 Question UID
-                            </Typography>
+                            </Typography> */}
                             <TextField     
                                 margin={'0.5em'}
                                 disabled
                                 fullWidth 
                                 //this will be fetched from the API...            
-                                label="613"
+                                label="Question UID: 613"
                             />                
                         </Box>        
                         <Box marginBottom="1em">
@@ -112,7 +120,7 @@ export default function AddQuestion(props){
                                 required
                                 fullWidth                   
                                 label="Enter the question body"
-                                /* placeholder="Question with baseline difficulty" */
+                                placeholder="Question with baseline difficulty"
                                 multiline
                             />
                         </Box>
@@ -133,7 +141,15 @@ export default function AddQuestion(props){
                                 label="Question Type" 
                             />}
                             />
-                        </Box>
+                        </Box>        
+                        <Box marginBottom="0.1em">
+                            <QuestionAnswers arrayOfQuestionAnswers={arrayOfQuestionAnswers}></QuestionAnswers>    
+                        </Box>                  
+                        <Box marginBottom="2em" textAlign={'center'}>
+                            <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>}>
+                                Add answer
+                            </Button>
+                        </Box>  
                     </Box>
                 </Box>
             </Container>
