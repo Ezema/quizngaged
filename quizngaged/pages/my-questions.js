@@ -35,18 +35,50 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
 import AddQuestion from '../customComponents/addQuestion.js'
+import EditQuestion from '../customComponents/editQuestion.js'
 
-export default function MyClassrooms(props) {
+
+//this is hardcoded but will be fetched when the API is operative. When the API is defined, the subtitle will contain either a brief description or some piece of stat about the classroom like students joined  
+const listOfQuestionsRetrieved = [{id:"1",questionType:'Multiple Choice',baselineQuestion:"Mathematics 6th grade",baselineQuestionAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}],easierQuestion:"Mathematics 6th grade",easierQuestionAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}],harderQuestion:"Mathematics 6th grade",harderQuestionAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}]},{id:"2",questionType:'Text Response',baselineQuestion:"Mathematics 6th grade",baselineQuestionAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}],easierQuestion:"Mathematics 6th grade",easierQuestionAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}],harderQuestion:"Mathematics 6th grade",harderQuestionAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}]}];
+
+export default function MyClassrooms(props) { 
+
+  const [listOfQuestions,setListOfQuestions] = React.useState(listOfQuestionsRetrieved)
+
+  const [newQuestionUID,setNewQuestionUID] = React.useState(null)
   
-  const [addQuestion,setAddQuestion] = React.useState(true)
+  const [addQuestionState,setAddQuestionState] = React.useState(false)
+  
+  const [editQuestionState,setEditQuestionState] = React.useState(false)
+
+  const [questionUIDToEdit,setQuestionUIDToEdit] = React.useState(null)
+  const [questionToEdit,setQuestionToEdit] = React.useState(null) 
+
+  const [questionIndexInQuestionsArray,setQuestionIndexInQuestionsArray]= React.useState(null) 
+  
 
   const [topBarTitle,setTopBarTitle] = React.useState("My questions")
 
-  const handleAddQuestion = ()=>{
-    (!addQuestion)?(setAddQuestion(true),setTopBarTitle("Add new question")):null
+  const handleAddQuestionState = ()=>{    
+    if(!addQuestionState){
+      let copyOfStatefulArray = JSON.parse(JSON.stringify(listOfQuestions));      
+      setNewQuestionUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )    
+      setAddQuestionState(true);
+      setTopBarTitle("Add new question")
+    }
+    else{
+      null
+    }
+    
+    
   }
   const handleGoBackToMyQuestions = ()=>{
-    (addQuestion)?(setAddQuestion(false),setTopBarTitle("My questions")):null
+    if(addQuestionState){
+      (setAddQuestionState(false),setTopBarTitle("My questions"))
+    }else if(editQuestionState){
+      (setEditQuestionState(false),setTopBarTitle("My questions"))
+    }
+    
   }
 
   const userIsAuthenticated = props.userIsAuthenticated;
@@ -60,8 +92,15 @@ export default function MyClassrooms(props) {
     setSidebarOpen(openStatus);
   };
 
-  //this is hardcoded but will be fetched when the API is operative. When the API is defined, the subtitle will contain either a brief description or some piece of stat about the classroom like students joined
-  const listOfQuestions = [{id:"1",question:"Mathematics 6th grade"},{id:"2",question:"Mathematics 6th grade"},{id:"3",question:"Mathematics 6th grade"},{id:"4",question:"Mathematics 6th grade"},{id:"5",question:"Mathematics 6th grade"},{id:"6",question:"Mathematics 6th grade"},{id:"7",question:"Mathematics 6th grade"},{id:"8",question:"Mathematics 6th grade"},{id:"9",question:"Mathematics 6th grade"}];
+  const handleEditQuestionState = (event,questionindexInArray)=>{    
+    setEditQuestionState(true)
+    setQuestionUIDToEdit(listOfQuestions[questionindexInArray].id)        
+    setQuestionIndexInQuestionsArray(questionindexInArray)
+    
+    setQuestionToEdit(listOfQuestions[questionindexInArray])
+  }
+
+  
 
   const list = () => (
     <Box
@@ -137,7 +176,7 @@ export default function MyClassrooms(props) {
     <div>
       <AppBar position="sticky">
         <Toolbar>
-        {addQuestion?(
+        {(addQuestionState)?(
           <IconButton
             size="large"
             edge="start"
@@ -148,7 +187,19 @@ export default function MyClassrooms(props) {
           >
             <ArrowBackIcon/>
           </IconButton>  
-        ):(
+        ):(editQuestionState)?(
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="back"
+            sx={{ mr: 2 }}
+            onClick={()=>handleGoBackToMyQuestions()}
+          >
+            <ArrowBackIcon/>
+          </IconButton>  
+        )        
+        :(
           <IconButton
             size="large"
             edge="start"
@@ -207,9 +258,18 @@ export default function MyClassrooms(props) {
         </Toolbar>
       </AppBar>
       <Container>
-        {addQuestion?(
+        {addQuestionState?(
           <Box paddingTop="1em" paddingBottom="100px">
-            <AddQuestion setAddQuestion={setAddQuestion} ></AddQuestion>
+            <AddQuestion listOfQuestions={listOfQuestions} setListOfQuestions={setListOfQuestions} newQuestionUID={newQuestionUID} setAddQuestionState={setAddQuestionState}  ></AddQuestion>
+          </Box>
+        )
+        :
+        (editQuestionState)?        
+        (
+          <Box paddingTop="1em" paddingBottom="100px">
+            <EditQuestion listOfQuestions={listOfQuestions} setListOfQuestions={setListOfQuestions} QuestionIndexInQuestionsArray={questionIndexInQuestionsArray} QuestionUIDToEdit={questionUIDToEdit} setEditQuestionState={setEditQuestionState} questionToEdit={questionToEdit}>
+
+            </EditQuestion>
           </Box>
         )
         :
@@ -223,9 +283,9 @@ export default function MyClassrooms(props) {
                         #{question.id}
                       </Typography>
                     <Typography variant='subtitle1'>                    
-                      {question.question}
+                      {question.baselineQuestion}
                     </Typography>
-                    <Button size="small">EDIT</Button>
+                    <Button size="small" onClick={(event)=>handleEditQuestionState(event,listOfQuestions.indexOf(question))}>EDIT</Button>
                   </CustomPaperReactComponent>
                 </Grid>      
               )
@@ -233,12 +293,14 @@ export default function MyClassrooms(props) {
           </Grid>
         </Box>)}
       </Container>
-      {addQuestion?
+      {addQuestionState?
+      (<div></div>)
+      :(editQuestionState)?
       (<div></div>)
       :(
         <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
           <Toolbar>          
-            <StyledFab color="secondary" aria-label="add" onClick={(e)=>handleAddQuestion()}>
+            <StyledFab color="secondary" aria-label="add" onClick={(e)=>handleAddQuestionState()}>
               <AddIcon />
             </StyledFab>          
           </Toolbar>
