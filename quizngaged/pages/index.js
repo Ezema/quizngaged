@@ -8,7 +8,7 @@ export default function MainApp() {
   const [URI, setURI] = React.useState(undefined)
 
   
-
+  // this will redirect the user homepage to 'my classrooms'
   React.useEffect(() => {    
     if(URI==undefined){      
       let fullPath = window.location.pathname+window.location.search

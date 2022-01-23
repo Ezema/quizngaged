@@ -55,34 +55,32 @@ const steps = [
   'Add harder version',
 ];
 
-export default function AddQuestion(props){
+export default function EditQuestion(props){    
+    
+    const editedQuestionUID = props.QuestionUIDToEdit;
 
-    const listOfQuestions = props.listOfQuestions;
-    const setListOfQuestions = props.setListOfQuestions;
-    const newQuestionUID = props.newQuestionUID;
+    const editedQuestion = props.questionToEdit    
 
-    const newQuestion = {id:newQuestionUID,questionType:'Multiple Choice',baselineQuestion:"",baselineQuestionAnswers:[{id:1,parentQuestionId:newQuestionUID,body:''}],easierQuestion:"",easierQuestionAnswers:[{id:1,parentQuestionId:newQuestionUID,body:''}],harderQuestion:"",harderQuestionAnswers:[{id:1,parentQuestionId:newQuestionUID,body:''}]}
+    const [statefulEditedQuestion,setStatefulEditedQuestion] = React.useState(editedQuestion)
+    let nonStatefulEditedQuestion = editedQuestion
 
-    const [statefulNewQuestion,setStatefulNewQuestion] = React.useState(newQuestion)
-    const nonStatefulNewQuestion = newQuestion
-
-    const [statefulArrayOfQuestionAnswers,setStatefulArrayOfQuestionAnswers] = React.useState(statefulNewQuestion.baselineQuestionAnswers)
+    const [statefulArrayOfQuestionAnswers,setStatefulArrayOfQuestionAnswers] = React.useState(statefulEditedQuestion.baselineQuestionAnswers)
     
 
-    const setAddQuestionState = props.setAddQuestionState;
+    const setEditQuestionState = props.setEditQuestionState;
 
     const [step,setStep] = React.useState(0)
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
-    const [userEntryQuestionType,setUserEntryQuestionType] = React.useState(statefulNewQuestion.questionType)
-    const [userEntryBaselineQuestionBody,setUserEntryBaselineQuestionBody] = React.useState(statefulNewQuestion.baselineQuestion)
-    const [userEntryEasierQuestionBody,setUserEntryEasierQuestionBody] = React.useState(statefulNewQuestion.easierQuestion)
-    const [userEntryHarderQuestionBody,setUserEntryHarderQuestionBody] = React.useState(statefulNewQuestion.harderQuestion)
+    const [userEntryQuestionType,setUserEntryQuestionType] = React.useState(statefulEditedQuestion.questionType)
+    const [userEntryBaselineQuestionBody,setUserEntryBaselineQuestionBody] = React.useState(statefulEditedQuestion.baselineQuestion)
+    const [userEntryEasierQuestionBody,setUserEntryEasierQuestionBody] = React.useState(statefulEditedQuestion.easierQuestion)
+    const [userEntryHarderQuestionBody,setUserEntryHarderQuestionBody] = React.useState(statefulEditedQuestion.harderQuestion)
 
     const handleQuestionBodyChange = (event, questionDifficulty)=>{
         if(questionDifficulty==0){            
-            setUserEntryBaselineQuestionBody(event.target.value)            
+            setUserEntryBaselineQuestionBody(event.target.value)
         }else if(questionDifficulty==1){
             setUserEntryEasierQuestionBody(event.target.value)
         }else if(questionDifficulty==2){
@@ -99,60 +97,58 @@ export default function AddQuestion(props){
     }
     
 
-    const handleNewQuestionAnswer = () => {
+    const handleEditedQuestionAnswer = () => {
         
         const createNewIndex = calculateLastQuestionAnswerUID(statefulArrayOfQuestionAnswers) + 1;
         const parentQuestionUID = getParentQuestionUID(statefulArrayOfQuestionAnswers);
 
         let copyArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
 
-        copyArray.push({id:createNewIndex,parentQuestionId:parentQuestionUID,body:''})
-        
+        copyArray.push({id:createNewIndex,parentQuestionId:parentQuestionUID,body:''})            
 
         setStatefulArrayOfQuestionAnswers(copyArray)
     }
 
     const handlePreviousStep = ()=>{
+
         if(step==0){
-            (setAddQuestionState(false),setStep(0))
-        }else if(step==1){                
+            (setEditQuestionState(false),setStep(0))
+        }
+        else if(step==1){                
             setStep(step-1)
 
-            let copyOfEasierQuestion = JSON.parse(JSON.stringify(userEntryEasierQuestionBody))
-            let copyOfQuestionType = JSON.parse(JSON.stringify(statefulNewQuestion.questionType))
-            let copyOfEasierAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))     
-            let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
-            
-            copyOfNewQuestion.questionType= copyOfQuestionType
-            copyOfNewQuestion.easierQuestion= copyOfEasierQuestion                
-            copyOfNewQuestion.easierQuestionAnswers = copyOfEasierAnswersArray
+            // save user changes temporary
+            let copyOfEasierQuestion = JSON.parse(JSON.stringify(userEntryEasierQuestionBody))            
+            let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
+            let copyOfEasierAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))                     
+            let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
 
+            copyOfEditedQuestion.questionType= copyOfQuestionType
+            copyOfEditedQuestion.easierQuestion= copyOfEasierQuestion
             //mapping correct answers to each question
+            copyOfEditedQuestion.easierQuestionAnswers = copyOfEasierAnswersArray
 
-            setStatefulNewQuestion(JSON.parse(JSON.stringify(copyOfNewQuestion)))
-            nonStatefulNewQuestion = JSON.parse(JSON.stringify(copyOfNewQuestion))
-                        
-            // change 'active' array of question answers being edited by the user
+            setStatefulEditedQuestion(JSON.parse(JSON.stringify(copyOfEditedQuestion)))
+            nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))            
 
-            setStatefulArrayOfQuestionAnswers(JSON.parse(JSON.stringify(statefulNewQuestion.baselineQuestionAnswers)))            
-            setMainButtonText('Next')
-
-        }else if(step==2){
+            setStatefulArrayOfQuestionAnswers(JSON.parse(JSON.stringify(statefulEditedQuestion.baselineQuestionAnswers)))
+        }
+        else if(step==2){
             setStep(step-1)
 
             let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
-            let copyOfQuestionType = JSON.parse(JSON.stringify(statefulNewQuestion.questionType))
+            let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
             let copyOfHarderAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
-            let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
+            let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
-            copyOfNewQuestion.questionType= copyOfQuestionType
-            copyOfNewQuestion.harderQuestion= copyOfHarderQuestion
-            copyOfNewQuestion.harderQuestionAnswers = copyOfHarderAnswersArray
+            copyOfEditedQuestion.questionType= copyOfQuestionType
+            copyOfEditedQuestion.harderQuestion= copyOfHarderQuestion
+            copyOfEditedQuestion.harderQuestionAnswers = copyOfHarderAnswersArray
     
-            setStatefulNewQuestion(JSON.parse(JSON.stringify(copyOfNewQuestion)))
-            nonStatefulNewQuestion = JSON.parse(JSON.stringify(copyOfNewQuestion))
+            setStatefulEditedQuestion(JSON.parse(JSON.stringify(copyOfEditedQuestion)))
+            nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))
             
-            setStatefulArrayOfQuestionAnswers(statefulNewQuestion.easierQuestionAnswers)
+            setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.easierQuestionAnswers)
             setMainButtonText('Next')
         }
     }
@@ -164,69 +160,71 @@ export default function AddQuestion(props){
                 // save user changes temporary
                                 
                 let copyOfBaselineQuestion = JSON.parse(JSON.stringify(userEntryBaselineQuestionBody))
-                let copyOfQuestionType = JSON.parse(JSON.stringify(statefulNewQuestion.questionType))
+                let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
                 let copyOfBaselineAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))                    
-                let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
+                let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
-                copyOfNewQuestion.questionType= copyOfQuestionType
-                copyOfNewQuestion.baselineQuestion= copyOfBaselineQuestion
-                copyOfNewQuestion.baselineQuestionAnswers = copyOfBaselineAnswersArray
+                copyOfEditedQuestion.questionType= copyOfQuestionType
+                copyOfEditedQuestion.baselineQuestion= copyOfBaselineQuestion
+                copyOfEditedQuestion.baselineQuestionAnswers = copyOfBaselineAnswersArray
 
-                setStatefulNewQuestion(copyOfNewQuestion)
-                nonStatefulNewQuestion = JSON.parse(JSON.stringify(copyOfNewQuestion))
+                setStatefulEditedQuestion(copyOfEditedQuestion)
+                nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))
 
                 // change 'active' array of question answers being edited by the user
-                setStatefulArrayOfQuestionAnswers(statefulNewQuestion.easierQuestionAnswers)
+                setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.easierQuestionAnswers)
             }
             else if(step==1){
                 setStep(step+1)                
                 // save user changes temporary
                 
                 let copyOfEasierQuestion = JSON.parse(JSON.stringify(userEntryEasierQuestionBody))
-                let copyOfQuestionType = JSON.parse(JSON.stringify(statefulNewQuestion.questionType))
+                let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
                 let copyOfEasierAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))     
-                let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
+                let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
-                copyOfNewQuestion.questionType= copyOfQuestionType
-                copyOfNewQuestion.easierQuestion= copyOfEasierQuestion                
-                copyOfNewQuestion.easierQuestionAnswers = copyOfEasierAnswersArray
+                copyOfEditedQuestion.questionType= copyOfQuestionType
+                copyOfEditedQuestion.easierQuestion= copyOfEasierQuestion                
+                copyOfEditedQuestion.easierQuestionAnswers = copyOfEasierAnswersArray
 
                 //mapping correct answers to each question
 
-                setStatefulNewQuestion(copyOfNewQuestion)
-                nonStatefulNewQuestion = JSON.parse(JSON.stringify(copyOfNewQuestion))
+                setStatefulEditedQuestion(copyOfEditedQuestion)
+                nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))
 
 
                 // change 'active' array of question answers being edited by the user
-                setStatefulArrayOfQuestionAnswers(statefulNewQuestion.harderQuestionAnswers)
+                setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.harderQuestionAnswers)
                 setMainButtonText('Finish')
             }
-            else if(step==2){
-                //save last changes
-                let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
-                let copyOfQuestionType = JSON.parse(JSON.stringify(statefulNewQuestion.questionType))
-                let copyOfHarderAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
-                let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
-                
-                copyOfNewQuestion.questionType= copyOfQuestionType
-                copyOfNewQuestion.harderQuestion= copyOfHarderQuestion
-                copyOfNewQuestion.harderQuestionAnswers = copyOfHarderAnswersArray
-    
-                setStatefulNewQuestion(copyOfNewQuestion)
-                nonStatefulNewQuestion = JSON.parse(JSON.stringify(copyOfNewQuestion))
-    
-                let copyOfQuestionsArray = JSON.parse(JSON.stringify(listOfQuestions))
-                copyOfNewQuestion =  JSON.parse(JSON.stringify(nonStatefulNewQuestion))                
-                copyOfQuestionsArray.push(copyOfNewQuestion)
-                setListOfQuestions(copyOfQuestionsArray)
-                setAddQuestionState(false)
-                setStep(0)
-            }            
             
             
         /* } */
-        
+        else if(step==2){
+            //save last changes
+            let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
+            let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
+            let copyOfHarderAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
+            let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
+            
+            copyOfEditedQuestion.questionType= copyOfQuestionType
+            copyOfEditedQuestion.harderQuestion= copyOfHarderQuestion
+            copyOfEditedQuestion.harderQuestionAnswers = copyOfHarderAnswersArray
+
+            setStatefulEditedQuestion(copyOfEditedQuestion)
+            nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))
+
+            let copyOfQuestionsArray = JSON.parse(JSON.stringify(props.listOfQuestions))
+            copyOfEditedQuestion =  JSON.parse(JSON.stringify(nonStatefulEditedQuestion))                                        
+
+            copyOfQuestionsArray[props.QuestionIndexInQuestionsArray]=copyOfEditedQuestion
+            
+            props.setListOfQuestions(copyOfQuestionsArray)
+            setEditQuestionState(false)
+            setStep(0)
+        }            
     }
+
 
     const questionType = ['Multiple Choice','Text Response']    
     
@@ -264,7 +262,7 @@ export default function AddQuestion(props){
                                 margin={'0.5em'}
                                 disabled
                                 fullWidth 
-                                label={"Question UID: "+newQuestionUID.toString()}
+                                label={"Question UID: "+editedQuestionUID.toString()}
                             />                
                         </Box>        
                         <Box marginBottom="1em">
@@ -302,7 +300,7 @@ export default function AddQuestion(props){
                             </QuestionAnswers>    
                         </Box>                  
                         <Box marginBottom="2em" textAlign={'center'}>
-                            <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>} onClick={handleNewQuestionAnswer}>
+                            <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>} onClick={handleEditedQuestionAnswer}>
                                 Add answer
                             </Button>
                         </Box>  
