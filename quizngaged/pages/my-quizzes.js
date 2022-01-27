@@ -21,7 +21,6 @@ import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 
-import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
@@ -34,12 +33,21 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
 
+
+import CustomTopNavBar from '../customComponents/customTopNavBar'
+
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
+
 export default function MyClassrooms(props) {
   
 
   const userIsAuthenticated = props.userIsAuthenticated;
 
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [statefulUserObject, setStatefulUserObject] = React.useState({});
+
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);  
 
   const toggleSidebar = (openStatus) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -51,136 +59,19 @@ export default function MyClassrooms(props) {
   //this is hardcoded but will be fetched when the API is operative. When the API is defined, the subtitle will contain either a brief description or some piece of stat about the classroom like students joined
   const listOfQuizzes = [{id:"1",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"2",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"3",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"4",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"5",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"6",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"7",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}}];
 
-  const list = () => (
-    <Box
-      role="presentation"
-      onClick={toggleSidebar(false)}
-      onKeyDown={toggleSidebar(false)}
-    >
-      <List>        
-        <Link href="/my-classrooms" passHref>
-          <a>
-            <ListItem button>
-              <ListItemIcon>
-                <LocalLibraryIcon />
-              </ListItemIcon>
-              <ListItemText>
-                My Classrooms
-              </ListItemText>
-            </ListItem>
-          </a>
-        </Link>
-        <Link href="/my-quizzes" passHref>
-          <a>
-            <ListItem button selected>
-              <ListItemIcon>
-                <ListIcon />
-              </ListItemIcon>
-              <ListItemText>
-                My quizzes
-              </ListItemText>        
-            </ListItem>        
-          </a>
-        </Link>
-        <Link href="/my-questions" passHref>
-          <a>
-            <ListItem button>
-              <ListItemIcon>
-                <QuestionAnswerIcon />
-              </ListItemIcon>          
-              <ListItemText>
-                My questions
-              </ListItemText>            
-            </ListItem>
-          </a>
-        </Link>
-      </List>
-      <Divider />
-      <List>        
-        <ListItem button>
-          <ListItemIcon>
-            <PersonIcon />
-          </ListItemIcon>
-          <Link href="/my-account" passHref>
-            <a>
-              <ListItemText>
-                My account
-              </ListItemText>
-            </a>
-          </Link>
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <LogoutIcon />
-          </ListItemIcon>
-          <ListItemText>
-            Log out
-          </ListItemText>
-        </ListItem>        
-      </List>
-    </Box>
-  );
+  firebase.initializeApp(firebaseClientConfig);    
+  firebase.app()
+  firebase.auth().onAuthStateChanged((user)=>{
+    if(user){
+      setStatefulUserObject(user)
+    }
+  })
+
+  const [topBarTitle,setTopBarTitle] = React.useState("My Quizzes")
 
   return (
     <div>
-      <AppBar position="sticky">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={toggleSidebar(true)}
-          >
-            <MenuIcon />
-          </IconButton>    
-            
-          <Drawer
-            anchor={'left'}
-            open={sidebarOpen}
-            onClose={toggleSidebar(false)}
-          >
-            {list()}
-          </Drawer>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              My Quizzes
-            </Typography>
-
-            {userIsAuthenticated && (
-              <div>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={()=>{}}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={()=>{}}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(()=>{})}
-                  onClose={()=>{}}
-                >
-                  <MenuItem onClick={()=>{}}>Profile</MenuItem>
-                  <MenuItem onClick={()=>{}}>My account</MenuItem>
-                </Menu>
-              </div>
-            )}
-        </Toolbar>
-      </AppBar>
+      <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar>
       <Container>
         <Box paddingTop="1em" paddingBottom="100px">
           <Grid container spacing={2}>
