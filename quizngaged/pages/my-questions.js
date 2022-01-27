@@ -24,18 +24,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
-import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
-import ListIcon from '@mui/icons-material/List';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import PersonIcon from '@mui/icons-material/Person';
-import LogoutIcon from '@mui/icons-material/Logout';
-import MenuIcon from '@mui/icons-material/Menu';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
 import AddQuestion from '../customComponents/addQuestion.js'
 import EditQuestion from '../customComponents/editQuestion.js'
+import CustomTopNavBar from '../customComponents/customTopNavBar'
+
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 
 
 //this is hardcoded but will be fetched when the API is operative. When the API is defined, the subtitle will contain either a brief description or some piece of stat about the classroom like students joined  
@@ -55,9 +52,10 @@ export default function MyClassrooms(props) {
   const [questionToEdit,setQuestionToEdit] = React.useState(null) 
 
   const [questionIndexInQuestionsArray,setQuestionIndexInQuestionsArray]= React.useState(null) 
+  const [statefulUserObject, setStatefulUserObject] = React.useState({});
   
 
-  const [topBarTitle,setTopBarTitle] = React.useState("My questions")
+  const [topBarTitle,setTopBarTitle] = React.useState("My Questions")
 
   const handleAddQuestionState = ()=>{    
     if(!addQuestionState){
@@ -71,192 +69,29 @@ export default function MyClassrooms(props) {
     }
     
     
-  }
-  const handleGoBackToMyQuestions = ()=>{
-    if(addQuestionState){
-      (setAddQuestionState(false),setTopBarTitle("My questions"))
-    }else if(editQuestionState){
-      (setEditQuestionState(false),setTopBarTitle("My questions"))
-    }
-    
-  }
-
-  const userIsAuthenticated = props.userIsAuthenticated;
-
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
-
-  const toggleSidebar = (openStatus) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    setSidebarOpen(openStatus);
-  };
+  }  
 
   const handleEditQuestionState = (event,questionindexInArray)=>{    
     setEditQuestionState(true)
+    setTopBarTitle("Edit question")
     setQuestionUIDToEdit(listOfQuestions[questionindexInArray].id)        
     setQuestionIndexInQuestionsArray(questionindexInArray)
     
     setQuestionToEdit(listOfQuestions[questionindexInArray])
   }
 
-  
 
-  const list = () => (
-    <Box
-      role="presentation"
-      onClick={toggleSidebar(false)}
-      onKeyDown={toggleSidebar(false)}
-    >
-      <List>        
-        <Link href="/my-classrooms" passHref>
-          <a>
-            <ListItem button>
-              <ListItemIcon>
-                <LocalLibraryIcon />
-              </ListItemIcon>
-              <ListItemText>
-                My Classrooms
-              </ListItemText>
-            </ListItem>
-          </a>
-        </Link>
-        <Link href="/my-quizzes" passHref>
-          <a>
-            <ListItem button>
-              <ListItemIcon>
-                <ListIcon />
-              </ListItemIcon>
-              <ListItemText>
-                My quizzes
-              </ListItemText>        
-            </ListItem>        
-          </a>
-        </Link>
-        <Link href="/my-questions" passHref>
-          <a>
-            <ListItem button selected>
-              <ListItemIcon>
-                <QuestionAnswerIcon />
-              </ListItemIcon>          
-              <ListItemText>
-                My questions
-              </ListItemText>            
-            </ListItem>
-          </a>
-        </Link>
-      </List>
-      <Divider />
-      <List>        
-        <ListItem button>
-          <ListItemIcon>
-            <PersonIcon />
-          </ListItemIcon>
-          <Link href="/my-account" passHref>
-            <a>
-              <ListItemText>
-                My account
-              </ListItemText>
-            </a>
-          </Link>
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <LogoutIcon />
-          </ListItemIcon>
-          <ListItemText>
-            Log out
-          </ListItemText>
-        </ListItem>        
-      </List>
-    </Box>
-  );
+  firebase.initializeApp(firebaseClientConfig);    
+  firebase.app()
+  firebase.auth().onAuthStateChanged((user)=>{
+    if(user){
+      setStatefulUserObject(user)
+    }
+  })
 
   return (        
     <div>
-      <AppBar position="sticky">
-        <Toolbar>
-        {(addQuestionState)?(
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="back"
-            sx={{ mr: 2 }}
-            onClick={()=>handleGoBackToMyQuestions()}
-          >
-            <ArrowBackIcon/>
-          </IconButton>  
-        ):(editQuestionState)?(
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="back"
-            sx={{ mr: 2 }}
-            onClick={()=>handleGoBackToMyQuestions()}
-          >
-            <ArrowBackIcon/>
-          </IconButton>  
-        )        
-        :(
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={toggleSidebar(true)}
-          >
-            <MenuIcon />
-          </IconButton>  
-        )}  
-            
-          <Drawer
-            anchor={'left'}
-            open={sidebarOpen}
-            onClose={toggleSidebar(false)}
-          >
-            {list()}
-          </Drawer>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              {topBarTitle}
-          </Typography>
-
-            {userIsAuthenticated && (
-              <div>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={()=>{}}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={()=>{}}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(()=>{})}
-                  onClose={()=>{}}
-                >
-                  <MenuItem onClick={()=>{}}>Profile</MenuItem>
-                  <MenuItem onClick={()=>{}}>My account</MenuItem>
-                </Menu>
-              </div>
-            )}
-        </Toolbar>
-      </AppBar>
+      <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={addQuestionState || editQuestionState} addQuestionState={addQuestionState} setAddQuestionState={setAddQuestionState} editQuestionState={editQuestionState} setEditQuestionState={setEditQuestionState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar>
       <Container>
         {addQuestionState?(
           <Box paddingTop="1em" paddingBottom="100px">
