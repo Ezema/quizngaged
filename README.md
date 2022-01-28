@@ -4,10 +4,13 @@ Agile module group 29 - "QuizNgaged" Application
 
 ### db
 
-Contains sample file to create a Doker image of database and set adminer to be able to check the DB
-To create an image
+Contains the file to create a Docker container with a MySQL database.
+The DB runs on the default MySQL port 3306
+To run the DB
+```bash
 cd db
 sudo docker-compose -f stack.yml up
+```
 
 ### backend
 
