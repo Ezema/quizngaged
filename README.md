@@ -1,6 +1,6 @@
-# agile-g29
+# Agile-g29 final deliverable
 
-Agile module group 29 - QuizNgaged
+Agile module group 29 - "QuizNgaged" Application
 
 ### db
 
@@ -9,32 +9,34 @@ To create an image
 cd db
 docker-compose -f stack.yml up
 
-### app
+### backend
 
 Code for server logic
-To make it work the file db.conf.js needs to be created
-with content
-module.exports = {
-HOST: "localhost",
-PORT: XXXX, // what port db is available ex: 8084
-USER: "XXXX", // the username for DB user
-PASSWORD: "XXXX", //password for the DB user
-DB: "XXXX", // db name example: appdb
-dialect: "mysql",
-pool: {
-max: 5,
-min: 0,
-acquire: 30000,
-idle: 10000
-}
-};
 
-to run node server
-cd app
+To make it work the file db.conf.js needs to be created
+with the following content:
+
+```javascript
+module.exports = {
+    HOST: "localhost",
+    PORT: XXXX, // what port db is available ex: 8084
+    USER: "XXXX", // the username for DB user
+    PASSWORD: "XXXX", //password for the DB user
+    DB: "XXXX", // db name example: appdb
+    dialect: "mysql",
+    pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+}
+```
+#### Running node/express server
+cd backend
 node server.js
 
-Application should be available on port :8080
+The server should be running on http://localhost:8080
 
-### front
+### frontend
 
-folder that contains frontend react application
+Contains the frontend react application
