@@ -1,15 +1,61 @@
 const express = require("express");
 const cors = require("cors");
+const mysql = require("mysql");
+
 
 /// ********* Below -> Auth functionality *********
 let admin = require("firebase-admin");
-
 let serviceAccount = require("./secret-key.json");
-
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 /// ********* Above -> Auth functionality *********
+
+/// ********* Below -> Connect to DB running via docker *********
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "Test1234",
+  database: "appdb",  
+});
+// connect to database
+db.connect((err) => {
+  if (err) {
+    console.log("The docker DB is not running!");
+    //throw err;
+  }
+  console.log("Connected to database");
+});
+global.db = db;
+
+db.query("DROP TABLE myTable;",
+  (err,result)=>{    
+})
+db.query("SHOW TABLES",(err,result)=>{
+  if(err){
+    console.log("Error while retrieving table: ", err)
+  }else{
+    console.log("These are the tables: ", result)
+  }
+
+})
+db.query("CREATE TABLE myTable(uid int,user varchar(30));",
+  (err,result)=>{
+    if(err){
+      console.log("Error while creating table: ", err)
+    }
+
+})
+db.query("SHOW TABLES",(err,result)=>{
+  if(err){
+    console.log("Error while retrieving table: ", err)
+  }else{
+    console.log("These are the tables after creating one: ", result)
+  }
+
+})
+/// ********* Above -> Connect to DB running via docker *********
+
 
 const app = express();
 

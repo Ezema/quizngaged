@@ -1,6 +1,8 @@
 # Use root/example as user/password credentials
 version: "3.1"
 
+volumes:
+  dbdata:
 services:
   db:
     platform: linux/x86_64
@@ -8,19 +10,12 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     volumes:
-      - dbdata
+      - dbdata:/var/lib/mysql
     ports:
-      - 8084:3306
+      - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: Test1234
       MYSQL_DATABASE: appdb
       MYSQL_USER: appuser
-      MYSQL_PASSWORD: Test1234
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8085:8080
-
-volumes:
-  dbdata:
+      MYSQL_PASSWORD: password
+      MYSQP_TCP_PORT: 3306
