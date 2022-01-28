@@ -7,7 +7,7 @@ Agile module group 29 - "QuizNgaged" Application
 Contains sample file to create a Doker image of database and set adminer to be able to check the DB
 To create an image
 cd db
-docker-compose -f stack.yml up
+sudo docker-compose -f stack.yml up
 
 ### backend
 
