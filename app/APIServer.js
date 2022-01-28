@@ -1,1 +1,0 @@
-//server to answer to DB queries made by the application
