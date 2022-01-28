@@ -90,10 +90,18 @@ export default function EditQuestion(props){
 
 
     const calculateLastQuestionAnswerUID = (array)=>{        
-        return array[array.length-1].id;
+        if(array.length != 0){
+            return array[array.length-1].id;
+        }else{
+            return 0;
+        }
     }
     const getParentQuestionUID = (array)=>{
-        return array[array.length-1].parentQuestionId;
+        if(array.length != 0){
+            return array[array.length-1].parentQuestionId;
+        }else{
+            return 0;
+        } 
     }
     
 
