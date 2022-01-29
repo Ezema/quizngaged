@@ -10,6 +10,7 @@ let globalUser = null;
 import Alert from '@mui/material/Alert';
 
 import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
+import globalUserData from '../customGlobalVariables/userData.js'
 
 function SignIn(props) {
   // Configure Firebase SDK client key.
@@ -40,7 +41,9 @@ function SignIn(props) {
     callbacks: {
       // Avoid redirects after sign-in.    
 
-      signInSuccessWithAuthResult: (authData) => {        
+      signInSuccessWithAuthResult: (authData) => {   
+        
+        console.log("authData: ", authData)
         
         firebase.auth().currentUser.getIdToken(false).then(function(idToken) {            
             axios({
@@ -77,8 +80,11 @@ function SignIn(props) {
   };
 
   firebase.auth().onAuthStateChanged((user)=>{
-  //setLoading view
-  globalUser = user    
+    //setLoading view
+    props.setUser(user)
+    globalUser = user    
+    console.log("globalUserData: ", globalUserData)
+    globalUserData = user
   })
 
   return (

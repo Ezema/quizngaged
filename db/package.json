@@ -1,0 +1,13 @@
+{
+  "name": "db",
+  "version": "1.0.0",
+  "description": "",  
+  "scripts": {
+    "start": "sudo docker-compose -f stack.yml up",
+    "mac-start": "sudo docker-compose -f mac-stack.yml up",
+    "db": "sudo docker-compose -f stack.yml up",
+    "db-cli": "mysql -h127.0.0.1 -uroot -pTest1234"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -32,8 +32,6 @@ import 'firebase/compat/auth';
 import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
 import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 
-import Router from 'next/router'
-
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 
 export default function MyClassrooms() {
