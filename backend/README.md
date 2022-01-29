@@ -32,3 +32,23 @@ OR
 npm run API
 ```
 
+### First create the database schema and populate it with initial test data
+
+connect mysql to docker database:
+
+```bash
+mysql -h127.0.0.1 -uroot -pTest1234
+```
+
+run script to create the schema (in db/design folder):
+
+```bash
+mysql> use appdb;
+mysql> source create_db.sql
+```
+
+run script to populate the test data (in db/design folder):
+
+```bash
+mysql> source initial_test_data.sql
+```

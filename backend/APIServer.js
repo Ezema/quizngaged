@@ -26,6 +26,16 @@ const db = mysql.createConnection({
     }
     console.log("Connected to database");
   });
+
+  db.query("select count(*) from institutions", (err, result) => {
+    if (err) {
+      console.log("QuizNgaged schema does not exist, create it first")
+      throw err;
+    } else {
+      console.log("QuizNgaged schema exists")
+    }
+  });
+
   global.db = db;
     
 /// ********* Above -> Connect to DB running via docker *********
