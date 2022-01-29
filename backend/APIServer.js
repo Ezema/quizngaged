@@ -89,19 +89,21 @@ app.post("/API/checkuserhasaccount",(req, res)=>{
 
     */
     
-    //while the development is on progress
-    db.query("DROP TABLE users;",
-        (err,result)=>{    
-    })  
-    
-    db.query("CREATE TABLE users(uidColumn varchar(60),userName varchar(30),userEmail varchar(30));",
-    (err,result)=>{
+    // temporary solution to tie user to the uid, update the teacher row with it
+    // TODO figure out how to do it properly
+    //  1. make uid mandatory, if the user not in the db, create a new user row with this uid
+    //  2. should it be updateable?
+    //  3. remove this update statement, don't update all teachers to same uid!
+    //  4. and allow other user types, currently this acts like everyone is one teacher
+    db.query("update users set uid = ? where is_teacher = TRUE",[String(req.body.user.uid)],(err,result)=>{
       if(err){
-        console.log("Error while creating table: ", err)
-      }
-  
-    }) 
-    db.query(`SELECT * FROM users WHERE uidColumn='${String(req.body.user.uid)}';`,(err,result)=>{
+          console.log("Unable to set teacher uid", err)
+      }else{            
+        console.log("updated teacher uid to ", String(req.body.user.uid))
+      }    
+    })
+
+    db.query("SELECT * FROM users WHERE uid=?",[String(req.body.user.uid)],(err,result)=>{
         if(err){
             console.log("Error while retrieving the UID: ", err)
         }else{            
