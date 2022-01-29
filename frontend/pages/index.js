@@ -12,15 +12,20 @@ import Image from 'next/image'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import checkUserIsAuthenticatedWithFirebase from '../customFunctions/checkUserIsAuthenticatedWithFirebase'
-import SignIn from './signIn.js'
+import SignIn from '../customReactScreenViews/signIn.js'
+import LoadingScreen from '../customComponents/loadingScreen.js'
+
+import CheckUserHasQuizngagedAccount from '../customComponents/checkUserHasQuizngagedAccount.js';
 
 import MyClassrooms from './my-classrooms.js'
 
 import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
 import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 
+
 export default function Index() {
   const [userIsAuthenticated,setUserIsAuthenticated] = React.useState(false)  
+  const [userHasQuizngagedAccount,setUserHasQuizngagedAccount] = React.useState(false)
   const [userAuthenticationFailed,setUserAuthenticationFailed] = React.useState(false)
   const [user,setUser] = React.useState(null)  
 
@@ -95,7 +100,9 @@ export default function Index() {
         </Paper>        
       </Container>      
     </div>)
-    :
-    (<MyClassrooms URI={URI} setURI={setURI}></MyClassrooms>)
+    :(!userHasQuizngagedAccount)?
+      (<CheckUserHasQuizngagedAccount userHasQuizngagedAccount={userHasQuizngagedAccount} setUserHasQuizngagedAccount={setUserHasQuizngagedAccount} user={user}></CheckUserHasQuizngagedAccount>)
+      :
+      (<MyClassrooms URI={URI} setURI={setURI}></MyClassrooms>)
   );
 }
