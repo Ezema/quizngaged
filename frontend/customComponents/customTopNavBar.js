@@ -143,7 +143,7 @@ export default function CustomTopNavBar(props){
         });
     };
 
-    const handleGoBackToMyQuestions = ()=>{
+    const handleGoBackToPreviousScreen = ()=>{
       if(props.addQuestionState){
         (props.setAddQuestionState(false),props.setTopBarTitle("My questions"))
       }else if(props.editQuestionState){
