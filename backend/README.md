@@ -34,6 +34,10 @@ npm run API
 
 ### First create the database schema and populate it with initial test data
 
+navigate to ./db/design, where create_db.sql and initial_test_data.sql files are:
+```bash
+cd ./db/design
+```
 connect mysql to docker database:
 
 ```bash
