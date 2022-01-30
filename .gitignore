@@ -33,3 +33,6 @@ yarn-error.log*
 # packaging
 **/package-lock.json
 
+#secret key
+secret-key.json
+

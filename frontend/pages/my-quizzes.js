@@ -39,6 +39,8 @@ import CustomTopNavBar from '../customComponents/customTopNavBar'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
+import EditQuizz from '../customComponents/editQuizz.js';
+import AddQuizz from '../customComponents/addQuizz.js';
 
 export default function MyClassrooms(props) {
   
@@ -49,12 +51,18 @@ export default function MyClassrooms(props) {
 
   const [sidebarOpen, setSidebarOpen] = React.useState(false);  
 
+  const [editQuizzState, setEditQuizzState] = React.useState(false);
+
+  const [addQuizzState, setAddQuizzState] = React.useState();
+
   const toggleSidebar = (openStatus) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
     setSidebarOpen(openStatus);
   };
+
+
 
   //this is hardcoded but will be fetched when the API is operative. When the API is defined, the subtitle will contain either a brief description or some piece of stat about the classroom like students joined
   const listOfQuizzes = [{id:"1",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"2",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"3",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"4",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"5",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"6",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"7",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}}];
@@ -69,11 +77,35 @@ export default function MyClassrooms(props) {
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Quizzes")
 
+  const handleAddQuizState = (event, lastIndexOfListOfQuizzes) => {
+    setAddQuizzState(true);
+    setTopBarTitle("Add Quizz")
+  }
+
+  const handleEditQuizzState = (event) => {
+    setEditQuizzState(true);
+    setTopBarTitle("Edit Quizz");
+
+  }
+
+
   return (
     <div>
-      <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar>
+      <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizzState || addQuizzState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizzState={editQuizzState}setEditQuizzState={setEditQuizzState} addQuizzState={addQuizzState} setAddQuizzState={setAddQuizzState}></CustomTopNavBar>
+      {/* <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar> */}
       <Container>
-        <Box paddingTop="1em" paddingBottom="100px">
+        {(editQuizzState)?(
+          <Box paddingTop="1em" paddingBottom="100px">
+            <EditQuizz/>
+          </Box> 
+        )
+        :
+        (addQuizzState)?
+        (<Box paddingTop="1em" paddingBottom="100px">
+          <AddQuizz/>
+          </Box>)
+        :
+        (<Box paddingTop="1em" paddingBottom="100px">
           <Grid container spacing={2}>
             {
               listOfQuizzes.map((quizz)=>                 
@@ -85,17 +117,17 @@ export default function MyClassrooms(props) {
                     <Typography variant='subtitle1'>                    
                       Number of questions: {quizz.numberOfQuestions}
                     </Typography>
-                    <Button size="small">EDIT</Button>
+                    <Button size="small" onClick={(event) => handleEditQuizzState(event, listOfQuizzes.indexOf(quizz))}>EDIT</Button>
                   </CustomPaperReactComponent>
                 </Grid>      
               )
             }
           </Grid>
-        </Box>
+        </Box>)}
       </Container>
       <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar>          
-          <StyledFab color="secondary" aria-label="add">
+          <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddQuizState(event, listOfQuizzes.length)}>
             <AddIcon />
           </StyledFab>          
         </Toolbar>

@@ -1,7 +1,7 @@
 {
   "name": "db",
   "version": "1.0.0",
-  "description": "",  
+  "description": "",
   "scripts": {
     "start": "sudo docker-compose -f stack.yml up",
     "mac-start": "sudo docker-compose -f mac-stack.yml up",
