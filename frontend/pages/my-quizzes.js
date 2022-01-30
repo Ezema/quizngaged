@@ -39,6 +39,8 @@ import CustomTopNavBar from '../customComponents/customTopNavBar'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
+import EditQuizz from '../customComponents/editQuizz.js';
+import AddQuizz from '../customComponents/addQuizz.js';
 
 export default function MyClassrooms(props) {
   
@@ -71,9 +73,21 @@ export default function MyClassrooms(props) {
 
   return (
     <div>
-      <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar>
+      <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizzState || addQuizzState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizzState={editQuizzState}setEditQuizzState={setEditQuizzState} addQuizzState={addQuizzState} setAddQuizzState={setAddQuizzState}></CustomTopNavBar>
+      {/* <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar> */}
       <Container>
-        <Box paddingTop="1em" paddingBottom="100px">
+        {(editQuizzState)?(
+          <Box paddingTop="1em" paddingBottom="100px">
+            <EditQuizz/>
+          </Box> 
+        )
+        :
+        (addQuizzState)?
+        (<Box paddingTop="1em" paddingBottom="100px">
+          <AddQuizz/>
+          </Box>)
+        :
+        (<Box paddingTop="1em" paddingBottom="100px">
           <Grid container spacing={2}>
             {
               listOfQuizzes.map((quizz)=>                 
@@ -95,7 +109,7 @@ export default function MyClassrooms(props) {
       </Container>
       <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar>          
-          <StyledFab color="secondary" aria-label="add">
+          <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddQuizState(event, listOfQuizzes.length)}>
             <AddIcon />
           </StyledFab>          
         </Toolbar>
