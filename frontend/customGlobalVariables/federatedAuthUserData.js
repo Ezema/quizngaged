@@ -1,9 +1,9 @@
 export default{
-    userAuth: {}
+    federatedAuthUserData: {}
 };
 
 /*
-    Data available:
+    Data in this object looks like this:
 
     displayName: (...)
     email: (...)

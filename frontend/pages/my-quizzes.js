@@ -33,19 +33,30 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
 
+import LoadingScreen from '../customComponents/loadingScreen.js';
+import Index from '../pages/index.js';
+
 
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
 import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 import EditQuizz from '../customComponents/editQuizz.js';
 import AddQuizz from '../customComponents/addQuizz.js';
 
-export default function MyClassrooms(props) {
-  
+//Firebase
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
-  const userIsAuthenticated = props.userIsAuthenticated;
+//Global variables
+import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
+//Backend communication functions
+import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
+
+
+export default function MyClassrooms(props) {
+
+  const [userIsAuthenticated,setUserIsAuthenticated] = React.useState(false)  
+  const [authenticationAttemptFinished,setAuthenticationAttemptFinished] = React.useState(false)
 
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
 
@@ -73,66 +84,103 @@ export default function MyClassrooms(props) {
     if(user){
       setStatefulUserObject(user)
     }
+    if(firebase.auth().currentUser){
+      globalUserIsAuthenticated.userIsAuthenticated = true  
+      setUserIsAuthenticated(true)
+      setAuthenticationAttemptFinished(true)                          
+    }else{
+        globalUserIsAuthenticated.userIsAuthenticated = false
+        setUserIsAuthenticated(false)       
+        setAuthenticationAttemptFinished(true)                 
+    }
   })
+
+  const [statefulQuizngagedUserData, setStatefulQuizngagedUserData] = React.useState({});
+
+  React.useEffect(()=>{
+    backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+    console.log("called")
+  },[])
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Quizzes")
 
   const handleAddQuizState = (event, lastIndexOfListOfQuizzes) => {
     setAddQuizzState(true);
-    setTopBarTitle("Add Quizz")
+    setTopBarTitle("Add Quiz")
   }
 
   const handleEditQuizzState = (event) => {
     setEditQuizzState(true);
-    setTopBarTitle("Edit Quizz");
+    setTopBarTitle("Edit Quiz");
 
   }
 
 
   return (
-    <div>
-      <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizzState || addQuizzState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizzState={editQuizzState}setEditQuizzState={setEditQuizzState} addQuizzState={addQuizzState} setAddQuizzState={setAddQuizzState}></CustomTopNavBar>
-      {/* <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar> */}
-      <Container>
-        {(editQuizzState)?(
-          <Box paddingTop="1em" paddingBottom="100px">
-            <EditQuizz/>
-          </Box> 
-        )
-        :
-        (addQuizzState)?
-        (<Box paddingTop="1em" paddingBottom="100px">
-          <AddQuizz/>
-          </Box>)
-        :
-        (<Box paddingTop="1em" paddingBottom="100px">
-          <Grid container spacing={2}>
-            {
-              listOfQuizzes.map((quizz)=>                 
-                <Grid item xs={12} md={6} lg={4} key={quizz.id}>              
-                  <CustomPaperReactComponent elevation={3}>                  
-                    <Typography variant='h6'>
-                        #{quizz.id}
-                      </Typography>
-                    <Typography variant='subtitle1'>                    
-                      Number of questions: {quizz.numberOfQuestions}
-                    </Typography>
-                    <Button size="small" onClick={(event) => handleEditQuizzState(event, listOfQuizzes.indexOf(quizz))}>EDIT</Button>
-                  </CustomPaperReactComponent>
-                </Grid>      
-              )
-            }
-          </Grid>
-        </Box>)}
-      </Container>
-      <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
-        <Toolbar>          
-          <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddQuizState(event, listOfQuizzes.length)}>
-            <AddIcon />
-          </StyledFab>          
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+    (!globalUserIsAuthenticated.userIsAuthenticated && !userIsAuthenticated)?
+    (      
+      (authenticationAttemptFinished)?
+      (           
+        <Index></Index>          
+      )
+      :
+      (
+        <LoadingScreen></LoadingScreen>
+      )      
+    )
+    :
+    (      
+      (statefulQuizngagedUserData.quizngagedUserData==undefined)?
+      (
+        <LoadingScreen></LoadingScreen>
+      )
+      :
+      (
+        <div>
+          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizzState || addQuizzState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizzState={editQuizzState}setEditQuizzState={setEditQuizzState} addQuizzState={addQuizzState} setAddQuizzState={setAddQuizzState}></CustomTopNavBar>
+          {/* <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar> */}
+          <Container>
+            {(editQuizzState)?(
+              <Box paddingTop="1em" paddingBottom="100px">
+                <EditQuizz/>
+              </Box> 
+            )
+            :
+            (addQuizzState)?
+            (<Box paddingTop="1em" paddingBottom="100px">
+              <AddQuizz/>
+              </Box>)
+            :
+            (<Box paddingTop="1em" paddingBottom="100px">
+              <Grid container spacing={2}>
+                {
+                  statefulQuizngagedUserData.quizngagedUserData.quizzes.map((quiz)=>                 
+                    <Grid item xs={12} md={6} lg={4} key={statefulQuizngagedUserData.quizngagedUserData.quizzes.indexOf(quiz)}>              
+                      <CustomPaperReactComponent elevation={3}>                  
+                        <Typography variant='h6'>
+                            #{quiz.id}
+                          </Typography>
+                        <Typography variant='subtitle1'>                    
+                          Number of questions: {quiz.title}
+                        </Typography>
+                        <Button size="small" onClick={(event) => handleEditQuizzState(event, listOfQuizzes.indexOf(quiz))}>EDIT</Button>
+                      </CustomPaperReactComponent>
+                    </Grid>      
+                  )
+                }
+              </Grid>
+            </Box>)}
+          </Container>
+          <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
+            <Toolbar>          
+              <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddQuizState(event, listOfQuizzes.length)}>
+                <AddIcon />
+              </StyledFab>          
+            </Toolbar>
+          </AppBar>
+        </div>
+      )  
+    )
+  )
 }
 

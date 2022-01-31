@@ -57,6 +57,8 @@ const steps = [
 
 export default function EditQuestion(props){    
     
+    console.log("edit question: ", props)
+
     const editedQuestionUID = props.QuestionUIDToEdit;
 
     const editedQuestion = props.questionToEdit    
