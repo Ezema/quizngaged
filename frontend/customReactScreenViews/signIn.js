@@ -6,13 +6,16 @@ import 'firebase/compat/auth';
 import { Typography } from '@mui/material';
 //import { PinDropSharp } from '@mui/icons-material';
 const axios = require('axios');
-let globalUser = null;
 import Alert from '@mui/material/Alert';
 
 import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
-import globalUserData from '../customGlobalVariables/userData.js'
+import federatedAuthUserData from '../customGlobalVariables/federatedAuthUserData.js'
+import federatedAuthDecodedToken from '../customGlobalVariables/federatedAuthDecodedToken'
 
 function SignIn(props) {
+
+  let decokedIdToken = null;  
+
   // Configure Firebase SDK client key.
   const firebaseConfig = {
     apiKey: "AIzaSyAI7fRp-LbEWGJr5o0VphYXxdRK57rKXBI",
@@ -39,37 +42,7 @@ function SignIn(props) {
     signInSuccessUrl: '/my-classrooms',  
 
     callbacks: {
-      // Avoid redirects after sign-in.    
-
-      signInSuccessWithAuthResult: (authData) => {   
-        
-        console.log("authData: ", authData)
-        
-        firebase.auth().currentUser.getIdToken(false).then(function(idToken) {            
-            axios({
-              method: "POST",        
-              url: 'http://localhost:8080',        
-              data: {            
-                  "globalUser": globalUser,            
-                  "idToken": idToken
-              },
-              timeout:5000
-            }).then(async (response) => {                                   
-                props.setUserIsAuthenticated(true)   
-                globalUserIsAuthenticated.userIsAuthenticated = true                                         
-                //props.setUser(globalUser)
-            }).catch(e => {
-                //if our server rejects this user, a notification must be shown
-                console.log(e);                      
-                //props.setUserIsAuthenticated(false)      
-                //props.setUserAuthenticationFailed(true)        
-            })
-        }).catch(function(error) {
-          //props.setUserIsAuthenticated(false)
-          //props.setUserAuthenticationFailed(true)        
-          //if google's server rejects this user, a notification must be shown
-        });
-        
+      signInSuccessWithAuthResult: (authData) => {        
       }
     },
     signInOptions: [
@@ -81,10 +54,15 @@ function SignIn(props) {
 
   firebase.auth().onAuthStateChanged((user)=>{
     //setLoading view
-    props.setUser(user)
-    globalUser = user    
-    console.log("globalUserData: ", globalUserData)
-    globalUserData = user
+    props.setUser(user)        
+    federatedAuthUserData = user    
+    firebase.auth().currentUser.getIdToken(false).then(function(idToken) {    
+      federatedAuthDecodedToken.federatedAuthDecodedToken = idToken
+    }).catch(function(error) {
+      //props.setUserIsAuthenticated(false)
+      //props.setUserAuthenticationFailed(true)        
+      //if google's server rejects this user, a notification must be shown
+    });    
   })
 
   return (

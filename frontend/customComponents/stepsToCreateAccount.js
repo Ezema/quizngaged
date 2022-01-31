@@ -8,11 +8,17 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import globalUserData from '../customGlobalVariables/userData.js'
+import globalUserData from '../customGlobalVariables/federatedAuthUserData.js'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+
+import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
+
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+
+import federatedAuthUserData from '../customGlobalVariables/federatedAuthUserData.js';
 
 const axios = require('axios');
 
@@ -32,38 +38,38 @@ export default function CreateTeacherAccount(props){
     const [activeStep, setActiveStep] = React.useState(0);
     const [buttonText, setButtonText] = React.useState('Next');    
     const [uploadUserDataInProgress, setUploadUserDataInProgress] = React.useState(false);    
+
+
+    const [email, setEmail] = React.useState(null);    
+    const [name, setName] = React.useState(null);    
+    const [phone, setPhone] = React.useState(null);    
+    const [userType, setUserType] = React.useState(null); 
+    
+    const handleUserEntryChange = (event,type)=>{
+        if(type.localeCompare('email')){
+            setEmail(event.target.value)
+        }else if(type.localeCompare('name')){
+            setName(event.target.value)
+        }else if(type.localeCompare('phone')){
+            setPhone(event.target.value)
+        }else if(type.localeCompare('userType')){
+            setUserType(event.target.value)
+        }
+
+    }
     
 
-    console.log("props: ", props)
+    //console.log("props: ", props)
 
     const handleUserDataUpload = ()=>{
-
+                        
+        quizngagedUserData.quizngagedUserData.uid = federatedAuthUserData.uid
+        quizngagedUserData.quizngagedUserData.userType = userType
+        quizngagedUserData.quizngagedUserData.name = name
+        quizngagedUserData.quizngagedUserData.email = email
+        quizngagedUserData.quizngagedUserData.phone = phone
         setUploadUserDataInProgress(true)        
-        
-        axios({
-            method: "POST",        
-            url: 'http://localhost:9090/API/uploaduserdata',        
-            data: {            
-                //send the google authenticated user to our backend to check if the user is registered or has to create a new account within quizngaged
-                "newUserDate": {
-                    email:"",
-                    name:"",
-                    accountType:"",
-                    phone:"",
-                }
-            },
-            timeout:10000
-          }).then(async (response) => {                          
-              if(response.data.opertionSuccess==true){                
-                Router.push('my-classrooms')
-                //
-              }else if(response.data.opertionSuccess==false){
-                //
-              }
-    
-          }).catch(e => {          
-              console.log(e);                                
-          })          
+        backendQuerySaveUserJSON(function callback(){Router.push('my-classrooms')})
     }
 
     return(
@@ -110,16 +116,19 @@ export default function CreateTeacherAccount(props){
                                         disabled
                                         id="email"
                                         label="Email"
-                                        value={globalUserData.email}
+                                        value={email}
+                                        onClick={(event)=>handleUserEntryChange(event.target,email)}
+                                        defaultValue={globalUserData.email}
                                     />
                                 </Grid>
                                 <Grid item paddingBottom={'1em'} >                            
                                     <TextField
-                                        fullWidth
-                                        
-                                        id="user-profile"
-                                        label="User profile"
-                                        value={props.userProfile}
+                                        fullWidth                                        
+                                        id="user-type"
+                                        label="User type"
+                                        value={userType}
+                                        onClick={(event)=>handleUserEntryChange(event.target,userType)}
+                                        defaultValue={props.userProfile}
                                     />
                                 </Grid>
                                 <Grid item paddingBottom={'1em'}>
@@ -128,6 +137,8 @@ export default function CreateTeacherAccount(props){
                                         required
                                         id="name-required"
                                         label="Name"
+                                        value={name}
+                                        onClick={(event)=>handleUserEntryChange(event.target,name)}
                                         defaultValue={globalUserData.displayName}
                                     />
                                 </Grid>
@@ -136,6 +147,8 @@ export default function CreateTeacherAccount(props){
                                         fullWidth
                                         id="phone-option"
                                         label="Phone"
+                                        value={phone}
+                                        onClick={(event)=>handleUserEntryChange(event.target,phone)}
                                         defaultValue={(globalUserData.phoneNumber)}
                                     />
                                 </Grid>                                
@@ -159,7 +172,7 @@ export default function CreateTeacherAccount(props){
                         </Grid>
             
                     ):
-                    (
+                    (                        
                         <Grid Container columns={2} alignContent={'center'} justifyContent={'center'} display={'flex'} width={'100%'}>                        
                             <Grid item width={'50%'}>
                                 <Button fullWidth size='large' variant='contained' color='primary' onClick={()=>setActiveStep(1)} endIcon={<NavigateNextIcon/>}>
