@@ -40,30 +40,11 @@ import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthentica
 
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 
-
-//this is hardcoded but will be fetched when the API is operative. When the API is defined, the subtitle will contain either a brief description or some piece of stat about the classroom like students joined  
-const listOfQuestionsRetrieved = [{id:"1",questionType:'Multiple Choice',questionBaselineBody:"Mathematics 6th grade",questionBaselineAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}],questionEasierBody:"Mathematics 6th grade",questionEasierAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}],questionHarderBody:"Mathematics 6th grade",questionHarderAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}]},{id:"2",questionType:'Text Response',questionBaselineBody:"Mathematics 6th grade",questionBaselineAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}],questionEasierBody:"Mathematics 6th grade",questionEasierAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}],questionHarderBody:"Mathematics 6th grade",questionHarderAnswers:[{id:1,parentQuestionId:'1',body:'Physics'},{id:2,parentQuestionId:'1',body:'Maths'},{id:3,parentQuestionId:'1',body:'Arts'},{id:4,parentQuestionId:'1',body:'Literature'}]}];
-
-/* questionType
-questionBaselineBody
-questionBaselineAnswers
-id
-parentQuestionId
-body
-questionEasierBody
-questionEasierAnswers
-questionHarderBody
-questionHarderAnswers */
-
-/* id:null,            
-questionType:null,
-questionBaselineBody:null,
-questionBaselineAnswers:[
-    {   id:null,
-        parentQuestionId:null,
-        body:null */
+import { useRouter } from 'next/router'
 
 export default function MyClassrooms(props) { 
+
+  const router = useRouter()
 
   const [listOfQuestions,setListOfQuestions] = React.useState(null)
   const [newQuestionUID,setNewQuestionUID] = React.useState(null)
@@ -107,42 +88,21 @@ export default function MyClassrooms(props) {
     setQuestionToEdit(listOfQuestions[questionindexInArray])
   }
 
-  firebase.initializeApp(firebaseClientConfig);    
-  firebase.app()
-  firebase.auth().onAuthStateChanged((user)=>{
-    if(user){
-      setStatefulUserObject(user)
-    }
-    if(firebase.auth().currentUser){
-      globalUserIsAuthenticated.userIsAuthenticated = true  
-      setUserIsAuthenticated(true)
-      setAuthenticationAttemptFinished(true)                          
-    }else{
-        globalUserIsAuthenticated.userIsAuthenticated = false
-        setUserIsAuthenticated(false)       
-        setAuthenticationAttemptFinished(true)                 
-    }
-  })
-
   React.useEffect(()=>{
-    backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})    
-  },[])
+    if(window.location.pathname.localeCompare("/my-questions")!=0){
+      window.location.pathname = "/my-questions"
+    }
+    if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
+      router.push('/')
+    }else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
+      router.push('/')
+    }else{
+      backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+    }       
+  },[])  
 
-  return (      
-    (!globalUserIsAuthenticated.userIsAuthenticated && !userIsAuthenticated)?
-    (      
-      (authenticationAttemptFinished)?
-      (           
-        <Index></Index>          
-      )
-      :
-      (
-        <LoadingScreen></LoadingScreen>
-      )      
-    )
-    :
-    (      
-      (statefulQuizngagedUserData.quizngagedUserData==undefined)?
+  return (    
+      (statefulQuizngagedUserData.questions==undefined)?
       (
         <LoadingScreen></LoadingScreen>
       )
@@ -153,7 +113,7 @@ export default function MyClassrooms(props) {
           
           {
           //due to the async nature of the setState function we need to include this
-          setListOfQuestions(statefulQuizngagedUserData.quizngagedUserData.questions)
+          setListOfQuestions(statefulQuizngagedUserData.questions)
           }
           <LoadingScreen></LoadingScreen>
         </div>
@@ -213,8 +173,7 @@ export default function MyClassrooms(props) {
           )
           }
         </div>
-      )
-    )
+      )    
   );
 }
 

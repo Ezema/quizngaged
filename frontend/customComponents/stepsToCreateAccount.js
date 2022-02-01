@@ -61,13 +61,21 @@ export default function CreateTeacherAccount(props){
 
     //console.log("props: ", props)
 
-    const handleUserDataUpload = ()=>{
-                        
-        quizngagedUserData.quizngagedUserData.uid = federatedAuthUserData.uid
-        quizngagedUserData.quizngagedUserData.userType = userType
-        quizngagedUserData.quizngagedUserData.name = name
-        quizngagedUserData.quizngagedUserData.email = email
-        quizngagedUserData.quizngagedUserData.phone = phone
+    const handleUserDataUpload = ()=>{                        
+        
+        let newQuizngagedUser = JSON.parse(JSON.stringify(quizngagedUserData.quizngagedUserData))
+            
+        newQuizngagedUser.uid = JSON.parse(localStorage.federatedAuthUserData).uid
+
+        newQuizngagedUser.userType = userType
+        newQuizngagedUser.name = name
+        newQuizngagedUser.email = email
+        newQuizngagedUser.phone = phone
+
+        localStorage.setItem("quizngagedUserData",JSON.stringify(newQuizngagedUser))
+
+        console.log("after saving in submit: ",localStorage)
+
         setUploadUserDataInProgress(true)        
         backendQuerySaveUserJSON(function callback(){Router.push('my-classrooms')})
     }

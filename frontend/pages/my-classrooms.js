@@ -27,8 +27,12 @@ import CustomTopNavBar from '../customComponents/customTopNavBar'
 
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
+import { useRouter } from 'next/router'
+
 
 export default function MyClassrooms() {
+
+  const router = useRouter()
 
   const [userIsAuthenticated,setUserIsAuthenticated] = React.useState(false)  
   const [authenticationAttemptFinished,setAuthenticationAttemptFinished] = React.useState(false)
@@ -36,60 +40,43 @@ export default function MyClassrooms() {
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
   
   const [statefulQuizngagedUserData, setStatefulQuizngagedUserData] = React.useState({});
-  
-  firebase.initializeApp(firebaseClientConfig);    
-  firebase.app()
-  firebase.auth().onAuthStateChanged((user)=>{
-
-    if(user){      
-      setStatefulUserObject(user)
-    }
-
-    if(firebase.auth().currentUser){
-      globalUserIsAuthenticated.userIsAuthenticated = true  
-      setUserIsAuthenticated(true)
-      setAuthenticationAttemptFinished(true)                          
-    }else{
-        globalUserIsAuthenticated.userIsAuthenticated = false
-        setUserIsAuthenticated(false)       
-        setAuthenticationAttemptFinished(true)                 
-    }
-  })
 
   React.useEffect(()=>{
-    backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})    
+    if(window.location.pathname.localeCompare("/my-classrooms")!=0){
+      window.location.pathname = "/my-classrooms"
+    }
+    if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
+      router.push('/')
+    }else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
+      router.push('/')
+    }else{
+      backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+    }
+    
   },[])
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Classroooms")
 
   return (      
-    (!globalUserIsAuthenticated.userIsAuthenticated && !userIsAuthenticated)?
-    (      
-      (authenticationAttemptFinished)?
-      (           
-        <Index></Index>          
-      )
-      :
+          
+      (statefulQuizngagedUserData.classrooms==undefined)?
       (
+        <div>
+        
         <LoadingScreen></LoadingScreen>
-      )      
-    )
-    :
-    (      
-      (statefulQuizngagedUserData.quizngagedUserData==undefined)?
-      (
-        <LoadingScreen></LoadingScreen>
-      )
+        </div>
+      ) 
       :
       (
         <div>
+          
           <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar>
           <Container>
             <Box paddingTop="1em" paddingBottom="100px">
               <Grid container spacing={2}>
               {
-                statefulQuizngagedUserData.quizngagedUserData.classrooms.map((classroom)=>                 
-                  <Grid item xs={12} md={6} lg={4} key={statefulQuizngagedUserData.quizngagedUserData.classrooms.indexOf(classroom)}>              
+                statefulQuizngagedUserData.classrooms.map((classroom)=>                 
+                  <Grid item xs={12} md={6} lg={4} key={statefulQuizngagedUserData.classrooms.indexOf(classroom)}>              
                     <CustomPaperReactComponent elevation={3}>
                       <Typography variant='h5'>
                         {classroom.name}
@@ -120,7 +107,6 @@ export default function MyClassrooms() {
           </AppBar>
         </div>
       )
-    )    
-  );
+  )
 }
 
