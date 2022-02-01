@@ -23,8 +23,15 @@ const db = mysql.createConnection({
     if (err) {
       console.log("The docker DB is not running!");
       //throw err;
+    }else{
+        console.log("Connected to database");
+        let sqlQuery = "CREATE TABLE IF NOT EXISTS users (uid VARCHAR(50),userjson json);"
+        db.query(sqlQuery,(err,result)=>{
+            console.log("schema ok");
+        })
     }
-    console.log("Connected to database");
+
+    
   });
   global.db = db;
     
