@@ -56,8 +56,6 @@ const steps = [
 ];
 
 export default function EditQuestion(props){    
-    
-    console.log("edit question: ", props)
 
     const editedQuestionUID = props.QuestionUIDToEdit;
 
@@ -66,7 +64,7 @@ export default function EditQuestion(props){
     const [statefulEditedQuestion,setStatefulEditedQuestion] = React.useState(editedQuestion)
     let nonStatefulEditedQuestion = editedQuestion
 
-    const [statefulArrayOfQuestionAnswers,setStatefulArrayOfQuestionAnswers] = React.useState(statefulEditedQuestion.baselineQuestionAnswers)
+    const [statefulArrayOfQuestionAnswers,setStatefulArrayOfQuestionAnswers] = React.useState(statefulEditedQuestion.questionBaselineAnswers)
     
 
     const setEditQuestionState = props.setEditQuestionState;
@@ -76,9 +74,9 @@ export default function EditQuestion(props){
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
     const [userEntryQuestionType,setUserEntryQuestionType] = React.useState(statefulEditedQuestion.questionType)
-    const [userEntryBaselineQuestionBody,setUserEntryBaselineQuestionBody] = React.useState(statefulEditedQuestion.baselineQuestion)
-    const [userEntryEasierQuestionBody,setUserEntryEasierQuestionBody] = React.useState(statefulEditedQuestion.easierQuestion)
-    const [userEntryHarderQuestionBody,setUserEntryHarderQuestionBody] = React.useState(statefulEditedQuestion.harderQuestion)
+    const [userEntryBaselineQuestionBody,setUserEntryBaselineQuestionBody] = React.useState(statefulEditedQuestion.questionBaselineBody)
+    const [userEntryEasierQuestionBody,setUserEntryEasierQuestionBody] = React.useState(statefulEditedQuestion.questionEasierBody)
+    const [userEntryHarderQuestionBody,setUserEntryHarderQuestionBody] = React.useState(statefulEditedQuestion.questionHarderBody)
 
     const handleQuestionBodyChange = (event, questionDifficulty)=>{
         if(questionDifficulty==0){            
@@ -134,14 +132,14 @@ export default function EditQuestion(props){
             let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
 
             copyOfEditedQuestion.questionType= copyOfQuestionType
-            copyOfEditedQuestion.easierQuestion= copyOfEasierQuestion
+            copyOfEditedQuestion.questionEasierBody= copyOfEasierQuestion
             //mapping correct answers to each question
-            copyOfEditedQuestion.easierQuestionAnswers = copyOfEasierAnswersArray
+            copyOfEditedQuestion.questionEasierAnswers = copyOfEasierAnswersArray
 
             setStatefulEditedQuestion(JSON.parse(JSON.stringify(copyOfEditedQuestion)))
             nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))            
 
-            setStatefulArrayOfQuestionAnswers(JSON.parse(JSON.stringify(statefulEditedQuestion.baselineQuestionAnswers)))
+            setStatefulArrayOfQuestionAnswers(JSON.parse(JSON.stringify(statefulEditedQuestion.questionBaselineAnswers)))
         }
         else if(step==2){
             setStep(step-1)
@@ -152,13 +150,13 @@ export default function EditQuestion(props){
             let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
             copyOfEditedQuestion.questionType= copyOfQuestionType
-            copyOfEditedQuestion.harderQuestion= copyOfHarderQuestion
-            copyOfEditedQuestion.harderQuestionAnswers = copyOfHarderAnswersArray
+            copyOfEditedQuestion.questionHarderBody= copyOfHarderQuestion
+            copyOfEditedQuestion.questionHarderAnswers = copyOfHarderAnswersArray
     
             setStatefulEditedQuestion(JSON.parse(JSON.stringify(copyOfEditedQuestion)))
             nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))
             
-            setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.easierQuestionAnswers)
+            setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.questionEasierAnswers)
             setMainButtonText('Next')
         }
     }
@@ -175,14 +173,14 @@ export default function EditQuestion(props){
                 let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
                 copyOfEditedQuestion.questionType= copyOfQuestionType
-                copyOfEditedQuestion.baselineQuestion= copyOfBaselineQuestion
-                copyOfEditedQuestion.baselineQuestionAnswers = copyOfBaselineAnswersArray
+                copyOfEditedQuestion.baselineQuestionBody= copyOfBaselineQuestion
+                copyOfEditedQuestion.questionBaselineAnswers = copyOfBaselineAnswersArray
 
                 setStatefulEditedQuestion(copyOfEditedQuestion)
                 nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))
 
                 // change 'active' array of question answers being edited by the user
-                setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.easierQuestionAnswers)
+                setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.questionEasierAnswers)
             }
             else if(step==1){
                 setStep(step+1)                
@@ -194,8 +192,8 @@ export default function EditQuestion(props){
                 let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
                 copyOfEditedQuestion.questionType= copyOfQuestionType
-                copyOfEditedQuestion.easierQuestion= copyOfEasierQuestion                
-                copyOfEditedQuestion.easierQuestionAnswers = copyOfEasierAnswersArray
+                copyOfEditedQuestion.questionEasierBody= copyOfEasierQuestion                
+                copyOfEditedQuestion.questionEasierAnswers = copyOfEasierAnswersArray
 
                 //mapping correct answers to each question
 
@@ -204,7 +202,7 @@ export default function EditQuestion(props){
 
 
                 // change 'active' array of question answers being edited by the user
-                setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.harderQuestionAnswers)
+                setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.questionHarderAnswers)
                 setMainButtonText('Finish')
             }
             
@@ -218,8 +216,8 @@ export default function EditQuestion(props){
             let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
             
             copyOfEditedQuestion.questionType= copyOfQuestionType
-            copyOfEditedQuestion.harderQuestion= copyOfHarderQuestion
-            copyOfEditedQuestion.harderQuestionAnswers = copyOfHarderAnswersArray
+            copyOfEditedQuestion.questionHarderBody= copyOfHarderQuestion
+            copyOfEditedQuestion.questionHarderAnswers = copyOfHarderAnswersArray
 
             setStatefulEditedQuestion(copyOfEditedQuestion)
             nonStatefulEditedQuestion = JSON.parse(JSON.stringify(copyOfEditedQuestion))
@@ -227,8 +225,8 @@ export default function EditQuestion(props){
             let copyOfQuestionsArray = JSON.parse(JSON.stringify(props.listOfQuestions))
             copyOfEditedQuestion =  JSON.parse(JSON.stringify(nonStatefulEditedQuestion))                                        
 
-            copyOfQuestionsArray[props.QuestionIndexInQuestionsArray]=copyOfEditedQuestion
-            
+            copyOfQuestionsArray[props.QuestionIndexInQuestionsArray]=copyOfEditedQuestion                    
+
             props.setListOfQuestions(copyOfQuestionsArray)
             setEditQuestionState(false)
             setStep(0)
