@@ -53,9 +53,7 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-app.post("/API/getuserJSON",(req, res)=>{
-
-    console.log("/API/getuserJSON: ", req.body)
+app.post("/API/getuserJSON",(req, res)=>{    
     
     //validate user UID received in the HTTP request
     admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
@@ -70,7 +68,9 @@ app.post("/API/getuserJSON",(req, res)=>{
                     //throw err;
                 } 
                 else {                    
-                    console.log("db query: ", result)
+                    console.log("\n")
+                    console.log("the retrieved userjson: ", result[0].userjson)
+                    console.log("\n")
                     res.send({"userjson":result[0]})
                 }    
             });
@@ -86,6 +86,12 @@ app.post("/API/saveuserJSON",(req, res)=>{
     //console.log("/API/saveuserJSON: ", req.body)
 
     //let sqlQuery = `INSERT INTO users (uid, userjson) VALUES ("${req.body.uid}", '${req.body.userjson}');`
+
+    //console.log("/API/saveuserJSON: ", sqlQuery)
+
+    //sqlQuery = `UPDATE users SET userjson='${req.body.userjson}' WHERE uid="${req.body.uid}";`
+
+    console.log("/API/saveuserJSON: ", new Date())
 
     //console.log("sqlQuery: ",sqlQuery)
 
@@ -110,6 +116,9 @@ app.post("/API/saveuserJSON",(req, res)=>{
                             if(err){                                
                                 res.send({'operationSuccessful':false})
                             }else{                                
+                                console.log("\n")
+                                console.log("the saved userjson: ", req.body.userjson)
+                                console.log("\n")
                                 res.send({'operationSuccessful':true})
                             }
 
@@ -120,6 +129,9 @@ app.post("/API/saveuserJSON",(req, res)=>{
                             if(err){                                
                                 res.send({'operationSuccessful':false})
                             }else{                                
+                                console.log("\n")
+                                console.log("the saved userjson: ", req.body.userjson)                    
+                                console.log("\n")
                                 res.send({'operationSuccessful':true})
                             }
 
@@ -137,7 +149,7 @@ app.post("/API/saveuserJSON",(req, res)=>{
 
 app.post("/API/checkuserhasaccount",(req, res)=>{
 
-    console.log("/API/checkuserhasaccount: ", req.body)
+    //console.log("/API/checkuserhasaccount: ", req.body)
 
     admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
     () => {      
