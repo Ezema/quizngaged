@@ -54,17 +54,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post("/API/getuserJSON",(req, res)=>{
+
+    console.log("/API/getuserJSON: ", req.body)
     
     //validate user UID received in the HTTP request
     admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
     () => {      
-            let sqlQuery = `SELECT userjson FROM users WHERE uid="${req.body.uid}";`
+            let sqlQuery = `SELECT userjson FROM users WHERE uid='${req.body.uid}';`
+
+            console.log("/API/getuserJSON DB Query: ", sqlQuery)
+
             db.query(sqlQuery, (err, result)=>{
                 if (err) {
                     console.log("error with db query")
                     //throw err;
                 } 
                 else {                    
+                    console.log("db query: ", result)
                     res.send({"userjson":result[0]})
                 }    
             });
@@ -77,6 +83,14 @@ app.post("/API/getuserJSON",(req, res)=>{
 })
 app.post("/API/saveuserJSON",(req, res)=>{
     
+    //console.log("/API/saveuserJSON: ", req.body)
+
+    //let sqlQuery = `INSERT INTO users (uid, userjson) VALUES ("${req.body.uid}", '${req.body.userjson}');`
+
+    //console.log("sqlQuery: ",sqlQuery)
+
+    
+
         //req.body.federatedAuthDecodedToken
         //req.body.uid
         //req.body.userjson
@@ -122,6 +136,9 @@ app.post("/API/saveuserJSON",(req, res)=>{
 })
 
 app.post("/API/checkuserhasaccount",(req, res)=>{
+
+    console.log("/API/checkuserhasaccount: ", req.body)
+
     admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
     () => {      
             let sqlQuery = `SELECT * FROM users WHERE uid="${req.body.uid}";`

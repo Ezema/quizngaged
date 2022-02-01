@@ -44,16 +44,20 @@ import EditQuizz from '../customComponents/editQuizz.js';
 import AddQuizz from '../customComponents/addQuizz.js';
 
 //Firebase
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+//import firebase from 'firebase/compat/app';
+//import 'firebase/compat/auth';
 
 //Global variables
 import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
 //Backend communication functions
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 
+import { useRouter } from 'next/router'
+
 
 export default function MyClassrooms(props) {
+
+  const router = useRouter()
 
   const [userIsAuthenticated,setUserIsAuthenticated] = React.useState(false)  
   const [authenticationAttemptFinished,setAuthenticationAttemptFinished] = React.useState(false)
@@ -73,34 +77,21 @@ export default function MyClassrooms(props) {
     setSidebarOpen(openStatus);
   };
 
-
-
-  //this is hardcoded but will be fetched when the API is operative. When the API is defined, the subtitle will contain either a brief description or some piece of stat about the classroom like students joined
-  const listOfQuizzes = [{id:"1",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"2",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"3",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"4",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"5",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"6",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}},{id:"7",quizTitle:"Laws of Newton",numberOfQuestions:"10",associatedClassrooms:{}}];
-
-  firebase.initializeApp(firebaseClientConfig);    
-  firebase.app()
-  firebase.auth().onAuthStateChanged((user)=>{
-    if(user){
-      setStatefulUserObject(user)
+  React.useEffect(()=>{
+    if(window.location.pathname.localeCompare("/my-quizzes")!=0){
+      window.location.pathname = "/my-quizzes"
     }
-    if(firebase.auth().currentUser){
-      globalUserIsAuthenticated.userIsAuthenticated = true  
-      setUserIsAuthenticated(true)
-      setAuthenticationAttemptFinished(true)                          
+    if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
+      router.push('/')
+    }else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
+      router.push('/')
     }else{
-        globalUserIsAuthenticated.userIsAuthenticated = false
-        setUserIsAuthenticated(false)       
-        setAuthenticationAttemptFinished(true)                 
-    }
-  })
+      backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+    }       
+  },[])
+
 
   const [statefulQuizngagedUserData, setStatefulQuizngagedUserData] = React.useState({});
-
-  React.useEffect(()=>{
-    backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
-    console.log("called")
-  },[])
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Quizzes")
 
@@ -116,21 +107,8 @@ export default function MyClassrooms(props) {
   }
 
 
-  return (
-    (!globalUserIsAuthenticated.userIsAuthenticated && !userIsAuthenticated)?
-    (      
-      (authenticationAttemptFinished)?
-      (           
-        <Index></Index>          
-      )
-      :
-      (
-        <LoadingScreen></LoadingScreen>
-      )      
-    )
-    :
-    (      
-      (statefulQuizngagedUserData.quizngagedUserData==undefined)?
+  return (    
+      (statefulQuizngagedUserData.quizzes==undefined)?
       (
         <LoadingScreen></LoadingScreen>
       )
@@ -150,12 +128,12 @@ export default function MyClassrooms(props) {
             (<Box paddingTop="1em" paddingBottom="100px">
               <AddQuizz/>
               </Box>)
-            :
+            : 
             (<Box paddingTop="1em" paddingBottom="100px">
               <Grid container spacing={2}>
                 {
-                  statefulQuizngagedUserData.quizngagedUserData.quizzes.map((quiz)=>                 
-                    <Grid item xs={12} md={6} lg={4} key={statefulQuizngagedUserData.quizngagedUserData.quizzes.indexOf(quiz)}>              
+                  statefulQuizngagedUserData.quizzes.map((quiz)=>                 
+                    <Grid item xs={12} md={6} lg={4} key={statefulQuizngagedUserData.quizzes.indexOf(quiz)}>              
                       <CustomPaperReactComponent elevation={3}>                  
                         <Typography variant='h6'>
                             #{quiz.id}
@@ -179,8 +157,7 @@ export default function MyClassrooms(props) {
             </Toolbar>
           </AppBar>
         </div>
-      )  
-    )
+      )    
   )
 }
 

@@ -54,9 +54,11 @@ function SignIn(props) {
 
   firebase.auth().onAuthStateChanged((user)=>{
     //setLoading view
-    props.setUser(user)        
+    props.setUser(user)            
     federatedAuthUserData = user    
-    firebase.auth().currentUser.getIdToken(false).then(function(idToken) {    
+    localStorage.setItem("federatedAuthUserData",JSON.stringify(user))
+    firebase.auth().currentUser.getIdToken(false).then(function(idToken) {          
+      localStorage.setItem("federatedAuthDecodedToken",JSON.stringify(idToken))
       federatedAuthDecodedToken.federatedAuthDecodedToken = idToken
     }).catch(function(error) {
       //props.setUserIsAuthenticated(false)
