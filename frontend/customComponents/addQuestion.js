@@ -47,6 +47,8 @@ import QuestionAnswers from './questionAnswer.js';
 
 import Autocomplete from '@mui/material/Autocomplete';
 
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+
 import { width } from '@mui/system';
 
 const steps = [
@@ -219,6 +221,22 @@ export default function AddQuestion(props){
                 copyOfNewQuestion =  JSON.parse(JSON.stringify(nonStatefulNewQuestion))                
                 copyOfQuestionsArray.push(copyOfNewQuestion)
                 setListOfQuestions(copyOfQuestionsArray)
+
+
+                //create a copy from localstorage
+                let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+
+                //save the edited questions in the copy
+                copyOfQuizngagedUserData.questions = copyOfQuestionsArray
+            
+                //replace the old data with the new data in localstorage
+                localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+
+                // call the backend to sync the local changes
+                backendQuerySaveUserJSON(()=>{})
+
+
+
                 setAddQuestionState(false)
                 setStep(0)
             }            

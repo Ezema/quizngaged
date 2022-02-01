@@ -18,9 +18,9 @@ export default function backendQueryGetUserJSON(props){
             },
             timeout:10000
         }).then(async (response) => {    
-            localStorage.setItem("quizngagedUserData", JSON.stringify(response.data.userjson.userjson)) 
+            localStorage.setItem("quizngagedUserData", response.data.userjson.userjson) 
 
-            props.callback(JSON.parse((JSON.parse(localStorage.quizngagedUserData))))
+            props.callback((JSON.parse(localStorage.quizngagedUserData)))
             //return true
         }).catch(e => {          
             console.log(e);                                

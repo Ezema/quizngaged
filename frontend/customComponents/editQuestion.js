@@ -49,6 +49,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 import { width } from '@mui/system';
 
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+
 const steps = [
   'Add base question',
   'Add easier version',
@@ -173,7 +175,7 @@ export default function EditQuestion(props){
                 let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
                 copyOfEditedQuestion.questionType= copyOfQuestionType
-                copyOfEditedQuestion.baselineQuestionBody= copyOfBaselineQuestion
+                copyOfEditedQuestion.questionBaselineBody= copyOfBaselineQuestion
                 copyOfEditedQuestion.questionBaselineAnswers = copyOfBaselineAnswersArray
 
                 setStatefulEditedQuestion(copyOfEditedQuestion)
@@ -228,6 +230,22 @@ export default function EditQuestion(props){
             copyOfQuestionsArray[props.QuestionIndexInQuestionsArray]=copyOfEditedQuestion                    
 
             props.setListOfQuestions(copyOfQuestionsArray)
+
+            //create a copy from localstorage
+            let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+
+            //save the edited questions in the copy
+            copyOfQuizngagedUserData.questions = copyOfQuestionsArray
+        
+            //replace the old data with the new data in localstorage
+            localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+
+            // call the backend to sync the local changes
+            backendQuerySaveUserJSON(()=>{})
+
+            console.log("\n")
+            console.log("in edit last step: ",copyOfQuestionsArray)
+           
             setEditQuestionState(false)
             setStep(0)
         }            
