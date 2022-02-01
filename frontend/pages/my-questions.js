@@ -78,9 +78,7 @@ export default function MyClassrooms(props) {
 
   const handleEditQuestionState = (event,questionindexInArray)=>{    
     setEditQuestionState(true)
-    setTopBarTitle("Edit question")
-    console.log("handle edit: ",listOfQuestions)
-    console.log("\n 2 handle edit: ",questionindexInArray)
+    setTopBarTitle("Edit question")    
     
     setQuestionUIDToEdit(listOfQuestions[questionindexInArray].id)        
     setQuestionIndexInQuestionsArray(questionindexInArray)
@@ -104,18 +102,16 @@ export default function MyClassrooms(props) {
   return (    
       (statefulQuizngagedUserData.questions==undefined)?
       (
-        <LoadingScreen></LoadingScreen>
+        <div>       
+          <LoadingScreen></LoadingScreen>
+        </div>
       )
       :
       (!listOfQuestions)?
       (
         <div>
-          
-          {
-          //due to the async nature of the setState function we need to include this
-          setListOfQuestions(statefulQuizngagedUserData.questions)
-          }
-          <LoadingScreen></LoadingScreen>
+        {setListOfQuestions(statefulQuizngagedUserData.questions)}
+        <LoadingScreen></LoadingScreen>
         </div>
       )
       :
@@ -131,7 +127,8 @@ export default function MyClassrooms(props) {
             :
             (editQuestionState)?        
             (
-              <Box paddingTop="1em" paddingBottom="100px">
+              
+              <Box paddingTop="1em" paddingBottom="100px">                
                 <EditQuestion listOfQuestions={listOfQuestions} setListOfQuestions={setListOfQuestions} QuestionIndexInQuestionsArray={questionIndexInQuestionsArray} QuestionUIDToEdit={questionUIDToEdit} setEditQuestionState={setEditQuestionState} questionToEdit={questionToEdit}>
 
                 </EditQuestion>
