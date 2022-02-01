@@ -47,9 +47,10 @@ export default function MyClassrooms() {
     }
     if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
       router.push('/')
-    }else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
+    }/* else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
       router.push('/')
-    }else{
+    } */else{
+      setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
     }
     
@@ -61,8 +62,7 @@ export default function MyClassrooms() {
           
       (statefulQuizngagedUserData.classrooms==undefined)?
       (
-        <div>
-        
+        <div>        
         <LoadingScreen></LoadingScreen>
         </div>
       ) 
