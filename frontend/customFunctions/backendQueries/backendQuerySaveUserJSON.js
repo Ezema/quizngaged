@@ -7,9 +7,9 @@ import quizngagedUserData from '../../customGlobalVariables/quizngagedUserData';
 
 export default function backendQuerySaveUserJSON(callback){  
 
-  console.log("backendpost localstorage: ",localStorage)
-
+  
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){  
+    console.log("backendpost localstorage: ",JSON.parse(localStorage.quizngagedUserData))
     axios({
       method: "POST",        
       url: 'http://localhost:9090/API/saveuserJSON',        

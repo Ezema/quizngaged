@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import globalUserData from '../customGlobalVariables/federatedAuthUserData.js'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -38,12 +37,12 @@ export default function CreateTeacherAccount(props){
     const [activeStep, setActiveStep] = React.useState(0);
     const [buttonText, setButtonText] = React.useState('Next');    
     const [uploadUserDataInProgress, setUploadUserDataInProgress] = React.useState(false);    
+    
 
-
-    const [email, setEmail] = React.useState(null);    
-    const [name, setName] = React.useState(null);    
-    const [phone, setPhone] = React.useState(null);    
-    const [userType, setUserType] = React.useState(null); 
+    const [email, setEmail] = React.useState(JSON.parse(localStorage.federatedAuthUserData).email);
+    const [name, setName] = React.useState(JSON.parse(localStorage.federatedAuthUserData).displayName);    
+    const [phone, setPhone] = React.useState(JSON.parse(localStorage.federatedAuthUserData).phoneNumber);    
+    const [userType, setUserType] = React.useState(JSON.parse(localStorage.federatedAuthUserData).userType); 
     
     const handleUserEntryChange = (event,type)=>{
         if(type.localeCompare('email')){
@@ -71,10 +70,9 @@ export default function CreateTeacherAccount(props){
         newQuizngagedUser.name = name
         newQuizngagedUser.email = email
         newQuizngagedUser.phone = phone
+        
 
         localStorage.setItem("quizngagedUserData",JSON.stringify(newQuizngagedUser))
-
-        console.log("after saving in submit: ",localStorage)
 
         setUploadUserDataInProgress(true)        
         backendQuerySaveUserJSON(function callback(){Router.push('my-classrooms')})
@@ -116,7 +114,7 @@ export default function CreateTeacherAccount(props){
                         <Grid item >
                             <Grid Container padding={'2em'} display={'grid'}  justifyContent={'center'} justifyItems={'center'} alignItems={'center'} alignContent={'center'}>
                                 <Grid item paddingBottom={'1em'}>
-                                    <Avatar src={globalUserData.photoURL} sx={{ width: '3em', height: '3em' }}/>
+                                    <Avatar src={JSON.parse(localStorage.federatedAuthUserData).photoURL} sx={{ width: '3em', height: '3em' }}/>
                                 </Grid>
                                 <Grid item paddingBottom={'1em'}>                            
                                     <TextField
@@ -126,7 +124,7 @@ export default function CreateTeacherAccount(props){
                                         label="Email"
                                         value={email}
                                         onClick={(event)=>handleUserEntryChange(event.target,email)}
-                                        defaultValue={globalUserData.email}
+                                        defaultValue={JSON.parse(localStorage.federatedAuthUserData).email}
                                     />
                                 </Grid>
                                 <Grid item paddingBottom={'1em'} >                            
@@ -147,7 +145,7 @@ export default function CreateTeacherAccount(props){
                                         label="Name"
                                         value={name}
                                         onClick={(event)=>handleUserEntryChange(event.target,name)}
-                                        defaultValue={globalUserData.displayName}
+                                        defaultValue={JSON.parse(localStorage.federatedAuthUserData).displayName}
                                     />
                                 </Grid>
                                 <Grid item paddingBottom={'1em'}>
@@ -157,7 +155,7 @@ export default function CreateTeacherAccount(props){
                                         label="Phone"
                                         value={phone}
                                         onClick={(event)=>handleUserEntryChange(event.target,phone)}
-                                        defaultValue={(globalUserData.phoneNumber)}
+                                        defaultValue={(JSON.parse(localStorage.federatedAuthUserData).phoneNumber)}
                                     />
                                 </Grid>                                
                             </Grid>
