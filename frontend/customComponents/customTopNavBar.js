@@ -35,6 +35,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 
 import Router from 'next/router'
 
@@ -100,9 +101,31 @@ export default function CustomTopNavBar(props){
               </a>
             </Link>
             <ListItem button onClick={()=>{
-              firebase.auth().signOut().then(function() {Router.push('/')
+
+              // Configure Firebase SDK client key.
+              const firebaseConfig = {
+                apiKey: "AIzaSyAI7fRp-LbEWGJr5o0VphYXxdRK57rKXBI",
+                authDomain: "quizngaged-login.firebaseapp.com",
+                projectId: "quizngaged-login",
+                storageBucket: "quizngaged-login.appspot.com",
+                messagingSenderId: "437791237122",
+                appId: "1:437791237122:web:3361b862fb8739c968731b",
+                measurementId: "G-W6MC0DXLRL"
+              };
+
+              //check if firebase is already initialized
+              if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+              }else {
+                firebase.app(); // if already initialized, use that one  
+              }
+                            
+              firebase.auth().signOut().then(function() {                
+                Router.push('/')
+                localStorage.clear();
               }, function(error) {
               });
+              
             }}>
                 <ListItemIcon>
                   <LogoutIcon />
@@ -137,10 +160,31 @@ export default function CustomTopNavBar(props){
 
     const handleLogOut = () => {
         setAnchorEl(null);
+        
+        // Configure Firebase SDK client key.
+        const firebaseConfig = {
+          apiKey: "AIzaSyAI7fRp-LbEWGJr5o0VphYXxdRK57rKXBI",
+          authDomain: "quizngaged-login.firebaseapp.com",
+          projectId: "quizngaged-login",
+          storageBucket: "quizngaged-login.appspot.com",
+          messagingSenderId: "437791237122",
+          appId: "1:437791237122:web:3361b862fb8739c968731b",
+          measurementId: "G-W6MC0DXLRL"
+        };
 
-        firebase.auth().signOut().then(function() {Router.push('/')          
+        //check if firebase is already initialized
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }else {
+          firebase.app(); // if already initialized, use that one  
+        }
+                      
+        firebase.auth().signOut().then(function() {                
+          Router.push('/')
+          localStorage.clear();
         }, function(error) {
-        });
+        });                
+        
     };
 
     const handleGoBackToPreviousScreen = ()=>{

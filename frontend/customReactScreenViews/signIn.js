@@ -53,18 +53,22 @@ function SignIn(props) {
   };
 
   firebase.auth().onAuthStateChanged((user)=>{
-    //setLoading view
-    props.setUser(user)            
-    federatedAuthUserData = user    
-    localStorage.setItem("federatedAuthUserData",JSON.stringify(user))
-    firebase.auth().currentUser.getIdToken(false).then(function(idToken) {          
-      localStorage.setItem("federatedAuthDecodedToken",JSON.stringify(idToken))
-      federatedAuthDecodedToken.federatedAuthDecodedToken = idToken
-    }).catch(function(error) {
-      //props.setUserIsAuthenticated(false)
-      //props.setUserAuthenticationFailed(true)        
-      //if google's server rejects this user, a notification must be shown
-    });    
+
+    if(user){
+      //setLoading view
+      props.setUser(user)            
+      federatedAuthUserData = user    
+      localStorage.setItem("federatedAuthUserData",JSON.stringify(user))
+      firebase.auth().currentUser.getIdToken(false).then(function(idToken) {          
+        localStorage.setItem("federatedAuthDecodedToken",JSON.stringify(idToken))
+        federatedAuthDecodedToken.federatedAuthDecodedToken = idToken
+      }).catch(function(error) {
+        //props.setUserIsAuthenticated(false)
+        //props.setUserAuthenticationFailed(true)        
+        //if google's server rejects this user, a notification must be shown
+      });
+    }
+        
   })
 
   return (
