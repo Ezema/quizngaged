@@ -38,7 +38,7 @@ function SignIn(props) {
 
   // Configure FirebaseUI.
   const uiConfig = {  
-    signInFlow: 'redirect',  
+    signInFlow: 'popup',  
     signInSuccessUrl: '/my-classrooms',  
 
     callbacks: {
@@ -53,7 +53,6 @@ function SignIn(props) {
   };
 
   firebase.auth().onAuthStateChanged((user)=>{
-
     if(user){
       //setLoading view
       props.setUser(user)            
