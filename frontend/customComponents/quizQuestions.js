@@ -14,21 +14,37 @@ const DisabledText = styled(Typography)({
 
 export default function QuizQuestions(props){          
 
-    const handleQuestionSelectionChange = (event,index) => {        
+    const handleQuestionSelectionChange = (event,questionId) => {
 
-        let copy = props.statefulArrayOfQuestionSelected
-        console.log("event.target.checked",event.target.checked,)
-        copy[index] = event.target.checked
-        props.setStatefulArrayOfQuestionSelected(copy)
+        if(props.statefulArrayOfQuestionSelected.indexOf(questionId)!=(-1)){
+            console.log("remove")
+            let copy = JSON.parse(JSON.stringify(props.statefulArrayOfQuestionSelected))
+            copy.splice(copy.indexOf(questionId), 1)
+            props.setStatefulArrayOfQuestionSelected(copy)
+        }else{            
+            console.log("add")
+            let copy = JSON.parse(JSON.stringify(props.statefulArrayOfQuestionSelected))
+            copy.push(questionId)
+            props.setStatefulArrayOfQuestionSelected(copy)
+        }
     };            
+
+
+    /* console.log("inside quiz questions props:", props)
+    console.log("inside quiz questions:", props.editQuizQuestions) */
 
     React.useEffect(()=>{
 
-        let nonStatefulArrayOfQuestionsSelected = []
-        for(let i=0; i< JSON.parse(localStorage.quizngagedUserData).questions; i++){
-            nonStatefulArrayOfQuestionsSelected.push(false)
+        if(props.editQuizState){
+            
+        }else{
+            let nonStatefulArrayOfQuestionsSelected = []
+            for(let i=0; i< JSON.parse(localStorage.quizngagedUserData).questions; i++){
+                nonStatefulArrayOfQuestionsSelected.push(false)
+            }
+            props.setStatefulArrayOfQuestionSelected(nonStatefulArrayOfQuestionsSelected)
         }
-        props.setStatefulArrayOfQuestionSelected(nonStatefulArrayOfQuestionsSelected)
+        
 
     },[])
 
@@ -42,15 +58,15 @@ export default function QuizQuestions(props){
             )
             :
             (           
-            <Grid Container style={{background:'#eeeeee'}} marginBottom={'1em'} padding={'0.1em'}>                
+            <Grid Container style={{background:'#eeeeee'}} marginBottom={'1em'} padding={'0.1em'} maxHeight={'36vh'} overflow={'scroll'}>                
                 <div>                    
                 {JSON.parse(localStorage.quizngagedUserData).questions.map((question)=>
                                                 
                         <Grid item key={question.id} margin={'0.5em'} justifyContent={'center'} > 
-                            <Paper justifyContent={'center'}>
+                            <Paper justifyContent={'center'}>                                
                                 <Checkbox
                                     disabled={props.step>0?true:false}
-                                    checked={props.statefulArrayOfQuestionSelected[question.id]}
+                                    checked={props.statefulArrayOfQuestionSelected.includes(question.id)}
                                     onChange={(event)=>handleQuestionSelectionChange(event,question.id)}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                 />    
