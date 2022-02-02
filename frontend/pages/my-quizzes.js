@@ -92,8 +92,8 @@ export default function MyClassrooms(props) {
     } */else{
       setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
-    }       
-  })
+    }
+  },[addQuizState,editQuizState])
 
 
   const [statefulQuizngagedUserData, setStatefulQuizngagedUserData] = React.useState({});
