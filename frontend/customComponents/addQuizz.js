@@ -51,9 +51,11 @@ import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQ
 
 import { width } from '@mui/system';
 
+import QuizQuestions from './quizQuestions.js';
+
 const steps = [
-  'Add Quizz',
-  'Confirm Quizz data',
+  'Add Quiz',
+  'Confirm Quiz data',
 ];
 
 export default function AddQuiz(props){
@@ -155,6 +157,7 @@ export default function AddQuiz(props){
         
     }
 
+    //This will be fetched from the API too
     const questionType = ['Geography','Mathematics']    
     
     return(
@@ -196,6 +199,9 @@ export default function AddQuiz(props){
                         <Box marginBottom="1em">
                             <TextField     
                                 required={step>0?false:true}
+                                InputProps={{
+                                    readOnly: step>0?true:false,
+                                  }}
                                 fullWidth                   
                                 label="Enter a title for the quiz"
                                 placeholder="Quiz title"
@@ -206,7 +212,7 @@ export default function AddQuiz(props){
                         </Box>
                         <Box marginBottom="1em">
                             <Autocomplete
-                                disabled={step>0?true:false}
+                                disabled={step>0?true:false}                                
                                 value={userEntryQuizCategory}
                                 onChange={(event, newValue) => {
                                 setUserEntryQuizCategory(newValue);
@@ -224,14 +230,21 @@ export default function AddQuiz(props){
                             />
                         </Box>        
                         <Box marginBottom="0.1em">
-                            {/* <QuestionAnswers statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
-                            </QuestionAnswers> */}    
-                        </Box>                  
-                        {/* <Box marginBottom="2em" textAlign={'center'}>
-                            <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>} onClick={handleNewQuestionAnswer}>
-                                Add answer
-                            </Button>
-                        </Box>   */}
+                            <QuizQuestions></QuizQuestions>
+                        </Box>
+                        {/*
+                            <Box marginBottom="0.1em">
+                                <QuestionAnswers statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
+                                </QuestionAnswers> 
+                            </Box>
+                        */} 
+                        {/* 
+                            <Box marginBottom="2em" textAlign={'center'}>
+                                <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>} onClick={handleNewQuestionAnswer}>
+                                    Add answer
+                                </Button>
+                            </Box>   
+                        */}
                     </Box>
                 </Box>
             </Container>

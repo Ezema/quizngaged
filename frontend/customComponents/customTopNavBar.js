@@ -192,10 +192,10 @@ export default function CustomTopNavBar(props){
         (props.setAddQuestionState(false),props.setTopBarTitle("My questions"))
       }else if(props.editQuestionState){
         (props.setEditQuestionState(false),props.setTopBarTitle("My questions"))
-      }else if(props.editQuizzState) {
-        (props.setEditQuizzState(false), props.setTopBarTitle("My quizzes"))
-      }else if(props.addQuizzState) {
-        (props.setAddQuizzState(false), props.setTopBarTitle("My quizzes"))
+      }else if(props.editQuizState) {
+        (props.setEditQuizState(false), props.setTopBarTitle("My quizzes"))
+      }else if(props.addQuizState) {
+        (props.setAddQuizState(false), props.setTopBarTitle("My quizzes"))
       }
       
     }
@@ -209,7 +209,7 @@ export default function CustomTopNavBar(props){
                     color="inherit"
                     aria-label="menu"
                     sx={{ mr: 2 }}
-                    onClick={(props.editQuestionState || props.addQuestionState || props.editQuizzState || props.addQuizzState)?handleGoBackToPreviousScreen:toggleSidebar(true)}
+                    onClick={(props.editQuestionState || props.addQuestionState || props.editQuizState || props.addQuizState)?handleGoBackToPreviousScreen:toggleSidebar(true)}
                 >
                   {props.goBackIconState?(<ArrowBackIcon />):(<MenuIcon />)}
                     
