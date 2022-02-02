@@ -12,14 +12,14 @@ import Router from 'next/router'
 export default function CreateQuizngagedAccount(props){        
 
     const [createAccount,setCreateAccount] = React.useState(0)
-    const [userProfile,setUserProfile] = React.useState(null)    
+    const [userType,setuserType] = React.useState(null)    
 
     function handleCreateTeacherAccount (){        
-        setUserProfile('Teacher')
+        setuserType('Teacher')
         setCreateAccount(1)
     }
     function handleCreateStudentAccount(){        
-        setUserProfile('Student')
+        setuserType('Student')
         setCreateAccount(1)
     }
 
@@ -58,6 +58,6 @@ export default function CreateQuizngagedAccount(props){
                 </Container>
             </div>
         ):
-            <StepsToCreateAccount userProfile={userProfile}></StepsToCreateAccount>
+            <StepsToCreateAccount userType={userType}></StepsToCreateAccount>
         )
 }
