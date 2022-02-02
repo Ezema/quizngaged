@@ -40,7 +40,7 @@ import Index from '../pages/index.js';
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 
 import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
-import EditQuizz from '../customComponents/editQuizz.js';
+import EditQuiz from '../customComponents/editQuiz.js';
 import AddQuizz from '../customComponents/addQuizz.js';
 
 //Firebase
@@ -73,6 +73,7 @@ export default function MyClassrooms(props) {
   const [listOfQuizzes,setListOfQuizzes] = React.useState(null);
 
   const [newQuizUID,setNewQuizUID] = React.useState(null)
+  const [editQuizUID,setEditQuizUID] = React.useState(null)
 
   const toggleSidebar = (openStatus) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -109,11 +110,15 @@ export default function MyClassrooms(props) {
     setTopBarTitle("Add Quiz")
   }
 
-  const handleEditQuizzState = (event) => {
+  const handleEditQuizState = (event, index) => {
+    console.log("is this index undefined?: ", index)
+    setEditQuizUID(index)
     setEditQuizState(true);
     setTopBarTitle("Edit Quiz");
-
   }
+
+  const handleOpenQuizzState = (event) => {
+  }  
 
 
   return (    
@@ -133,13 +138,18 @@ export default function MyClassrooms(props) {
       )
       :
       (
-        <div>
+        <div style={{          
+          overflowY: 'hidden',
+          overflowX: 'hidden',          
+          minHeight: '100vh',
+          maxHeight: '100vh',  
+        }}>
           <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizState || addQuizState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizState={editQuizState}setEditQuizState={setEditQuizState} addQuizState={addQuizState} setAddQuizState={setAddQuizState}></CustomTopNavBar>
           {/* <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar> */}
           <Container>
             {(editQuizState)?(
               <Box paddingTop="1em" paddingBottom="100px">
-                <EditQuizz/>
+                <EditQuiz listOfQuizzes={listOfQuizzes} setListOfQuizzes={setListOfQuizzes} editQuizUID={editQuizUID} setEditQuizState={setEditQuizState} editQuizState={editQuizState}/>
               </Box> 
             )
             :
@@ -160,8 +170,8 @@ export default function MyClassrooms(props) {
                         <Typography variant='subtitle1'>                    
                           Number of questions: {quiz.title}
                         </Typography>
-                        <Button size="small" onClick={(event) => handleOpenQuizzState(event, listOfQuizzes.indexOf(quiz))}>OPEN</Button>
-                        <Button size="small" onClick={(event) => handleEditQuizzState(event, listOfQuizzes.indexOf(quiz))}>EDIT</Button>
+                        <Button size="small" onClick={(event) => handleOpenQuizzState(event, quiz.id)}>VIEW</Button>
+                        <Button size="small" onClick={(event) => handleEditQuizState(event, quiz.id)}>EDIT</Button>
                       </CustomPaperReactComponent>
                     </Grid>      
                   )

@@ -58,29 +58,30 @@ const steps = [
   'Confirm Quiz data',
 ];
 
-export default function AddQuiz(props){
+export default function EditQuiz(props){
 
     const listOfQuizzes = props.listOfQuizzes;
     const setListOfQuestions = props.setListOfQuestions;
-    const newQuizUID = props.newQuizUID;
+    const editQuizUID = props.editQuizUID;
 
-    const newQuiz = {id:newQuizUID,quizTitle:null,quizTopic:null,isDeleted:false,questions:[]}
+    
+    const editQuiz = JSON.parse(localStorage.quizngagedUserData).quizzes[props.editQuizUID]
+    console.log("editQuiz",editQuiz)
 
-    const [statefulNewQuiz,setStatefulNewQuiz] = React.useState(newQuiz)
-    const nonStatefulnewQuiz = newQuiz
-
-    const setAddQuizState = props.setAddQuizState;
+    const [statefuleditQuiz,setStatefuleditQuiz] = React.useState(editQuiz)
+    const nonStatefuleditQuiz = editQuiz    
 
     const [step,setStep] = React.useState(0)
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
-    const [userEntryQuizTopic,setUserEntryQuizTopic] = React.useState("Geography")
-
-    const [userEntryQuizTitle,setUserEntryQuizTitle] = React.useState(statefulNewQuiz.quizTitle)
+    const [userEntryQuizTopic,setUserEntryQuizTopic] = React.useState(editQuiz.quizTopic)
+    const [userEntryQuizTitle,setUserEntryQuizTitle] = React.useState(editQuiz.quizTitle)
 
     const [statefulQuestions, setStatefulQuestions] = React.useState(null)
-    const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState([])
+    const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editQuiz.questions)
+
+    console.log("does state init work?: ", editQuiz.questions)
 
     const handleQuizTitleChange = (event)=>{
         setUserEntryQuizTitle(event.target.value)        
@@ -98,7 +99,7 @@ export default function AddQuiz(props){
     const handlePreviousStep = ()=>{
         if(step==0){
             setStep(0)
-            props.setAddQuizState(false)
+            props.setEditQuizState(false)
         }else if(step==1){
             setStep(step-1)
             
@@ -115,17 +116,15 @@ export default function AddQuiz(props){
             }
             else if(step==1){
 
-                newQuiz.quizTitle = userEntryQuizTitle
-                newQuiz.quizTopic = userEntryQuizTopic
-                newQuiz.questions = statefulArrayOfQuestionSelected
-
-                console.log("saving new quizz", newQuiz)
+                editQuiz.quizTitle = userEntryQuizTitle
+                editQuiz.quizTopic = userEntryQuizTopic
+                editQuiz.questions = statefulArrayOfQuestionSelected
 
                 //create a copy from localstorage
                 let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
 
-                //save the edited questions in the copy
-                copyOfQuizngagedUserData.quizzes.push(newQuiz)
+                //save the edited questions in the copy                
+                copyOfQuizngagedUserData.quizzes[props.editQuizUID]=editQuiz                
             
                 //replace the old data with the new data in localstorage                
                 localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
@@ -133,7 +132,7 @@ export default function AddQuiz(props){
                 // call the backend to sync the local changes
                 backendQuerySaveUserJSON(()=>{})
 
-                props.setAddQuizState(false)
+                props.setEditQuizState(false)
                 setStep(0)
             }            
             
@@ -178,7 +177,7 @@ export default function AddQuiz(props){
                                 margin={'0.5em'}
                                 disabled
                                 fullWidth 
-                                label={"Quiz UID: "+newQuizUID.toString()}
+                                label={"Quiz UID: "+editQuizUID.toString()}
                             />                
                         </Box>        
                         <Box marginBottom="1em">
@@ -215,7 +214,8 @@ export default function AddQuiz(props){
                             />
                         </Box>        
                         <Box marginBottom="0.1em">
-                            <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfQuestionSelected={statefulArrayOfQuestionSelected} setStatefulArrayOfQuestionSelected={setStatefulArrayOfQuestionSelected} step={step}></QuizQuestions>
+                            <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfQuestionSelected={statefulArrayOfQuestionSelected} setStatefulArrayOfQuestionSelected={setStatefulArrayOfQuestionSelected} step={step} editQuizState={props.editQuizState}
+                            /* editQuizQuestions={editQuiz.questions} */></QuizQuestions>
                         </Box>                        
                     </Box>
                 </Box>
