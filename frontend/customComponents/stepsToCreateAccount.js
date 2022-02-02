@@ -32,7 +32,7 @@ const steps = ['Add your information', 'Confirm your details'];
 
 
 
-export default function CreateTeacherAccount(props){            
+export default function StepsToCreateAccount(props){            
 
     const [activeStep, setActiveStep] = React.useState(0);
     const [buttonText, setButtonText] = React.useState('Next');    
@@ -42,7 +42,7 @@ export default function CreateTeacherAccount(props){
     const [email, setEmail] = React.useState(JSON.parse(localStorage.federatedAuthUserData).email);
     const [name, setName] = React.useState(JSON.parse(localStorage.federatedAuthUserData).displayName);    
     const [phone, setPhone] = React.useState(JSON.parse(localStorage.federatedAuthUserData).phoneNumber);    
-    const [userType, setUserType] = React.useState(JSON.parse(localStorage.federatedAuthUserData).userType); 
+    const [userType, setUserType] = React.useState(props.userType); 
     
     const handleUserEntryChange = (event,type)=>{
         if(type.localeCompare('email')){
@@ -70,6 +70,8 @@ export default function CreateTeacherAccount(props){
         newQuizngagedUser.name = name
         newQuizngagedUser.email = email
         newQuizngagedUser.phone = phone
+
+        console.log("about to upload: ",newQuizngagedUser)
         
 
         localStorage.setItem("quizngagedUserData",JSON.stringify(newQuizngagedUser))
