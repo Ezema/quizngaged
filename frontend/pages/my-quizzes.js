@@ -168,9 +168,12 @@ export default function MyClassrooms(props) {
                             #{quiz.id}
                           </Typography>
                         <Typography variant='subtitle1'>                    
-                          Number of questions: {quiz.title}
+                          Quiz Title: {quiz.quizTitle}
                         </Typography>
-                        <Button size="small" onClick={(event) => handleOpenQuizzState(event, quiz.id)}>VIEW</Button>
+                        <Typography variant='subtitle1'>                    
+                          Number of questions: {quiz.questions.length}
+                        </Typography>
+                        {/* <Button size="small" onClick={(event) => handleOpenQuizzState(event, quiz.id)}>VIEW</Button> */}
                         <Button size="small" onClick={(event) => handleEditQuizState(event, quiz.id)}>EDIT</Button>
                       </CustomPaperReactComponent>
                     </Grid>      
