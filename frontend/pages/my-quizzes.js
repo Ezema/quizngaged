@@ -68,7 +68,11 @@ export default function MyClassrooms(props) {
 
   const [editQuizzState, setEditQuizzState] = React.useState(false);
 
-  const [addQuizzState, setAddQuizzState] = React.useState();
+  const [addQuizState, setAddQuizState] = React.useState();
+
+  const [listOfQuizzes,setListOfQuizzes] = React.useState(null);
+
+  const [newQuizUID,setNewQuizUID] = React.useState(null)
 
   const toggleSidebar = (openStatus) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -97,7 +101,11 @@ export default function MyClassrooms(props) {
   const [topBarTitle,setTopBarTitle] = React.useState("My Quizzes")
 
   const handleAddQuizState = (event, lastIndexOfListOfQuizzes) => {
-    setAddQuizzState(true);
+    let copyOfStatefulArray = JSON.parse(JSON.stringify(listOfQuizzes));        
+
+    setNewQuizUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )
+
+    setAddQuizState(true);
     setTopBarTitle("Add Quiz")
   }
 
@@ -114,9 +122,19 @@ export default function MyClassrooms(props) {
         <LoadingScreen></LoadingScreen>
       )
       :
+      (listOfQuizzes==null)?
       (
         <div>
-          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizzState || addQuizzState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizzState={editQuizzState}setEditQuizzState={setEditQuizzState} addQuizzState={addQuizzState} setAddQuizzState={setAddQuizzState}></CustomTopNavBar>
+        {          
+        setListOfQuizzes(statefulQuizngagedUserData.quizzes)}
+        {console.log("setting")}
+        <LoadingScreen></LoadingScreen>
+        </div>
+      )
+      :
+      (
+        <div>
+          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizzState || addQuizState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizzState={editQuizzState}setEditQuizzState={setEditQuizzState} addQuizState={addQuizState} setAddQuizState={setAddQuizState}></CustomTopNavBar>
           {/* <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar> */}
           <Container>
             {(editQuizzState)?(
@@ -125,9 +143,9 @@ export default function MyClassrooms(props) {
               </Box> 
             )
             :
-            (addQuizzState)?
+            (addQuizState)?
             (<Box paddingTop="1em" paddingBottom="100px">
-              <AddQuizz/>
+              <AddQuizz listOfQuizzes={listOfQuizzes} setListOfQuizzes={setListOfQuizzes} newQuizUID={newQuizUID} setAddQuizState={setAddQuizState}/>
               </Box>)
             : 
             (<Box paddingTop="1em" paddingBottom="100px">
@@ -142,6 +160,7 @@ export default function MyClassrooms(props) {
                         <Typography variant='subtitle1'>                    
                           Number of questions: {quiz.title}
                         </Typography>
+                        <Button size="small" onClick={(event) => handleOpenQuizzState(event, listOfQuizzes.indexOf(quiz))}>OPEN</Button>
                         <Button size="small" onClick={(event) => handleEditQuizzState(event, listOfQuizzes.indexOf(quiz))}>EDIT</Button>
                       </CustomPaperReactComponent>
                     </Grid>      
