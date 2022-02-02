@@ -66,7 +66,7 @@ export default function MyClassrooms(props) {
 
   const [sidebarOpen, setSidebarOpen] = React.useState(false);  
 
-  const [editQuizzState, setEditQuizzState] = React.useState(false);
+  const [editQuizState, setEditQuizState] = React.useState(false);
 
   const [addQuizState, setAddQuizState] = React.useState();
 
@@ -110,7 +110,7 @@ export default function MyClassrooms(props) {
   }
 
   const handleEditQuizzState = (event) => {
-    setEditQuizzState(true);
+    setEditQuizState(true);
     setTopBarTitle("Edit Quiz");
 
   }
@@ -134,10 +134,10 @@ export default function MyClassrooms(props) {
       :
       (
         <div>
-          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizzState || addQuizState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizzState={editQuizzState}setEditQuizzState={setEditQuizzState} addQuizState={addQuizState} setAddQuizState={setAddQuizState}></CustomTopNavBar>
+          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} goBackIconState={editQuizState || addQuizState} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} editQuizState={editQuizState}setEditQuizState={setEditQuizState} addQuizState={addQuizState} setAddQuizState={setAddQuizState}></CustomTopNavBar>
           {/* <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar> */}
           <Container>
-            {(editQuizzState)?(
+            {(editQuizState)?(
               <Box paddingTop="1em" paddingBottom="100px">
                 <EditQuizz/>
               </Box> 
@@ -169,13 +169,23 @@ export default function MyClassrooms(props) {
               </Grid>
             </Box>)}
           </Container>
-          <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
-            <Toolbar>          
-              <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddQuizState(event, listOfQuizzes.length)}>
-                <AddIcon />
-              </StyledFab>          
-            </Toolbar>
-          </AppBar>
+          {
+            (addQuizState)?
+            (<div></div>)
+            :
+            (editQuizState)?
+            (<div></div>)
+            :
+            (
+              <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
+                <Toolbar>          
+                  <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddQuizState(event, listOfQuizzes.length)}>
+                    <AddIcon />
+                  </StyledFab>          
+                </Toolbar>
+              </AppBar>
+            )
+          }
         </div>
       )    
   )
