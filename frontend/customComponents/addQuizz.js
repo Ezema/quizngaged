@@ -64,13 +64,10 @@ export default function AddQuiz(props){
     const setListOfQuestions = props.setListOfQuestions;
     const newQuizUID = props.newQuizUID;
 
-    const newQuestion = {id:newQuizUID}
+    const newQuiz = {id:newQuizUID,quizTitle:null,quizTopic:null,isDeleted:false,questions:[]}
 
-    const [statefulNewQuiz,setStatefulNewQuiz] = React.useState(newQuestion)
-    const nonStatefulNewQuestion = newQuestion
-
-    const [statefulArrayOfQuestionAnswers,setStatefulArrayOfQuestionAnswers] = React.useState(statefulNewQuiz.questionBaselineAnswers)
-    
+    const [statefulNewQuiz,setStatefulNewQuiz] = React.useState(newQuiz)
+    const nonStatefulnewQuiz = newQuiz
 
     const setAddQuizState = props.setAddQuizState;
 
@@ -78,19 +75,15 @@ export default function AddQuiz(props){
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
-    const [userEntryQuizCategory,setUserEntryQuizCategory] = React.useState(statefulNewQuiz.questionType)
-    const [userEntryBaselineQuestionBody,setUserEntryBaselineQuestionBody] = React.useState(statefulNewQuiz.questionBaselineBody)
-    const [userEntryEasierQuestionBody,setUserEntryEasierQuestionBody] = React.useState(statefulNewQuiz.questionEasierBody)
-    const [userEntryHarderQuestionBody,setUserEntryHarderQuestionBody] = React.useState(statefulNewQuiz.questionHarderBody)
+    const [userEntryQuizTopic,setUserEntryQuizTopic] = React.useState(statefulNewQuiz.quizTopic)
 
-    const handleQuestionBodyChange = (event, questionDifficulty)=>{
-        if(questionDifficulty==0){            
-            setUserEntryBaselineQuestionBody(event.target.value)            
-        }else if(questionDifficulty==1){
-            setUserEntryEasierQuestionBody(event.target.value)
-        }else if(questionDifficulty==2){
-            setUserEntryHarderQuestionBody(event.target.value)
-        }
+    const [userEntryQuizTitle,setUserEntryQuizTitle] = React.useState(statefulNewQuiz.quizTitle)
+
+    const [statefulQuestions, setStatefulQuestions] = React.useState(null)
+    const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState([])
+
+    const handleQuizTitleChange = (event)=>{
+        setUserEntryQuizTitle(event.target.value)        
     }
 
 
@@ -101,19 +94,6 @@ export default function AddQuiz(props){
         return array[array.length-1].parentQuestionId;
     }
     
-
-    const handleNewQuestionAnswer = () => {
-        
-        const createNewIndex = calculateLastQuestionAnswerUID(statefulArrayOfQuestionAnswers) + 1;
-        const parentQuestionUID = getParentQuestionUID(statefulArrayOfQuestionAnswers);
-
-        let copyArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
-
-        copyArray.push({id:createNewIndex,parentQuestionId:parentQuestionUID,body:''})
-        
-
-        setStatefulArrayOfQuestionAnswers(copyArray)
-    }
 
     const handlePreviousStep = ()=>{
         if(step==0){
@@ -134,19 +114,30 @@ export default function AddQuiz(props){
                 setMainButtonText('Finish')                                    
             }
             else if(step==1){
-                //save last changes                
+
+                let questionsUIDSelected = []
+
+                for(let i=0; i<statefulArrayOfQuestionSelected.length;i++){
+                    if(statefulArrayOfQuestionSelected[i]==true){
+                        questionsUIDSelected.push(i)
+                    }
+                }                
+
+                newQuiz.quizTitle = userEntryQuizTitle
+                newQuiz.quizTopic = userEntryQuizTopic
+                newQuiz.questions = questionsUIDSelected
 
                 //create a copy from localstorage
                 let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
 
                 //save the edited questions in the copy
-                //copyOfQuizngagedUserData.quizes = copyOfQuestionsArray
+                copyOfQuizngagedUserData.quizzes.push(newQuiz)
             
-                //replace the old data with the new data in localstorage
-                //localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+                //replace the old data with the new data in localstorage                
+                localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
 
                 // call the backend to sync the local changes
-                //backendQuerySaveUserJSON(()=>{})
+                backendQuerySaveUserJSON(()=>{})
 
                 props.setAddQuizState(false)
                 setStep(0)
@@ -158,7 +149,7 @@ export default function AddQuiz(props){
     }
 
     //This will be fetched from the API too
-    const questionType = ['Geography','Mathematics']    
+    const quizTopics = ['Geography','Mathematics']    
     
     return(
         <div>   
@@ -205,24 +196,24 @@ export default function AddQuiz(props){
                                 fullWidth                   
                                 label="Enter a title for the quiz"
                                 placeholder="Quiz title"
-                                onChange={(event)=>{handleQuestionBodyChange(event,(step==0?(0):(step==1?(1):(2))))}}
-                                value={step==0?(userEntryBaselineQuestionBody):((step==1)?(userEntryEasierQuestionBody):(userEntryHarderQuestionBody))}
+                                onChange={(event)=>{handleQuizTitleChange(event)}}
+                                value={userEntryQuizTitle}
                                 multiline
                             />
                         </Box>
                         <Box marginBottom="1em">
                             <Autocomplete
                                 disabled={step>0?true:false}                                
-                                value={userEntryQuizCategory}
+                                value={userEntryQuizTopic}
                                 onChange={(event, newValue) => {
-                                setUserEntryQuizCategory(newValue);
+                                setUserEntryQuizTopic(newValue);
                                 }}
-                                inputValue={userEntryQuizCategory}
+                                inputValue={userEntryQuizTopic}
                                 onInputChange={(event, newInputValue) => {
-                                setUserEntryQuizCategory(newInputValue);
+                                setUserEntryQuizTopic(newInputValue);
                                 }}
                                 disablePortal
-                                options={questionType}
+                                options={quizTopics}    
                                 fullWidth
                                 renderInput={(questionOption) => <TextField {...questionOption} 
                                 label="Quiz Category" 
@@ -230,21 +221,8 @@ export default function AddQuiz(props){
                             />
                         </Box>        
                         <Box marginBottom="0.1em">
-                            <QuizQuestions></QuizQuestions>
-                        </Box>
-                        {/*
-                            <Box marginBottom="0.1em">
-                                <QuestionAnswers statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
-                                </QuestionAnswers> 
-                            </Box>
-                        */} 
-                        {/* 
-                            <Box marginBottom="2em" textAlign={'center'}>
-                                <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>} onClick={handleNewQuestionAnswer}>
-                                    Add answer
-                                </Button>
-                            </Box>   
-                        */}
+                            <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfQuestionSelected={statefulArrayOfQuestionSelected} setStatefulArrayOfQuestionSelected={setStatefulArrayOfQuestionSelected} step={step}></QuizQuestions>
+                        </Box>                        
                     </Box>
                 </Box>
             </Container>
