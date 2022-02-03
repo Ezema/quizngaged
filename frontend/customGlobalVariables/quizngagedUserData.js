@@ -14,6 +14,8 @@ export default {
             isDeleted:false,
             pastQuizzes:[                
             ],
+            ongoingLiveQuizzes:[                
+            ],
             classroomStatistics:{},
             classroomSettings:{}
             },
@@ -22,6 +24,8 @@ export default {
                 isDeleted:false,
                 name:'My Second classroom',
                 pastQuizzes:[                    
+                ],
+                ongoingLiveQuizzes:[                
                 ],
                 classroomStatistics:{},
                 classroomSettings:{}
