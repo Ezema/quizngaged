@@ -47,6 +47,7 @@ export default function MyClassrooms() {
   const [launchClassroomQuizState,setLaunchClassroomQuizState] = React.useState(false)
   const [viewClassroomResultsState,setViewClassroomResultsState] = React.useState(false)
   const [viewClassroomStatisticsState,setViewClassroomStatisticsState] = React.useState(false)
+  const [viewClassroomOngoingQuizzesState,setViewClassroomOngoingQuizzesState] = React.useState(false)
   
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
   
@@ -104,8 +105,8 @@ export default function MyClassrooms() {
       :
       (
         <div>          
-          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} viewClassroomStatisticsState={viewClassroomStatisticsState} setViewClassroomStatisticsState={setViewClassroomStatisticsState} viewClassroomResultsState={viewClassroomResultsState} setViewClassroomResultsState={setViewClassroomResultsState} launchClassroomQuizState={launchClassroomQuizState} setLaunchClassroomQuizState={setLaunchClassroomQuizState}
-          goBackIconState={addClassroomState || editClassroomState || viewClassroomState || viewClassroomStatisticsState || viewClassroomResultsState || launchClassroomQuizState}></CustomTopNavBar>
+          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} viewClassroomStatisticsState={viewClassroomStatisticsState} setViewClassroomStatisticsState={setViewClassroomStatisticsState} viewClassroomResultsState={viewClassroomResultsState} setViewClassroomResultsState={setViewClassroomResultsState} launchClassroomQuizState={launchClassroomQuizState} setLaunchClassroomQuizState={setLaunchClassroomQuizState} viewClassroomOngoingQuizzesState={viewClassroomOngoingQuizzesState} setViewClassroomOngoingQuizzesState={setViewClassroomOngoingQuizzesState}
+          goBackIconState={addClassroomState || editClassroomState || viewClassroomState || viewClassroomStatisticsState || viewClassroomResultsState || launchClassroomQuizState || viewClassroomOngoingQuizzesState}></CustomTopNavBar>
           <Container>
           {(editClassroomState)?
           (
@@ -131,8 +132,7 @@ export default function MyClassrooms() {
                 launchClassroomQuizState={launchClassroomQuizState} setLaunchClassroomQuizState={setLaunchClassroomQuizState} 
                 viewClassroomResultsState={viewClassroomResultsState}
                 setViewClassroomResultsState={setViewClassroomResultsState}
-                viewClassroomStatisticsState={viewClassroomStatisticsState} setViewClassroomStatisticsState={setViewClassroomStatisticsState}
-                
+                viewClassroomStatisticsState={viewClassroomStatisticsState} setViewClassroomStatisticsState={setViewClassroomStatisticsState}viewClassroomOngoingQuizzesState={viewClassroomOngoingQuizzesState} setViewClassroomOngoingQuizzesState={setViewClassroomOngoingQuizzesState}
                 ></ViewClassroom>
               </Box>
           )

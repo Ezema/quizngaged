@@ -13,21 +13,29 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import ViewClassroomResults from './viewClassroomResults.js'
 import ViewClassroomStatistics from './viewClassroomStatistics.js'
 import LaunchClassroomQuiz from './launchClassroomQuiz.js'
+import ViewClassroomOngoingQuizzes from './viewClassroomOngoingQuizzes.js'
+
+import LiveTvIcon from '@mui/icons-material/LiveTv';
 
 export default function ViewClassroom(props){
 
-    const handleViewClassroomStatisticsChange = ()=>{
-        props.setTopBarTitle("Classroom Statistics")
-        props.setViewClassroomStatisticsState(true)
-    }
-    const handleViewClassroomResultsChange = ()=>{
-        props.setTopBarTitle("Classroom Results")
-        props.setViewClassroomResultsState(true)
+    const handleViewClassroomOngoingQuizzesChange = ()=>{
+        props.setTopBarTitle("Live Ongoing quizzes")
+        props.setViewClassroomOngoingQuizzesState(true)
     }
     const handleLaunchClassroomQuizChange = ()=>{
         props.setTopBarTitle("Launch Quiz")
         props.setLaunchClassroomQuizState(true)
     }
+    const handleViewClassroomResultsChange = ()=>{
+        props.setTopBarTitle("Classroom Results")
+        props.setViewClassroomResultsState(true)
+    }
+    const handleViewClassroomStatisticsChange = ()=>{
+        props.setTopBarTitle("Classroom Statistics")
+        props.setViewClassroomStatisticsState(true)
+    }    
+    
     return(
         <div>
             {(props.viewClassroomStatisticsState)?(
@@ -36,12 +44,17 @@ export default function ViewClassroom(props){
             :
             (props.launchClassroomQuizState)?
             (
-                <LaunchClassroomQuiz></LaunchClassroomQuiz>
+                <LaunchClassroomQuiz launchClassroomQuizState={props.launchClassroomQuizState} setLaunchClassroomQuizState={props.setLaunchClassroomQuizState}></LaunchClassroomQuiz>
             )
             :
             (props.viewClassroomResultsState)?
             (
                 <ViewClassroomResults></ViewClassroomResults>
+            )
+            :
+            (props.viewClassroomOngoingQuizzesState)?
+            (
+                <ViewClassroomOngoingQuizzes></ViewClassroomOngoingQuizzes>
             )
             :
             (
@@ -56,6 +69,20 @@ export default function ViewClassroom(props){
                                     <Grid item right={'0.1em'}>
                                         <Button sx={{ marginLeft:'1em',fontSize:'1em'}} onClick={handleLaunchClassroomQuizChange}>
                                             Launch quiz
+                                        </Button>
+                                    </Grid>                            
+                                </Grid>
+                            </Paper>
+                        </Grid>
+                        <Grid item marginBottom={'1em'}>
+                            <Paper elevation={3}>
+                                <Grid Container display={'flex'} /* justifyContent={'center'}  */alignContent={'center'} alignItems={'center'}>
+                                    <Grid item textAlign={'center'} sx={{background:'#1976d2',padding:'1em'}}>
+                                        <LiveTvIcon sx={{ fontSize: 100, color:'white'}}/>
+                                    </Grid>
+                                    <Grid item right={'0.1em'}>
+                                        <Button sx={{ marginLeft:'1em',fontSize:'1em'}} onClick={handleViewClassroomOngoingQuizzesChange}>
+                                            View ongoing live quizzes
                                         </Button>
                                     </Grid>                            
                                 </Grid>
