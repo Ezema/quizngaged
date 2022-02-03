@@ -55,12 +55,9 @@ import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQu
 import { useRouter } from 'next/router'
 
 
-export default function MyClassrooms(props) {
+export default function MyQuizzes(props) {
 
   const router = useRouter()
-
-  const [userIsAuthenticated,setUserIsAuthenticated] = React.useState(false)  
-  const [authenticationAttemptFinished,setAuthenticationAttemptFinished] = React.useState(false)
 
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
 

@@ -1,14 +1,22 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 const axios = require('axios');
+//require('dotenv').config();
 
 import quizngagedUserData from '../../customGlobalVariables/quizngagedUserData';
 
 export default function backendQueryGetUserJSON(props){    
 
+    /* let serverHostname = null
+    if(window.location.hostname.localeCompare('localhost')!=0){
+        serverHostname = 
+    }else{
+        serverHostname = 
+    } */
+
     if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){
         axios({
-            method: "POST",        
+            method: "POST",            
             url: 'http://localhost:9090/API/getuserJSON',        
             data: {            
                 //the idToken is only for Firebase, it is used to check that the user is authentic and not a bot.
