@@ -24,6 +24,7 @@ import Toolbar from '@mui/material/Toolbar';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import Snackbar from '@mui/material/Snackbar';
 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import ListIcon from '@mui/icons-material/List';
@@ -50,16 +51,16 @@ import Autocomplete from '@mui/material/Autocomplete';
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 
 import { width } from '@mui/system';
-
-import QuizQuestions from './quizQuestions.js';
+import { Alert } from '@mui/material';
 
 const steps = [
-  'Add Quiz',
-  'Confirm Quiz data',
+  'Edit Classroom',
+  'Confirm changes',
 ];
 
 export default function EditClassroom(props){
 
+    const [snackBar, setSnackBar] = React.useState({isOpen:false, message:'Test'})
     const listOfQuizzes = props.listOfQuizzes;
     const setListOfQuestions = props.setListOfQuestions;
     const editClassroomUID = props.editClassroomUID;
@@ -79,10 +80,16 @@ export default function EditClassroom(props){
     const [statefulQuestions, setStatefulQuestions] = React.useState(null)
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editClassroom.questions)    
 
-    const handleQuizTitleChange = (event)=>{
-        setUserEntryClassroomName(event.target.value)        
+    const handleClassroomNameChange = (event)=>{
+      let regExp = /^\s*$/;      
+      let changedTitle = event.target.value;
+      let isEmpty = regExp.test(changedTitle);
+      setUserEntryClassroomName(changedTitle);
+      setEntriesAreValid(changedTitle.length != 0 && !isEmpty);
     }
-
+    const snackBarClose = () => {
+      setSnackBar({isOpen:false,message:"", severity:""})
+    }
 
     const calculateLastQuestionAnswerUID = (array)=>{        
         return array[array.length-1].id;
@@ -104,7 +111,9 @@ export default function EditClassroom(props){
     }
 
     const handleNextStep = ()=>{
-        /* if(step<2 && entriesAreValid){ */
+      
+      if (entriesAreValid) {
+        if(step<2){
             if(step==0){
                 (setStep(step+1));
                 // save user changes temporary            
@@ -130,10 +139,11 @@ export default function EditClassroom(props){
                 props.setEditClassroomState(false)
                 setStep(0)
             }            
-            
-            
-        /* } */
-        
+        }
+      }
+      else {
+        setSnackBar({isOpen:true, message:"Classroom name cannot be blank", severity:"error"}) 
+      }
     }
 
     //This will be fetched from the API too
@@ -154,10 +164,10 @@ export default function EditClassroom(props){
                     <Box marginTop="2em">
                         <Typography variant='h6'>
                             {(step==0)?
-                                ('Add a new quiz') :
+                                ('Edit Classroom') :
                             (
                                 (step==1)?
-                                    'Confirm the data' :
+                                    'Confirm' :
                                     null
                                     
                             )}
@@ -172,27 +182,25 @@ export default function EditClassroom(props){
                                 margin={'0.5em'}
                                 disabled
                                 fullWidth 
-                                label={"Quiz UID: "+editClassroomUID.toString()}
+                                label={"Classroom UID: "+editClassroomUID.toString()}
                             />                
                         </Box>        
                         <Box marginBottom="1em">
-                            <TextField     
+                        <TextField     
                                 required={step>0?false:true}
                                 InputProps={{
                                     readOnly: step>0?true:false,
                                   }}
                                 fullWidth                   
-                                label="Enter a title for the quiz"
-                                placeholder="Quiz title"
-                                onChange={(event)=>{handleQuizTitleChange(event)}}
+                                label="Enter name"
+                                placeholder="Classroom name"
+                                onChange={(event)=>{handleClassroomNameChange(event)}}
                                 value={userEntryClassroomName}
                                 multiline
+                                error={!entriesAreValid}
+                                helperText={entriesAreValid?'':'Name cannot be blank'}
                             />
                         </Box>                            
-                        {/* <Box marginBottom="0.1em">
-                            <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfQuestionSelected={statefulArrayOfQuestionSelected} setStatefulArrayOfQuestionSelected={setStatefulArrayOfQuestionSelected} step={step} editClassroomState={props.editClassroomState}
-                            ></QuizQuestions>
-                        </Box> */}
                     </Box>
                 </Box>
             </Container>
@@ -209,7 +217,15 @@ export default function EditClassroom(props){
                         </Button>
                     </Grid>
                 </Grid>
-            </Container>                
+            </Container>
+            <Snackbar
+            open={snackBar.isOpen}
+            autoHideDuration={6000}
+            onClose={snackBarClose}
+            >
+              <Alert severity={snackBar.severity}>{snackBar.message}</Alert>
+            </Snackbar>                
+
         </div>
     )
 }
