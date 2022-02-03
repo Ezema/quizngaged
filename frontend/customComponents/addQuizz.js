@@ -83,7 +83,9 @@ export default function AddQuiz(props){
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState([])
 
     const handleQuizTitleChange = (event)=>{
-        setUserEntryQuizTitle(event.target.value)        
+        var changedTitle = event.target.value;
+        setUserEntryQuizTitle(changedTitle)
+        setEntriesAreValid(changedTitle.length != 0);
     }
 
 
@@ -107,7 +109,7 @@ export default function AddQuiz(props){
     }
 
     const handleNextStep = ()=>{
-        /* if(step<2 && entriesAreValid){ */
+        if(step<2 && entriesAreValid){ 
             if(step==0){
                 (setStep(step+1));
                 // save user changes temporary            
@@ -138,7 +140,7 @@ export default function AddQuiz(props){
             }            
             
             
-        /* } */
+        } 
         
     }
 
@@ -180,21 +182,40 @@ export default function AddQuiz(props){
                                 fullWidth 
                                 label={"Quiz UID: "+newQuizUID.toString()}
                             />                
-                        </Box>        
-                        <Box marginBottom="1em">
-                            <TextField     
-                                required={step>0?false:true}
-                                InputProps={{
-                                    readOnly: step>0?true:false,
-                                  }}
-                                fullWidth                   
-                                label="Enter a title for the quiz"
-                                placeholder="Quiz title"
-                                onChange={(event)=>{handleQuizTitleChange(event)}}
-                                value={userEntryQuizTitle}
-                                multiline
-                            />
                         </Box>
+                        {entriesAreValid ?
+                            <Box marginBottom="1em">
+                                <TextField     
+                                    required={step>0?false:true}
+                                    InputProps={{
+                                        readOnly: step>0?true:false,
+                                    }}
+                                    fullWidth                   
+                                    label="Enter a title for the quiz"
+                                    placeholder="Quiz title"
+                                    onChange={(event)=>{handleQuizTitleChange(event)}}
+                                    value={userEntryQuizTitle}
+                                    multiline
+                                />
+                            </Box>
+                        :
+                            <Box marginBottom="1em">
+                                <TextField     
+                                    required={step>0?false:true}
+                                    InputProps={{
+                                        readOnly: step>0?true:false,
+                                    }}
+                                    fullWidth                   
+                                    label="Enter a title for the quiz"
+                                    placeholder="Quiz title"
+                                    onChange={(event)=>{handleQuizTitleChange(event)}}
+                                    value={userEntryQuizTitle}
+                                    multiline
+                                    error
+                                    helperText="Title cannot be blank"
+                                />
+                            </Box>
+                        }
                         <Box marginBottom="1em">
                             <Autocomplete
                                 disabled={step>0?true:false}                                
