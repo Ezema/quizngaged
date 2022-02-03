@@ -69,10 +69,7 @@ export default function StepsToCreateAccount(props){
         newQuizngagedUser.userType = userType
         newQuizngagedUser.name = name
         newQuizngagedUser.email = email
-        newQuizngagedUser.phone = phone
-
-        console.log("about to upload: ",newQuizngagedUser)
-        
+        newQuizngagedUser.phone = phone        
 
         localStorage.setItem("quizngagedUserData",JSON.stringify(newQuizngagedUser))
 

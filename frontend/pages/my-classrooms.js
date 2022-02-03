@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 
+import Button from '@mui/material/Button';
+
 import AddIcon from '@mui/icons-material/Add';
 
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
@@ -25,8 +27,10 @@ import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig'
 
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 
+import AddClassroom from '../customComponents/addClassroom'
+
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
-import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
+//import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
 import { useRouter } from 'next/router'
 
 
@@ -34,8 +38,8 @@ export default function MyClassrooms() {
 
   const router = useRouter()
 
-  const [userIsAuthenticated,setUserIsAuthenticated] = React.useState(false)  
-  const [authenticationAttemptFinished,setAuthenticationAttemptFinished] = React.useState(false)
+  const [addClassroomState,setAddClassroomState] = React.useState(false)
+  const [editClassroomState,setEditClassroomState] = React.useState(false)
   
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
   
@@ -58,8 +62,24 @@ export default function MyClassrooms() {
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Classroooms")
 
-  return (      
-          
+  const [newClassroomUID,setNewClassroomUID] = React.useState(null)
+
+  const handleOpenClassroom = ()=>{
+  }
+
+  const handleEditClassroom = ()=>{    
+  }
+
+  const handleAddClassroom = ()=>{    
+    let copyOfStatefulArray = JSON.parse(JSON.stringify(statefulQuizngagedUserData.classrooms));        
+
+    setNewClassroomUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )
+
+    setAddClassroomState(true);
+    setTopBarTitle("Add Classroom")
+  }
+
+  return (                
       (statefulQuizngagedUserData.classrooms==undefined)?
       (
         <div>        
@@ -68,43 +88,61 @@ export default function MyClassrooms() {
       ) 
       :
       (
-        <div>
-          
-          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}></CustomTopNavBar>
+        <div>          
+          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} goBackIconState={addClassroomState}></CustomTopNavBar>
           <Container>
+          {(editClassroomState)?
+          (
+            <div></div>
+          )
+          :
+          (addClassroomState)?
+          (
+            <AddClassroom></AddClassroom>
+          )
+          :
+          (
             <Box paddingTop="1em" paddingBottom="100px">
               <Grid container spacing={2}>
               {
                 statefulQuizngagedUserData.classrooms.map((classroom)=>                 
                   <Grid item xs={12} md={6} lg={4} key={statefulQuizngagedUserData.classrooms.indexOf(classroom)}>              
                     <CustomPaperReactComponent elevation={3}>
+                      <Typography variant='subtitle1'>
+                        #{classroom.id}
+                      </Typography>
                       <Typography variant='h5'>
                         {classroom.name}
-                      </Typography>
-                      <Typography variant='subtitle1'>
-                        {classroom.subtitle}
-                      </Typography>
+                      </Typography>                      
+                      <Button size="small" onClick={(event) => handleOpenClassroom(event, classroom.id)}>OPEN</Button>
+                      <Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>
                     </CustomPaperReactComponent>
                   </Grid>      
                 )
               }
-              </Grid>
-              {/* <Grid container justifyContent="flex-end" paddingTop="1em">
-                <Fab color="primary" size="large" aria-label="add" style={{position:'fixed',bottom:"1em",right:"1em",}}>
-                  <AddIcon />
-                </Fab>
-              </Grid> */}
-            </Box>
-            
-            
+              </Grid>              
+            </Box>            
+          )}
           </Container>
-          <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
-            <Toolbar>          
-              <StyledFab color="secondary" aria-label="add">
-                <AddIcon />
-              </StyledFab>          
-            </Toolbar>
-          </AppBar>
+          {(editClassroomState)?
+          (
+            <div></div>
+          )
+          :
+          (addClassroomState)?
+          (
+            <div></div>
+          )
+          :
+          (
+            <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
+              <Toolbar>          
+                <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddClassroom(event, statefulQuizngagedUserData.classrooms.length)}>
+                  <AddIcon />
+                </StyledFab>          
+              </Toolbar>
+            </AppBar>
+          )}
         </div>
       )
   )
