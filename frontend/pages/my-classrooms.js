@@ -72,7 +72,7 @@ export default function MyClassrooms() {
   const handleEditClassroom = (event,index)=>{    
     setEditClassroomUID(index)
     setEditClassroomState(true);
-    setTopBarTitle("Edit Quiz");
+    setTopBarTitle("Edit Classroom");
   }
 
   const handleAddClassroom = ()=>{    
@@ -94,7 +94,7 @@ export default function MyClassrooms() {
       :
       (
         <div>          
-          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} goBackIconState={addClassroomState}></CustomTopNavBar>
+          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState} goBackIconState={addClassroomState || editClassroomState}></CustomTopNavBar>
           <Container>
           {(editClassroomState)?
           (
