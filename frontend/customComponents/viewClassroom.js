@@ -54,7 +54,7 @@ export default function ViewClassroom(props){
             :
             (props.viewClassroomOngoingQuizzesState)?
             (
-                <ViewClassroomOngoingQuizzes></ViewClassroomOngoingQuizzes>
+                <ViewClassroomOngoingQuizzes viewClassroomUID={props.viewClassroomUID}></ViewClassroomOngoingQuizzes>
             )
             :
             (
