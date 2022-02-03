@@ -41,7 +41,7 @@ import Router from 'next/router'
 
 export default function CustomTopNavBar(props){
 
-    const list = () => (
+    const teacherList = () => (
         <Box
           role="presentation"
           onClick={toggleSidebar(false)}
@@ -138,6 +138,79 @@ export default function CustomTopNavBar(props){
         </Box>
       );
 
+    const studentList = () => (
+      <Box
+        role="presentation"
+        onClick={toggleSidebar(false)}
+        onKeyDown={toggleSidebar(false)}
+      >
+        <List>        
+          <Link href="/my-classrooms" passHref>
+            <a>
+              <ListItem button selected={props.topBarTitle.localeCompare('My Classrooms')==0}>
+                <ListItemIcon>
+                  <LocalLibraryIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  My Classrooms
+                </ListItemText>
+              </ListItem>
+            </a>
+          </Link>          
+        </List>
+        <Divider />
+        <List>        
+          <Link href="/my-account" passHref>
+            <a>
+              <ListItem button selected={props.topBarTitle.localeCompare('My Account')==0}>
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>              
+                <ListItemText>
+                  My Account
+                </ListItemText>
+              
+              </ListItem>
+            </a>
+          </Link>
+          <ListItem button onClick={()=>{
+
+            // Configure Firebase SDK client key.
+            const firebaseConfig = {
+              apiKey: "AIzaSyAI7fRp-LbEWGJr5o0VphYXxdRK57rKXBI",
+              authDomain: "quizngaged-login.firebaseapp.com",
+              projectId: "quizngaged-login",
+              storageBucket: "quizngaged-login.appspot.com",
+              messagingSenderId: "437791237122",
+              appId: "1:437791237122:web:3361b862fb8739c968731b",
+              measurementId: "G-W6MC0DXLRL"
+            };
+
+            //check if firebase is already initialized
+            if (!firebase.apps.length) {
+              firebase.initializeApp(firebaseConfig);
+            }else {
+              firebase.app(); // if already initialized, use that one  
+            }
+                          
+            firebase.auth().signOut().then(function() {                
+              Router.push('/')
+              localStorage.clear();
+            }, function(error) {
+            });
+            
+          }}>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>              
+              <ListItemText>
+                Log Out
+              </ListItemText>              
+          </ListItem>        
+        </List>
+      </Box>
+    );
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     
@@ -229,13 +302,26 @@ export default function CustomTopNavBar(props){
                     
                 </IconButton>    
                     
-                <Drawer
-                    anchor={'left'}
-                    open={sidebarOpen}
-                    onClose={toggleSidebar(false)}
-                >
-                    {list()}
-                </Drawer>
+                {
+                  (JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Teacher')==0)?
+                  (
+                    <Drawer
+                        anchor={'left'}
+                        open={sidebarOpen}
+                        onClose={toggleSidebar(false)}>
+                          {teacherList()}
+                    </Drawer>
+                  )
+                  :
+                  (
+                    <Drawer
+                        anchor={'left'}
+                        open={sidebarOpen}
+                        onClose={toggleSidebar(false)}>
+                          {studentList()}
+                    </Drawer>
+                  )
+                }
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                   {props.topBarTitle}
                 </Typography>
