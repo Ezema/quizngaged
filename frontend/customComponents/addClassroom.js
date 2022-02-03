@@ -24,6 +24,8 @@ import Toolbar from '@mui/material/Toolbar';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import Snackbar from '@mui/material/Snackbar';
+import { Alert } from '@mui/material';
 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import ListIcon from '@mui/icons-material/List';
@@ -87,8 +89,8 @@ export default function AddClassroom(props){
 
     const setAddClassroomState = props.setAddClassroomState;
 
+    const [snackBar, setSnackBar] = React.useState({isOpen:false, message:'Test'})
     const [step,setStep] = React.useState(0)
-    const [entriesAreValid,setEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
     const [userEntryClassroomSettings,setUserEntryClassroomSettings] = React.useState({})
@@ -110,8 +112,12 @@ export default function AddClassroom(props){
 
     
     const handleStudentClassroomUniqueUIDChange = (event)=>{
-        setShowError(false)
-        setStudentClassroomUniqueUID(event.target.value)
+        let changedUID = event.target.value;
+        setStudentClassroomUniqueUID(changedUID);
+        let regExp = /^\s*$/;
+        let isEmpty = regExp.test(changedUID);
+        let isValid = changedUID.length != 0 && !isEmpty;
+        setShowError(!isValid);
     }
     
 
@@ -119,8 +125,17 @@ export default function AddClassroom(props){
         setStudentClassroomDescription(event.target.value)        
     }
 
-    const handleClassroomTitleChange = (event)=>{
-        setUserEntryClassroomName(event.target.value)        
+    const handleClassroomNameChange = (event)=>{
+      let regExp = /^\s*$/;      
+      let changedTitle = event.target.value;
+      let isEmpty = regExp.test(changedTitle);
+      setUserEntryClassroomName(changedTitle)
+      let isValid = changedTitle.length != 0 && !isEmpty;
+      // setCheckingValidClassroom(isValid);
+      setShowError(!isValid);
+    }
+    const snackBarClose = () => {
+      setSnackBar({isOpen:false,message:"", severity:""})
     }
 
     const calculateLastQuestionAnswerUID = (array)=>{        
@@ -149,11 +164,13 @@ export default function AddClassroom(props){
 
     React.useEffect(()=>{
         if(checkingValidClassroom){
-            if(serverResponseForClassroomIDValidity){                
+            if(serverResponseForClassroomIDValidity){   
+                console.log('got valid id');
                 setStep(step+1)
                 setMainButtonText('Finish')
                 setCheckingValidClassroom(false)
             }else{
+                console.log('got invalid id');
                 setCheckingValidClassroom(false)
                 setShowError(true)
             }
@@ -161,18 +178,21 @@ export default function AddClassroom(props){
     },[serverResponseForClassroomIDValidity,])
 
     const handleNextStep = ()=>{
-        /* if(step<2 && entriesAreValid){ */
+        let teacherAddIncomplete = step == 0 && !props.userIsStudent && (userEntryClassroomName == undefined || userEntryClassroomName.length == 0);
+        if (teacherAddIncomplete) {
+            setShowError(true)
+        }
+
+        if(step<2 && !showError && !teacherAddIncomplete){ 
             if(props.userIsStudent){
-                if(step==0){                
+                if(step==0){
                     if(studentClassroomUniqueUID==null || studentClassroomUniqueUID==undefined || studentClassroomUniqueUID==="" || isNaN(parseFloat(studentClassroomUniqueUID))){
                         setShowError(true)
                     }else{                        
                         handleClassroomIDisValid()
-                    }
-                    
+                    }                    
                 }
                 else if(step==1){
-    
                     backendQueryCheckClassroomUniqueIDIsValid(studentClassroomUniqueUID)
                     props.setAddClassroomState(false)
                     setStep(0)
@@ -211,8 +231,11 @@ export default function AddClassroom(props){
                 }
             }                                    
             
-        /* } */
-        
+        }
+        else {
+          setSnackBar({isOpen:true, message:props.userIsStudent?"Invalid classroom code entered (or blank)":"Classroom name cannot be blank", severity:"error"}) 
+        }
+          
     }
     
     return(
@@ -254,11 +277,12 @@ export default function AddClassroom(props){
                                             readOnly: step>0?true:false,
                                         }}
                                         fullWidth                                               
-                                        error={showError}        
                                         label="Enter the teacher-provided classroom code"
                                         placeholder="Classroom code"
                                         onChange={(event)=>{handleStudentClassroomUniqueUIDChange(event)}}
                                         value={studentClassroomUniqueUID}
+                                        error={showError}
+                                        helperText={showError?'Enter the code provided by your teacher':''}
                                         multiline
                                     />
                                 </Box>
@@ -299,6 +323,13 @@ export default function AddClassroom(props){
                         </Grid>
                     </Grid>
                 </Container>
+                <Snackbar
+                open={snackBar.isOpen}
+                autoHideDuration={6000}
+                onClose={snackBarClose}
+                >
+                  <Alert severity={snackBar.severity}>{snackBar.message}</Alert>
+                </Snackbar>                
             </div>
             )
             :
@@ -339,18 +370,20 @@ export default function AddClassroom(props){
                                 />                
                             </Box>        
                             <Box marginBottom="1em">
-                                <TextField     
-                                    required={step>0?false:true}
-                                    InputProps={{
-                                        readOnly: step>0?true:false,
+                              <TextField     
+                                  required={step>0?false:true}
+                                  InputProps={{
+                                      readOnly: step>0?true:false,
                                     }}
-                                    fullWidth                   
-                                    label="Enter a name for the classroom"
-                                    placeholder="Classroom name"
-                                    onChange={(event)=>{handleClassroomTitleChange(event)}}
-                                    value={userEntryClassroomName}
-                                    multiline
-                                />
+                                  fullWidth                   
+                                  label="Enter name"
+                                  placeholder="Classroom name"
+                                  onChange={(event)=>{handleClassroomNameChange(event)}}
+                                  value={userEntryClassroomName}
+                                  multiline
+                                  error={showError?true:false}
+                                  helperText={showError?'Name cannot be blank':''}
+                              />
                             </Box>
                             {/* <Box marginBottom="0.1em">
                                 <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfPastQuizzes={statefulArrayOfPastQuizzes} setStatefulArrayOfPastQuizzes={setStatefulArrayOfPastQuizzes} step={step}></QuizQuestions>
@@ -372,6 +405,13 @@ export default function AddClassroom(props){
                         </Grid>
                     </Grid>
                 </Container>
+                <Snackbar
+                open={snackBar.isOpen}
+                autoHideDuration={6000}
+                onClose={snackBarClose}
+                >
+                  <Alert severity={snackBar.severity}>{snackBar.message}</Alert>
+                </Snackbar>                
             </div>
             )        
     )

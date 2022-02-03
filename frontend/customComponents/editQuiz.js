@@ -54,7 +54,7 @@ import { width } from '@mui/system';
 import QuizQuestions from './quizQuestions.js';
 
 const steps = [
-  'Add Quiz',
+  'Edit Quiz',
   'Confirm Quiz data',
 ];
 
@@ -81,7 +81,9 @@ export default function EditQuiz(props){
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editQuiz.questions)    
 
     const handleQuizTitleChange = (event)=>{
-        setUserEntryQuizTitle(event.target.value)        
+        var changedTitle = event.target.value;
+        setUserEntryQuizTitle(changedTitle)
+        setEntriesAreValid(changedTitle.length != 0);
     }
 
 
@@ -105,7 +107,7 @@ export default function EditQuiz(props){
     }
 
     const handleNextStep = ()=>{
-        /* if(step<2 && entriesAreValid){ */
+        if(step<2 && entriesAreValid){
             if(step==0){
                 (setStep(step+1));
                 // save user changes temporary            
@@ -134,7 +136,7 @@ export default function EditQuiz(props){
             }            
             
             
-        /* } */
+        }
         
     }
 
@@ -156,7 +158,7 @@ export default function EditQuiz(props){
                     <Box marginTop="2em">
                         <Typography variant='h6'>
                             {(step==0)?
-                                ('Add a new quiz') :
+                                ('Edit quiz') :
                             (
                                 (step==1)?
                                     'Confirm the data' :
@@ -177,20 +179,55 @@ export default function EditQuiz(props){
                                 label={"Quiz UID: "+editQuizUID.toString()}
                             />                
                         </Box>        
-                        <Box marginBottom="1em">
+                        {/* <Box marginBottom="1em">
                             <TextField     
                                 required={step>0?false:true}
                                 InputProps={{
                                     readOnly: step>0?true:false,
-                                  }}
+                                }}
                                 fullWidth                   
                                 label="Enter a title for the quiz"
                                 placeholder="Quiz title"
                                 onChange={(event)=>{handleQuizTitleChange(event)}}
                                 value={userEntryQuizTitle}
                                 multiline
+                                error={entriesAreValid?error:false}
+                                helperText={entriesAreValid?'Title cannot be blank':''}
                             />
-                        </Box>
+                        </Box> */}
+                        {entriesAreValid ?
+                            <Box marginBottom="1em">
+                                <TextField     
+                                    required={step>0?false:true}
+                                    InputProps={{
+                                        readOnly: step>0?true:false,
+                                    }}
+                                    fullWidth                   
+                                    label="Enter a title for the quiz"
+                                    placeholder="Quiz title"
+                                    onChange={(event)=>{handleQuizTitleChange(event)}}
+                                    value={userEntryQuizTitle}
+                                    multiline
+                                />
+                            </Box>
+                        :
+                            <Box marginBottom="1em">
+                                <TextField     
+                                    required={step>0?false:true}
+                                    InputProps={{
+                                        readOnly: step>0?true:false,
+                                    }}
+                                    fullWidth                   
+                                    label="Enter a title for the quiz"
+                                    placeholder="Quiz title"
+                                    onChange={(event)=>{handleQuizTitleChange(event)}}
+                                    value={userEntryQuizTitle}
+                                    multiline
+                                    error
+                                    helperText="Title cannot be blank"
+                                />
+                            </Box>
+                        }
                         <Box marginBottom="1em">
                             <Autocomplete
                                 disabled={step>0?true:false}                                
