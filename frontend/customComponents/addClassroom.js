@@ -62,7 +62,7 @@ export default function AddClassroom(props){
     
     const newClassroomUID = props.newClassroomUID;
 
-    const newClassroom = {id:newClassroomUID,name:null,classroomStatistics:{},classroomSettings:null,isDeleted:false,pastQuizzes:[]}
+    const newClassroom = {id:newClassroomUID,name:null,classroomStatistics:{},classroomSettings:null,isDeleted:false,pastQuizzes:[],ongoingLiveQuizzes:[]}
 
     const [statefulNewQuiz,setStatefulNewQuiz] = React.useState(newClassroom)
     const nonStatefulnewQuiz = newClassroom
@@ -79,6 +79,7 @@ export default function AddClassroom(props){
 
     const [statefulQuestions, setStatefulQuestions] = React.useState(null)
     const [statefulArrayOfPastQuizzes, setStatefulArrayOfPastQuizzes] = React.useState([])
+    const [statefulArrayOfOngoingLiveQuizzes, setStatefulArrayOfOngoingLiveQuizzes] = React.useState([])
 
     const handleQuizTitleChange = (event)=>{
         setUserEntryClassroomName(event.target.value)        
@@ -116,6 +117,7 @@ export default function AddClassroom(props){
                 newClassroom.name = userEntryClassroomName
                 newClassroom.classroomSettings = userEntryClassroomSettings
                 newClassroom.pastQuizzes = statefulArrayOfPastQuizzes
+                newClassroom.ongoingLiveQuizzes = statefulArrayOfOngoingLiveQuizzes
 
                 console.log("saving new classroom", newClassroom)
 
