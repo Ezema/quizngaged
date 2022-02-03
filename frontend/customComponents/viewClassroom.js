@@ -39,12 +39,12 @@ export default function ViewClassroom(props){
     return(
         <div>
             {(props.viewClassroomStatisticsState)?(
-                <ViewClassroomStatistics></ViewClassroomStatistics>
+                <ViewClassroomStatistics ></ViewClassroomStatistics>
             )
             :
             (props.launchClassroomQuizState)?
             (
-                <LaunchClassroomQuiz launchClassroomQuizState={props.launchClassroomQuizState} setLaunchClassroomQuizState={props.setLaunchClassroomQuizState}></LaunchClassroomQuiz>
+                <LaunchClassroomQuiz viewClassroomUID={props.viewClassroomUID} launchClassroomQuizState={props.launchClassroomQuizState} setLaunchClassroomQuizState={props.setLaunchClassroomQuizState}></LaunchClassroomQuiz>
             )
             :
             (props.viewClassroomResultsState)?
