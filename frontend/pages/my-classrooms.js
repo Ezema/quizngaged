@@ -133,7 +133,7 @@ export default function MyClassrooms() {
           (
             
               <Box paddingTop="1em">
-                <ViewClassroom viewClassroomUID={viewClassroomUID} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} 
+                <ViewClassroom userIsStudent={userIsStudent} viewClassroomUID={viewClassroomUID} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} 
                 topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}
                 launchClassroomQuizState={launchClassroomQuizState} setLaunchClassroomQuizState={setLaunchClassroomQuizState} 
                 viewClassroomResultsState={viewClassroomResultsState}
