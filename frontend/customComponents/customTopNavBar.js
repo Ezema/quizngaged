@@ -200,10 +200,15 @@ export default function CustomTopNavBar(props){
         (props.setAddClassroomState(false), props.setTopBarTitle("My Classrooms"))
       }else if(props.editClassroomState) {
         (props.setEditClassroomState(false), props.setTopBarTitle("My Classrooms"))
+      }else if(props.viewClassroomStatisticsState) {
+        (props.setViewClassroomStatisticsState(false), props.setTopBarTitle("Classroom"))
+      }else if(props.viewClassroomResultsChange) {
+        (props.setViewClassroomResultsState(false), props.setTopBarTitle("Classroom"))
+      }else if(props.launchClassroomQuizState) {
+        (props.setLaunchClassroomQuizState(false), props.setTopBarTitle("Classroom"))
       }else if(props.viewClassroomState) {
         (props.setViewClassroomState(false), props.setTopBarTitle("My Classrooms"))
-      }
-      
+      }      
       
     }
 
@@ -216,7 +221,7 @@ export default function CustomTopNavBar(props){
                     color="inherit"
                     aria-label="menu"
                     sx={{ mr: 2 }}
-                    onClick={(props.editQuestionState || props.addQuestionState || props.editQuizState || props.addQuizState || props.addClassroomState || props.editClassroomState || props.viewClassroomState)?handleGoBackToPreviousScreen:toggleSidebar(true)}
+                    onClick={(props.editQuestionState || props.addQuestionState || props.editQuizState || props.addQuizState || props.addClassroomState || props.editClassroomState || props.viewClassroomState || props.viewClassroomStatisticsState || props.viewClassroomResultsState || props.launchClassroomQuizState)?handleGoBackToPreviousScreen:toggleSidebar(true)}
                 >
                   {props.goBackIconState?(<ArrowBackIcon />):(<MenuIcon />)}
                     

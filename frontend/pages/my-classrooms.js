@@ -43,10 +43,20 @@ export default function MyClassrooms() {
   const [addClassroomState,setAddClassroomState] = React.useState(false)
   const [editClassroomState,setEditClassroomState] = React.useState(false)
   const [viewClassroomState,setViewClassroomState] = React.useState(false)
+
+  const [launchClassroomQuizState,setLaunchClassroomQuizState] = React.useState(false)
+  const [viewClassroomResultsState,setViewClassroomResultsState] = React.useState(false)
+  const [viewClassroomStatisticsState,setViewClassroomStatisticsState] = React.useState(false)
   
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
   
   const [statefulQuizngagedUserData, setStatefulQuizngagedUserData] = React.useState({});
+
+  const [topBarTitle,setTopBarTitle] = React.useState("My Classroooms")
+
+  const [newClassroomUID,setNewClassroomUID] = React.useState(null)
+  const [editClassroomUID,setEditClassroomUID] = React.useState(null)
+  const [viewClassroomUID,setViewClassroomUID] = React.useState(null)
 
   React.useEffect(()=>{
     if(window.location.pathname.localeCompare("/my-classrooms")!=0){
@@ -62,15 +72,6 @@ export default function MyClassrooms() {
     }
     
   },[addClassroomState,editClassroomState])
-
-  const [topBarTitle,setTopBarTitle] = React.useState("My Classroooms")
-
-  const [newClassroomUID,setNewClassroomUID] = React.useState(null)
-  const [editClassroomUID,setEditClassroomUID] = React.useState(null)
-  const [viewClassroomUID,setViewClassroomUID] = React.useState(null)
-
-  const handleOpenClassroom = ()=>{
-  }
 
   const handleEditClassroom = (event,index)=>{    
     setEditClassroomUID(index)
@@ -103,7 +104,8 @@ export default function MyClassrooms() {
       :
       (
         <div>          
-          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} goBackIconState={addClassroomState || editClassroomState || viewClassroomState}></CustomTopNavBar>
+          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} viewClassroomStatisticsState={viewClassroomStatisticsState} setViewClassroomStatisticsState={setViewClassroomStatisticsState} viewClassroomResultsState={viewClassroomResultsState} setViewClassroomResultsState={setViewClassroomResultsState} launchClassroomQuizState={launchClassroomQuizState} setLaunchClassroomQuizState={setLaunchClassroomQuizState}
+          goBackIconState={addClassroomState || editClassroomState || viewClassroomState || viewClassroomStatisticsState || viewClassroomResultsState || launchClassroomQuizState}></CustomTopNavBar>
           <Container>
           {(editClassroomState)?
           (
@@ -124,7 +126,14 @@ export default function MyClassrooms() {
           (
             
               <Box paddingTop="1em">
-                <ViewClassroom newClassroomUID={newClassroomUID} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState}></ViewClassroom>
+                <ViewClassroom viewClassroomUID={viewClassroomUID} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} 
+                topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}
+                launchClassroomQuizState={launchClassroomQuizState} setLaunchClassroomQuizState={setLaunchClassroomQuizState} 
+                viewClassroomResultsState={viewClassroomResultsState}
+                setViewClassroomResultsState={setViewClassroomResultsState}
+                viewClassroomStatisticsState={viewClassroomStatisticsState} setViewClassroomStatisticsState={viewClassroomStatisticsState}
+                
+                ></ViewClassroom>
               </Box>
           )
           :
