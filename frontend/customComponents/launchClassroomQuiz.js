@@ -41,7 +41,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-
+import BoltIcon from '@mui/icons-material/Bolt';
 
 import QuestionAnswers from './questionAnswer.js';
 
@@ -60,24 +60,23 @@ const steps = [
 
 export default function LaunchClassroomQuiz(props){
 
-    //const newQuizUID = props.newQuizUID;
-    const newQuizUID = 10;
+        
+    const newOngoingLiveQuizUID = JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.length;
 
-    const newQuiz = {id:newQuizUID,quizTitle:null,quizTopic:null,isDeleted:false,questions:[]}
+    console.log("newOngoingLiveQuizUID: ",newOngoingLiveQuizUID)
 
-    const [statefulNewQuiz,setStatefulNewQuiz] = React.useState(newQuiz)
-    const nonStatefulnewQuiz = newQuiz
+    const newOngoingLiveQuiz = {id:newOngoingLiveQuizUID,quizSelected:null,eventDescription:null}
+
+    const [statefulNewQuiz,setStatefulNewQuiz] = React.useState(newOngoingLiveQuiz)
+    const nonStatefulnewQuiz = newOngoingLiveQuiz
 
     const [step,setStep] = React.useState(0)
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
-    const [mainButtonText,setMainButtonText] = React.useState('Next')
+    const [mainButtonText,setMainButtonText] = React.useState('Next')    
 
-    const [userEntryQuizTopic,setUserEntryQuizTopic] = React.useState("Geography")
-
-    const [userEntryEventDescription,setUserEntryEventDescription] = React.useState(statefulNewQuiz.quizTitle)
-
-    const [statefulQuestions, setStatefulQuestions] = React.useState(null)
-    const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState([])
+    const [userEntryEventDescription,setUserEntryEventDescription] = React.useState("")
+    
+    const [statefulQuizSelected, setStatefulQuizSelected] = React.useState(null)
 
     const handleEventDescriptionChange = (event)=>{
         setUserEntryEventDescription(event.target.value)        
@@ -99,21 +98,20 @@ export default function LaunchClassroomQuiz(props){
             if(step==0){
                 (setStep(step+1));
                 // save user changes temporary            
-                setMainButtonText('Finish')                                    
+                setMainButtonText('Launch')                                    
             }
             else if(step==1){
+                
+                newOngoingLiveQuiz.eventDescription = userEntryEventDescription
+                newOngoingLiveQuiz.quizSelected = statefulQuizSelected
 
-                newQuiz.quizTitle = userEntryEventDescription
-                newQuiz.quizTopic = userEntryQuizTopic
-                newQuiz.questions = statefulArrayOfQuestionSelected
-
-                console.log("saving new quizz", newQuiz)
+                console.log("saving new live quizz", newOngoingLiveQuiz)
 
                 //create a copy from localstorage
                 let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
 
                 //save the edited questions in the copy
-                copyOfQuizngagedUserData.quizzes.push(newQuiz)
+                copyOfQuizngagedUserData.classrooms[props.viewClassroomUID].ongoingLiveQuizzes.push(newOngoingLiveQuiz)
             
                 //replace the old data with the new data in localstorage                
                 localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
@@ -129,10 +127,7 @@ export default function LaunchClassroomQuiz(props){
         /* } */
         
     }
-
-    //This will be fetched from the API too
-    const quizTopics = ['Geography','Mathematics']    
-    
+  
     return(
         <div>   
             <Stepper activeStep={step}>
@@ -166,7 +161,7 @@ export default function LaunchClassroomQuiz(props){
                                 margin={'0.5em'}
                                 disabled
                                 fullWidth 
-                                label={"Quiz UID: "+newQuizUID.toString()}
+                                label={"Quiz UID: "+newOngoingLiveQuizUID.toString()}
                             />                
                         </Box>        
                         <Box marginBottom="1em">
@@ -184,7 +179,7 @@ export default function LaunchClassroomQuiz(props){
                             />
                         </Box>                                
                         <Box marginBottom="0.1em">
-                            <ListOfQuizzes statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfQuestionSelected={statefulArrayOfQuestionSelected} setStatefulArrayOfQuestionSelected={setStatefulArrayOfQuestionSelected} step={step}></ListOfQuizzes>
+                            <ListOfQuizzes statefulQuizSelected={statefulQuizSelected} setStatefulQuizSelected={setStatefulQuizSelected} step={step}></ListOfQuizzes>
                         </Box>                        
                     </Box>
                 </Box>
@@ -197,7 +192,9 @@ export default function LaunchClassroomQuiz(props){
                         </Button>
                     </Grid>
                     <Grid item paddingLeft={'2em'} width={'50vw'}>
-                        <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handleNextStep()} endIcon={<NavigateNextIcon/>}>
+                        <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handleNextStep()} 
+                        startIcon={step==1?<BoltIcon/>:null}
+                        endIcon={step==1?<BoltIcon/>:<NavigateNextIcon/>}>
                             {mainButtonText}
                         </Button>
                     </Grid>

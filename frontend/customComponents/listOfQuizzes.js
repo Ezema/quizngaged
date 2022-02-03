@@ -14,43 +14,19 @@ const DisabledText = styled(Typography)({
 
 export default function ListOfQuizzes(props){          
 
-    const handleQuestionSelectionChange = (event,questionId) => {
-
-        if(props.statefulArrayOfQuestionSelected.indexOf(questionId)!=(-1)){
-            console.log("remove")
-            let copy = JSON.parse(JSON.stringify(props.statefulArrayOfQuestionSelected))
-            copy.splice(copy.indexOf(questionId), 1)
-            props.setStatefulArrayOfQuestionSelected(copy)
-        }else{            
-            console.log("add")
-            let copy = JSON.parse(JSON.stringify(props.statefulArrayOfQuestionSelected))
-            copy.push(questionId)
-            props.setStatefulArrayOfQuestionSelected(copy)
+    const handleQuizSelectionChange = (event,quizId) => {
+        if(props.statefulQuizSelected==quizId){
+            props.setStatefulQuizSelected(null)
         }
-    };            
-
-
-    /* console.log("inside quiz questions props:", props)
-    console.log("inside quiz questions:", props.editQuizQuestions) */
-
-    React.useEffect(()=>{
-
-        if(props.editQuizState){
-            
-        }else{
-            let nonStatefulArrayOfQuestionsSelected = []
-            for(let i=0; i< JSON.parse(localStorage.quizngagedUserData).questions; i++){
-                nonStatefulArrayOfQuestionsSelected.push(false)
-            }
-            props.setStatefulArrayOfQuestionSelected(nonStatefulArrayOfQuestionsSelected)
+        else{
+            props.setStatefulQuizSelected(quizId)
         }
-        
+    };
 
-    },[])
-
+    console.log("props: ", props)
     return(
         <div>            
-            {(JSON.parse(localStorage.quizngagedUserData).questions=null)?
+            {(JSON.parse(localStorage.quizngagedUserData).quizzes=null)?
             (
                 <div>
 
@@ -60,26 +36,26 @@ export default function ListOfQuizzes(props){
             (           
             <Grid Container style={{background:'#eeeeee'}} marginBottom={'1em'} padding={'0.1em'} maxHeight={'36vh'} overflow={'scroll'}>                
                 <div>                    
-                {JSON.parse(localStorage.quizngagedUserData).questions.map((question)=>
+                {JSON.parse(localStorage.quizngagedUserData).quizzes.map((quiz)=>
                                                 
-                        <Grid item key={question.id} margin={'0.5em'} justifyContent={'center'} > 
+                        <Grid item key={quiz.id} margin={'0.5em'} justifyContent={'center'} > 
                             <Paper justifyContent={'center'}>                                
                                 <Checkbox
                                     disabled={props.step>0?true:false}
-                                    checked={props.statefulArrayOfQuestionSelected.includes(question.id)}
-                                    onChange={(event)=>handleQuestionSelectionChange(event,question.id)}
+                                    checked={props.statefulQuizSelected==(quiz.id)}
+                                    onChange={(event)=>handleQuizSelectionChange(event,quiz.id)}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                 />    
                                 {/* {(props.step>0)?
                                 (
                                 <DisabledText>
-                                    {question.id+". "+question.questionBaselineBody}
+                                    {quiz.id+". "+quiz.questionBaselineBody}
                                 </DisabledText>
                                 )
                                 :
                                 ( */}
                                 <Typography display="inline">
-                                    {question.id+". "+question.questionBaselineBody}
+                                    {quiz.id+". "+quiz.quizTitle}
                                 </Typography>                            
                                 {/* )} */}
                                                                 
