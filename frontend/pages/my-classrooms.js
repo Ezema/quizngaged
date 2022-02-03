@@ -58,7 +58,7 @@ export default function MyClassrooms() {
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
     }
     
-  },[])
+  },[addClassroomState])
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Classroooms")
 
@@ -98,7 +98,10 @@ export default function MyClassrooms() {
           :
           (addClassroomState)?
           (
-            <AddClassroom></AddClassroom>
+            
+              <Box paddingTop="1em">
+                <AddClassroom newClassroomUID={newClassroomUID} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState}></AddClassroom>
+              </Box>
           )
           :
           (
