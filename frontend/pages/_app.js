@@ -1,7 +1,11 @@
 import '../styles/globals.css'
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+import UserAccessCheck from '../userAccess/userAccess.js'
+
+function Quizngaged({ Component, pageProps }) {
+  return (    
+      <Component {...pageProps} />        
+    )
 }
 
-export default MyApp
+export default Quizngaged

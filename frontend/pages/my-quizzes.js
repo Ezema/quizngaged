@@ -55,7 +55,7 @@ import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQu
 import { useRouter } from 'next/router'
 
 
-export default function MyQuizzes(props) {
+function MyQuizzes(props) {  
 
   const router = useRouter()
 
@@ -72,6 +72,9 @@ export default function MyQuizzes(props) {
   const [newQuizUID,setNewQuizUID] = React.useState(null)
   const [editQuizUID,setEditQuizUID] = React.useState(null)
 
+  const [userIsStudent,setUserIsStudent] = React.useState(true)
+  
+
   const toggleSidebar = (openStatus) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -85,11 +88,16 @@ export default function MyQuizzes(props) {
     }
     if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
       router.push('/')
-    }/* else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
-      router.push('/')
-    } */else{
+    }else{
       setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+    }
+        
+    if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Student')!=0){
+      setUserIsStudent(false)
+    }
+    else{
+      router.push('/my-classrooms')
     }
   },[addQuizState,editQuizState])
 
@@ -117,8 +125,19 @@ export default function MyQuizzes(props) {
   }  
 
 
+  /* if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Teacher')!=0){
+    router.push('/')
+  } */
+
+  /* (JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Teacher')!=0)?
+      (
+        router.push('/')
+      )
+      : */
+
   return (    
-      (statefulQuizngagedUserData.quizzes==undefined)?
+      
+      (statefulQuizngagedUserData.quizzes==undefined || userIsStudent==true)?
       (
         <LoadingScreen></LoadingScreen>
       )
@@ -132,7 +151,7 @@ export default function MyQuizzes(props) {
         <LoadingScreen></LoadingScreen>
         </div>
       )
-      :
+      :      
       (
         <div style={{          
           overflowY: 'hidden',
@@ -200,3 +219,13 @@ export default function MyQuizzes(props) {
   )
 }
 
+MyQuizzes.getInitialProps = async (ctx) => {
+  /* const res = await fetch('https://api.github.com/repos/vercel/next.js')
+  const json = await res.json()
+  return { stars: json.stargazers_count } */
+  console.log("before load!", ctx)
+  return {}
+  
+}
+
+export default MyQuizzes

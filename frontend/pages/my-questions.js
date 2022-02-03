@@ -59,6 +59,7 @@ export default function MyClassrooms(props) {
   const [authenticationAttemptFinished,setAuthenticationAttemptFinished] = React.useState(false)
   const [statefulQuizngagedUserData, setStatefulQuizngagedUserData] = React.useState({});
   
+  const [userIsStudent,setUserIsStudent] = React.useState(true)
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Questions")
 
@@ -96,10 +97,18 @@ export default function MyClassrooms(props) {
       setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
     }       
-  },[])  
+
+    if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Student')!=0){
+      setUserIsStudent(false)
+    }
+    else{
+      router.push('/my-classrooms')
+    }
+
+  },[addQuestionState, editQuestionState])  
 
   return (    
-      (statefulQuizngagedUserData.questions==undefined)?
+      (statefulQuizngagedUserData.questions==undefined || userIsStudent==true)?
       (
         <div>       
           <LoadingScreen></LoadingScreen>
