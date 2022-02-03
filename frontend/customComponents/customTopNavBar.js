@@ -197,13 +197,15 @@ export default function CustomTopNavBar(props){
       }else if(props.addQuizState) {
         (props.setAddQuizState(false), props.setTopBarTitle("My quizzes"))
       }else if(props.addClassroomState) {
-        (props.setAddClassroomState(false), props.setTopBarTitle("My Classroom"))
+        (props.setAddClassroomState(false), props.setTopBarTitle("My Classrooms"))
       }else if(props.editClassroomState) {
-        (props.setEditClassroomState(false), props.setTopBarTitle("My Classroom"))
+        (props.setEditClassroomState(false), props.setTopBarTitle("My Classrooms"))
+      }else if(props.viewClassroomState) {
+        (props.setViewClassroomState(false), props.setTopBarTitle("My Classrooms"))
       }
       
       
-    }    
+    }
 
     return(
         <AppBar position="sticky">
@@ -214,7 +216,7 @@ export default function CustomTopNavBar(props){
                     color="inherit"
                     aria-label="menu"
                     sx={{ mr: 2 }}
-                    onClick={(props.editQuestionState || props.addQuestionState || props.editQuizState || props.addQuizState || props.addClassroomState || props.editClassroomState)?handleGoBackToPreviousScreen:toggleSidebar(true)}
+                    onClick={(props.editQuestionState || props.addQuestionState || props.editQuizState || props.addQuizState || props.addClassroomState || props.editClassroomState || props.viewClassroomState)?handleGoBackToPreviousScreen:toggleSidebar(true)}
                 >
                   {props.goBackIconState?(<ArrowBackIcon />):(<MenuIcon />)}
                     

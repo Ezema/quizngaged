@@ -29,6 +29,7 @@ import CustomTopNavBar from '../customComponents/customTopNavBar'
 
 import AddClassroom from '../customComponents/addClassroom'
 import EditClassroom from '../customComponents/editClassroom'
+import ViewClassroom from '../customComponents/viewClassroom.js';
 
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 //import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
@@ -41,6 +42,7 @@ export default function MyClassrooms() {
 
   const [addClassroomState,setAddClassroomState] = React.useState(false)
   const [editClassroomState,setEditClassroomState] = React.useState(false)
+  const [viewClassroomState,setViewClassroomState] = React.useState(false)
   
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
   
@@ -65,6 +67,7 @@ export default function MyClassrooms() {
 
   const [newClassroomUID,setNewClassroomUID] = React.useState(null)
   const [editClassroomUID,setEditClassroomUID] = React.useState(null)
+  const [viewClassroomUID,setViewClassroomUID] = React.useState(null)
 
   const handleOpenClassroom = ()=>{
   }
@@ -73,6 +76,12 @@ export default function MyClassrooms() {
     setEditClassroomUID(index)
     setEditClassroomState(true);
     setTopBarTitle("Edit Classroom");
+  }
+
+  const handleViewClassroom = (event,index)=>{    
+    setViewClassroomUID(index)
+    setViewClassroomState(true);
+    setTopBarTitle("Classroom");
   }
 
   const handleAddClassroom = ()=>{    
@@ -94,7 +103,7 @@ export default function MyClassrooms() {
       :
       (
         <div>          
-          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState} goBackIconState={addClassroomState || editClassroomState}></CustomTopNavBar>
+          <CustomTopNavBar statefulUserObject={statefulUserObject} setStatefulUserObject={setStatefulUserObject} topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} goBackIconState={addClassroomState || editClassroomState || viewClassroomState}></CustomTopNavBar>
           <Container>
           {(editClassroomState)?
           (
@@ -111,6 +120,14 @@ export default function MyClassrooms() {
               </Box>
           )
           :
+          (viewClassroomState)?
+          (
+            
+              <Box paddingTop="1em">
+                <ViewClassroom newClassroomUID={newClassroomUID} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState}></ViewClassroom>
+              </Box>
+          )
+          :
           (
             <Box paddingTop="1em" paddingBottom="100px">
               <Grid container spacing={2}>
@@ -124,7 +141,7 @@ export default function MyClassrooms() {
                       <Typography variant='h5'>
                         {classroom.name}
                       </Typography>                      
-                      <Button size="small" onClick={(event) => handleOpenClassroom(event, classroom.id)}>OPEN</Button>
+                      <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id)}>OPEN</Button>
                       <Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>
                     </CustomPaperReactComponent>
                   </Grid>      
@@ -140,6 +157,11 @@ export default function MyClassrooms() {
           )
           :
           (addClassroomState)?
+          (
+            <div></div>
+          )
+          :
+          (viewClassroomState)?
           (
             <div></div>
           )
