@@ -65,8 +65,7 @@ export default function EditQuiz(props){
     const editQuizUID = props.editQuizUID;
 
     
-    const editQuiz = JSON.parse(localStorage.quizngagedUserData).quizzes[props.editQuizUID]
-    console.log("editQuiz",editQuiz)
+    const editQuiz = JSON.parse(localStorage.quizngagedUserData).quizzes[props.editQuizUID]    
 
     const [statefuleditQuiz,setStatefuleditQuiz] = React.useState(editQuiz)
     const nonStatefuleditQuiz = editQuiz    
@@ -79,9 +78,7 @@ export default function EditQuiz(props){
     const [userEntryQuizTitle,setUserEntryQuizTitle] = React.useState(editQuiz.quizTitle)
 
     const [statefulQuestions, setStatefulQuestions] = React.useState(null)
-    const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editQuiz.questions)
-
-    console.log("does state init work?: ", editQuiz.questions)
+    const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editQuiz.questions)    
 
     const handleQuizTitleChange = (event)=>{
         setUserEntryQuizTitle(event.target.value)        
