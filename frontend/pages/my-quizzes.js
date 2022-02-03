@@ -107,8 +107,7 @@ export default function MyQuizzes(props) {
     setTopBarTitle("Add Quiz")
   }
 
-  const handleEditQuizState = (event, index) => {
-    console.log("is this index undefined?: ", index)
+  const handleEditQuizState = (event, index) => {    
     setEditQuizUID(index)
     setEditQuizState(true);
     setTopBarTitle("Edit Quiz");

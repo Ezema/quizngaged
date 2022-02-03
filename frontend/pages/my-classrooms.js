@@ -28,6 +28,7 @@ import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig'
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 
 import AddClassroom from '../customComponents/addClassroom'
+import EditClassroom from '../customComponents/editClassroom'
 
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 //import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
@@ -58,16 +59,20 @@ export default function MyClassrooms() {
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
     }
     
-  },[addClassroomState])
+  },[addClassroomState,editClassroomState])
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Classroooms")
 
   const [newClassroomUID,setNewClassroomUID] = React.useState(null)
+  const [editClassroomUID,setEditClassroomUID] = React.useState(null)
 
   const handleOpenClassroom = ()=>{
   }
 
-  const handleEditClassroom = ()=>{    
+  const handleEditClassroom = (event,index)=>{    
+    setEditClassroomUID(index)
+    setEditClassroomState(true);
+    setTopBarTitle("Edit Quiz");
   }
 
   const handleAddClassroom = ()=>{    
@@ -93,7 +98,9 @@ export default function MyClassrooms() {
           <Container>
           {(editClassroomState)?
           (
-            <div></div>
+            <Box paddingTop="1em">
+              <EditClassroom editClassroomUID={editClassroomUID} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState}></EditClassroom>
+            </Box>
           )
           :
           (addClassroomState)?

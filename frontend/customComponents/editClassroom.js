@@ -54,31 +54,30 @@ import { width } from '@mui/system';
 import QuizQuestions from './quizQuestions.js';
 
 const steps = [
-  'Add Classroom',
-  'Confirm Classroom data',
+  'Add Quiz',
+  'Confirm Quiz data',
 ];
 
-export default function AddClassroom(props){
+export default function EditClassroom(props){
+
+    const listOfQuizzes = props.listOfQuizzes;
+    const setListOfQuestions = props.setListOfQuestions;
+    const editClassroomUID = props.editClassroomUID;
+
     
-    const newClassroomUID = props.newClassroomUID;
+    const editClassroom = JSON.parse(localStorage.quizngagedUserData).classrooms[props.editClassroomUID]    
 
-    const newClassroom = {id:newClassroomUID,name:null,classroomStatistics:{},classroomSettings:null,isDeleted:false,pastQuizzes:[]}
-
-    const [statefulNewQuiz,setStatefulNewQuiz] = React.useState(newClassroom)
-    const nonStatefulnewQuiz = newClassroom
-
-    const setAddClassroomState = props.setAddClassroomState;
+    const [statefuleditQuiz,setStatefuleditQuiz] = React.useState(editClassroom)
+    const nonStatefuleditQuiz = editClassroom    
 
     const [step,setStep] = React.useState(0)
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
-
-    const [userEntryClassroomSettings,setUserEntryClassroomSettings] = React.useState({})
-
-    const [userEntryClassroomName,setUserEntryClassroomName] = React.useState(statefulNewQuiz.name)
+    
+    const [userEntryClassroomName,setUserEntryClassroomName] = React.useState(editClassroom.name)
 
     const [statefulQuestions, setStatefulQuestions] = React.useState(null)
-    const [statefulArrayOfPastQuizzes, setStatefulArrayOfPastQuizzes] = React.useState([])
+    const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editClassroom.questions)    
 
     const handleQuizTitleChange = (event)=>{
         setUserEntryClassroomName(event.target.value)        
@@ -96,7 +95,7 @@ export default function AddClassroom(props){
     const handlePreviousStep = ()=>{
         if(step==0){
             setStep(0)
-            props.setAddClassroomState(false)
+            props.setEditClassroomState(false)
         }else if(step==1){
             setStep(step-1)
             
@@ -113,17 +112,14 @@ export default function AddClassroom(props){
             }
             else if(step==1){
 
-                newClassroom.name = userEntryClassroomName
-                newClassroom.classroomSettings = userEntryClassroomSettings
-                newClassroom.pastQuizzes = statefulArrayOfPastQuizzes
-
-                console.log("saving new classroom", newClassroom)
+                editClassroom.name = userEntryClassroomName                
+        
 
                 //create a copy from localstorage
                 let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
 
-                //save the edited pastQuizzes in the copy
-                copyOfQuizngagedUserData.classrooms.push(newClassroom)
+                //save the edited questions in the copy                
+                copyOfQuizngagedUserData.classrooms[props.editClassroomUID]=editClassroom                
             
                 //replace the old data with the new data in localstorage                
                 localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
@@ -131,7 +127,7 @@ export default function AddClassroom(props){
                 // call the backend to sync the local changes
                 backendQuerySaveUserJSON(()=>{})
 
-                props.setAddClassroomState(false)
+                props.setEditClassroomState(false)
                 setStep(0)
             }            
             
@@ -139,6 +135,9 @@ export default function AddClassroom(props){
         /* } */
         
     }
+
+    //This will be fetched from the API too
+    const quizTopics = ['Geography','Mathematics']    
     
     return(
         <div>   
@@ -155,7 +154,7 @@ export default function AddClassroom(props){
                     <Box marginTop="2em">
                         <Typography variant='h6'>
                             {(step==0)?
-                                ('Add a new Classroom') :
+                                ('Add a new quiz') :
                             (
                                 (step==1)?
                                     'Confirm the data' :
@@ -173,7 +172,7 @@ export default function AddClassroom(props){
                                 margin={'0.5em'}
                                 disabled
                                 fullWidth 
-                                label={"Quiz UID: "+newClassroomUID.toString()}
+                                label={"Quiz UID: "+editClassroomUID.toString()}
                             />                
                         </Box>        
                         <Box marginBottom="1em">
@@ -183,16 +182,17 @@ export default function AddClassroom(props){
                                     readOnly: step>0?true:false,
                                   }}
                                 fullWidth                   
-                                label="Enter a name for the classroom"
-                                placeholder="Classroom name"
+                                label="Enter a title for the quiz"
+                                placeholder="Quiz title"
                                 onChange={(event)=>{handleQuizTitleChange(event)}}
                                 value={userEntryClassroomName}
                                 multiline
                             />
-                        </Box>
+                        </Box>                            
                         {/* <Box marginBottom="0.1em">
-                            <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfPastQuizzes={statefulArrayOfPastQuizzes} setStatefulArrayOfPastQuizzes={setStatefulArrayOfPastQuizzes} step={step}></QuizQuestions>
-                        </Box> */}                        
+                            <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfQuestionSelected={statefulArrayOfQuestionSelected} setStatefulArrayOfQuestionSelected={setStatefulArrayOfQuestionSelected} step={step} editClassroomState={props.editClassroomState}
+                            ></QuizQuestions>
+                        </Box> */}
                     </Box>
                 </Box>
             </Container>
