@@ -59,6 +59,8 @@ export default function MyClassrooms() {
   const [editClassroomUID,setEditClassroomUID] = React.useState(null)
   const [viewClassroomUID,setViewClassroomUID] = React.useState(null)
 
+  const [userIsStudent,setUserIsStudent] = React.useState(true)
+
   React.useEffect(()=>{
     if(window.location.pathname.localeCompare("/my-classrooms")!=0){
       window.location.pathname = "/my-classrooms"
@@ -70,6 +72,10 @@ export default function MyClassrooms() {
     } */else{
       setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+    }
+
+    if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Student')!=0){
+      setUserIsStudent(false)
     }
     
   },[addClassroomState,editClassroomState])
@@ -136,7 +142,7 @@ export default function MyClassrooms() {
                 ></ViewClassroom>
               </Box>
           )
-          :
+          :          
           (
             <Box paddingTop="1em" paddingBottom="100px">
               <Grid container spacing={2}>
@@ -151,7 +157,7 @@ export default function MyClassrooms() {
                         {classroom.name}
                       </Typography>                      
                       <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id)}>OPEN</Button>
-                      <Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>
+                      {(userIsStudent)?null:<Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>}
                     </CustomPaperReactComponent>
                   </Grid>      
                 )
