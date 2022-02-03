@@ -15,6 +15,8 @@ import ViewClassroomStatistics from './viewClassroomStatistics.js'
 import LaunchClassroomQuiz from './launchClassroomQuiz.js'
 import ViewClassroomOngoingQuizzes from './viewClassroomOngoingQuizzes.js'
 
+import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
+
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 
 export default function ViewClassroom(props){
@@ -22,7 +24,7 @@ export default function ViewClassroom(props){
     const handleViewClassroomOngoingQuizzesChange = ()=>{
         props.setTopBarTitle("Live Ongoing quizzes")
         props.setViewClassroomOngoingQuizzesState(true)
-    }
+    }    
     const handleLaunchClassroomQuizChange = ()=>{
         props.setTopBarTitle("Launch Quiz")
         props.setLaunchClassroomQuizState(true)
@@ -35,6 +37,12 @@ export default function ViewClassroom(props){
         props.setTopBarTitle("Classroom Statistics")
         props.setViewClassroomStatisticsState(true)
     }    
+
+    const handleStudentWantsToJoinAQuiz = ()=>{
+        props.setTopBarTitle("Join a Quiz")
+        backendQueryGetUserJSON({callback:()=>{}})
+        props.setViewClassroomOngoingQuizzesState(true)
+    }
     
     return(
         <div>
@@ -68,7 +76,7 @@ export default function ViewClassroom(props){
                                         <BoltIcon sx={{ fontSize: 100, color:'white'}}/>
                                     </Grid>
                                     <Grid item right={'0.1em'}>
-                                        <Button sx={{ marginLeft:'1em',fontSize:'1em'}} onClick={handleLaunchClassroomQuizChange}>
+                                        <Button sx={{ marginLeft:'1em',fontSize:'1em'}} onClick={handleStudentWantsToJoinAQuiz}>
                                             Join quiz
                                         </Button>
                                     </Grid>                            

@@ -10,6 +10,10 @@ import CustomPaperReactComponent from './customPaperReactComponent.js';
 
 export default function ViewClassroomOngoingQuizzes(props){
 
+    React.useEffect(()=>{
+        //console.log("ongoing quizzes after load: ",JSON.parse(localStorage.quizngagedUserData).classrooms)
+    },[])
+
     const handleViewLiveOngoingQuiz = ()=>{}
     return(
         <div>
@@ -21,7 +25,9 @@ export default function ViewClassroomOngoingQuizzes(props){
                 :
                 (JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.length==0)?
                 (
-                    <div>empty</div>
+                    <Typography variant='h4'>
+                        No active quizzes at this time
+                    </Typography>
                 )
                 :
                 (
