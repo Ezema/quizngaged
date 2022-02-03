@@ -131,7 +131,7 @@ export default function MyClassrooms() {
                 launchClassroomQuizState={launchClassroomQuizState} setLaunchClassroomQuizState={setLaunchClassroomQuizState} 
                 viewClassroomResultsState={viewClassroomResultsState}
                 setViewClassroomResultsState={setViewClassroomResultsState}
-                viewClassroomStatisticsState={viewClassroomStatisticsState} setViewClassroomStatisticsState={viewClassroomStatisticsState}
+                viewClassroomStatisticsState={viewClassroomStatisticsState} setViewClassroomStatisticsState={setViewClassroomStatisticsState}
                 
                 ></ViewClassroom>
               </Box>

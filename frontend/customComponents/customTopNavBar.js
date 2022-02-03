@@ -202,7 +202,7 @@ export default function CustomTopNavBar(props){
         (props.setEditClassroomState(false), props.setTopBarTitle("My Classrooms"))
       }else if(props.viewClassroomStatisticsState) {
         (props.setViewClassroomStatisticsState(false), props.setTopBarTitle("Classroom"))
-      }else if(props.viewClassroomResultsChange) {
+      }else if(props.viewClassroomResultsState) {
         (props.setViewClassroomResultsState(false), props.setTopBarTitle("Classroom"))
       }else if(props.launchClassroomQuizState) {
         (props.setLaunchClassroomQuizState(false), props.setTopBarTitle("Classroom"))
