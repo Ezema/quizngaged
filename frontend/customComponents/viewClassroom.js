@@ -68,7 +68,7 @@ export default function ViewClassroom(props){
             (props.userIsStudent)?
             (
                 <Container>
-                    <Grid Container display={'grid'}>
+                    <Grid Container display={'grid'}>                        
                         <Grid item marginBottom={'1em'}>
                             <Paper elevation={3}>
                                 <Grid Container display={'flex'} /* justifyContent={'center'}  */alignContent={'center'} alignItems={'center'}>
