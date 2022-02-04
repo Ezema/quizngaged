@@ -9,15 +9,15 @@ export default {
         "phone":null,
         "classrooms":[
             {
-            id:0,
-            name:'My first classroom',
-            isDeleted:false,
-            pastQuizzes:[                
-            ],
-            ongoingLiveQuizzes:[                
-            ],
-            classroomStatistics:{},
-            classroomSettings:{}
+                id:0,
+                name:'My first classroom',
+                isDeleted:false,
+                pastQuizzes:[                
+                ],
+                ongoingLiveQuizzes:[                
+                ],
+                classroomStatistics:{},
+                classroomSettings:{}
             },
             {
                 id:1,

@@ -26,8 +26,12 @@ const db = mysql.createConnection({
     }else{
         console.log("Connected to database");
         let sqlQuery = "CREATE TABLE IF NOT EXISTS users (uid VARCHAR(50),userjson json);"
+        let secondSqlQuery = "CREATE TABLE IF NOT EXISTS classrooms (uniqueclassroomid INT UNSIGNED NOT NULL AUTO_INCREMENT,classroomjson json,classroomOwneruid VARCHAR(50), PRIMARY KEY(uniqueclassroomid));"
         db.query(sqlQuery,(err,result)=>{
-            console.log("schema ok");
+            console.log("first table ok");
+        })
+        db.query(secondSqlQuery,(err,result)=>{
+            console.log("second table ok");
         })
     }
 
@@ -176,6 +180,34 @@ app.post("/API/checkuserhasaccount",(req, res)=>{
     });
 })
 
+app.post("/API/newuniqueclassroomid",(req, res)=>{
+
+    //console.log("/API/checkuserhasaccount: ", req.body)
+
+    admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
+    () => {      
+            let sqlQuery = `SELECT * FROM classrooms;`
+            db.query(sqlQuery, (err, result)=>{
+                if (err) {
+                    console.log("error with db query")
+                    //throw err;
+                } 
+                else {            
+                    /* if(result.length==0){
+                        res.send({"hasAccount":false})  
+                    }else{                        
+                        res.send({"hasAccount":true})
+                    } */
+
+                }    
+            });
+            return
+    }).catch((error)=>{
+        //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+        console.log("error: ", error)
+        return
+    });
+})
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9090;
