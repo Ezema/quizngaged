@@ -175,20 +175,6 @@ export default function AddClassroom(props){
                 else if(step==1){
     
                     backendQueryCheckClassroomUniqueIDIsValid(studentClassroomUniqueUID)
-                    //setCheckingValidClassroom(true)
-
-                    //create a copy from localstorage
-                    //let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
-    
-                    //save the edited pastQuizzes in the copy
-                    //copyOfQuizngagedUserData.classrooms.push(newClassroom)
-                
-                    //replace the old data with the new data in localstorage                
-                    //localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
-    
-    
-                    // call the backend to sync the local changes                
-                    //backendQuerySaveUserJSON(()=>{})                        
                     props.setAddClassroomState(false)
                     setStep(0)
                 }

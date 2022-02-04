@@ -138,6 +138,8 @@ export default {
         "photoURL":null,
         "name":null,
         "phone":null,
+        "uniqueClassroomsJoinedIDs":[
+        ],
         "classrooms":[
         ]
     }

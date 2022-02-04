@@ -164,19 +164,57 @@ export default function MyClassrooms() {
             <Box paddingTop="1em" paddingBottom="100px">              
               <Grid container spacing={2}>
               {
-                JSON.parse(localStorage.quizngagedUserData).classrooms.map((classroom)=>                 
-                  <Grid item xs={12} md={6} lg={4} key={JSON.parse(localStorage.quizngagedUserData).classrooms.indexOf(classroom)}>              
-                    <CustomPaperReactComponent elevation={3}>
-                      <Typography variant='subtitle1'>
-                        #{classroom.id}
-                      </Typography>
-                      <Typography variant='h5'>
-                        {classroom.name}
-                      </Typography>                      
-                      <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id)}>OPEN</Button>
-                      {(userIsStudent)?null:<Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>}
-                    </CustomPaperReactComponent>
-                  </Grid>      
+                userIsStudent?
+                (
+                  (JSON.parse(localStorage.quizngagedUserData).classrooms.length==0)?
+                  (
+                    <Grid item>
+                      <Box textAlign={'center'}>
+                        <Container>
+                          <Typography variant='h5'>
+                            No classrooms joined.                          
+                          </Typography>
+                          <Typography variant='h5'>                          
+                            Click below to join a classroom
+                          </Typography>
+                        </Container>
+                      </Box>
+                    </Grid>
+                  )
+                  :
+                  (
+                  JSON.parse(localStorage.quizngagedUserData).classrooms.map((classroom)=>                 
+                    <Grid item xs={12} md={6} lg={4} key={classroom.globalQuizngagedId}>
+                      <CustomPaperReactComponent elevation={3}>                      
+                        <Typography variant='subtitle1'>
+                          #{classroom.globalQuizngagedId}
+                        </Typography>
+                        <Typography variant='h5'>
+                          {classroom.name}
+                        </Typography>                      
+                        <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.globalQuizngagedId)}>OPEN</Button>
+                        {(userIsStudent)?null:<Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>}
+                      </CustomPaperReactComponent>
+                    </Grid>      
+                  )
+                  )  
+                ) 
+                :
+                (
+                  JSON.parse(localStorage.quizngagedUserData).classrooms.map((classroom)=>                 
+                    <Grid item xs={12} md={6} lg={4} key={JSON.parse(localStorage.quizngagedUserData).classrooms.indexOf(classroom)}>              
+                      <CustomPaperReactComponent elevation={3}>
+                        <Typography variant='subtitle1'>
+                          #{classroom.id}
+                        </Typography>
+                        <Typography variant='h5'>
+                          {classroom.name}
+                        </Typography>                      
+                        <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id)}>OPEN</Button>
+                        {(userIsStudent)?null:<Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>}
+                      </CustomPaperReactComponent>
+                    </Grid>      
+                  )
                 )
               }
               </Grid>              
