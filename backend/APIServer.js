@@ -191,11 +191,11 @@ app.post("/API/savenewuniqueclassroom",(req, res)=>{
             db.query(sqlQuery, (err, result)=>{
                 if (err) {
                     
-                    console.log("error with db query")                    
+                    console.log("error with db query")
                     //throw err;
                 } 
                 else { 
-                    res.send({'operationSuccessful':true})
+                    res.send({'globalUniqueID':result.insertId})
                 }    
             });
             return
@@ -236,35 +236,6 @@ app.post("/API/checkclassroomuniqueidisvalid",(req, res)=>{
         return
     });
 })
-
-/* app.post("/API/getnewuniqueclassroomid",(req, res)=>{
-    console.log("\n", req.body)
-    console.log("/API/getnewuniqueclassroomid: ")
-
-    admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
-    () => {      
-            let sqlQuery = `SELECT MAX(uniqueclassroomid) FROM classrooms;`
-            db.query(sqlQuery, (err, result)=>{
-                if (err) {
-                    console.log("error with db query")
-                    //throw err;
-                } 
-                else { 
-                    console.log("db result: ",result[0]["MAX(uniqueclassroomid)"])           
-                    if(result[0]["MAX(uniqueclassroomid)"]==null){
-                        res.send({"newuniqueclassroomid":1})  
-                    }else{                                                
-                        res.send({"newuniqueclassroomid":(result[0]["MAX(uniqueclassroomid)"]+1)})
-                    }
-                }    
-            });
-            return
-    }).catch((error)=>{
-        //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
-        console.log("error: ", error)
-        return
-    });
-}) */
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9090;

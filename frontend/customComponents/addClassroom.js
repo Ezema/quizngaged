@@ -80,7 +80,7 @@ export default function AddClassroom(props){
     
     const newClassroomUID = props.newClassroomUID;
 
-    const newClassroom = {id:newClassroomUID,name:null,classroomStatistics:{},classroomSettings:null,isDeleted:false,pastQuizzes:[],ongoingLiveQuizzes:[]}
+    const newClassroom = {id:newClassroomUID,globalQuizngagedId:null,name:null,classroomStatistics:{},classroomSettings:null,isDeleted:false,pastQuizzes:[],ongoingLiveQuizzes:[]}
 
     const [statefulNewQuiz,setStatefulNewQuiz] = React.useState(newClassroom)
     const nonStatefulnewQuiz = newClassroom
@@ -211,6 +211,8 @@ export default function AddClassroom(props){
                     newClassroom.classroomSettings = userEntryClassroomSettings
                     newClassroom.pastQuizzes = statefulArrayOfPastQuizzes
                     newClassroom.ongoingLiveQuizzes = statefulArrayOfOngoingLiveQuizzes
+
+                    newClassroom.globalQuizngagedId = backendQuerySaveNewUniqueClassroom(newClassroomUID,JSON.stringify(newClassroom))
     
                     console.log("saving new classroom", newClassroom)
     
@@ -224,10 +226,9 @@ export default function AddClassroom(props){
                     localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
     
     
-                    // call the backend to sync the local changes                
-                    backendQuerySaveUserJSON(()=>{})
-                    backendQuerySaveNewUniqueClassroom(()=>{},JSON.stringify(newClassroom))
-    
+                    // call the backend to sync the local changes                    
+                    backendQuerySaveUserJSON(()=>{})                    
+
                     props.setAddClassroomState(false)
                     setStep(0)
                 }

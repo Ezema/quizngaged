@@ -1,7 +1,7 @@
 
 const axios = require('axios');
 
-export default function backendQuerySaveNewUniqueClassroom(callback,classroomjson){    
+export default function backendQuerySaveNewUniqueClassroom (newClassroomUID,classroomjson){    
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){    
     axios({
       method: "POST",        
@@ -16,11 +16,13 @@ export default function backendQuerySaveNewUniqueClassroom(callback,classroomjso
       },
       timeout:10000
     }).then(async (response) => {                      
-        callback()
+        //newClassroomUID
+        return response.data.globalUniqueID
     }).catch(e => {          
         console.log(e);                                
     })
   }
-
 }
+
+//backendQuerySaveNewUniqueClassroom
 
