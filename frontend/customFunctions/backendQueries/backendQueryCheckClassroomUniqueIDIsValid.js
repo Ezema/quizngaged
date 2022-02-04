@@ -22,7 +22,12 @@ export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroo
         props.callback(response.data.uniqueClassroomIDValidity)
 
         let copy = JSON.parse(localStorage.quizngagedUserData)            
-        copy.classrooms.push(JSON.parse(response.data.classroomjson))                
+        //modify the server json object
+        let modifiedJSON = JSON.parse(response.data.classroomjson)
+        modifiedJSON.globalQuizngagedId = response.data.uniqueclassroomid
+        modifiedJSON.classroomowneruid = response.data.uniqueclassroomid
+        copy.classrooms.push(modifiedJSON)
+        
         localStorage.setItem("quizngagedUserData",JSON.stringify(copy))        
         backendQuerySaveUserJSON(()=>{})
         /* response.data.classroomowneruid
