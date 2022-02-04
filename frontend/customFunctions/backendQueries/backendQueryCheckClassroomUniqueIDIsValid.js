@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 
 const axios = require('axios');
 
+import backendQuerySaveUserJSON from './backendQuerySaveUserJSON';
+
 export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroomUniqueId){
 
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
@@ -20,10 +22,9 @@ export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroo
         props.callback(response.data.uniqueClassroomIDValidity)
 
         let copy = JSON.parse(localStorage.quizngagedUserData)            
-        copy.classrooms.push(JSON.parse(response.data.classroomjson))        
-        console.log("copy",copy)
-        localStorage.setItem("quizngagedUserData",JSON.stringify(copy))
-        console.log("localStorage",JSON.parse(localStorage.quizngagedUserData))
+        copy.classrooms.push(JSON.parse(response.data.classroomjson))                
+        localStorage.setItem("quizngagedUserData",JSON.stringify(copy))        
+        backendQuerySaveUserJSON(()=>{})
         /* response.data.classroomowneruid
         response.data.uniqueclassroomid */
         
