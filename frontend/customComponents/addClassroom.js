@@ -49,12 +49,18 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 
+import backendQueryCheckClassroomUniqueIDIsValid from '../customFunctions/backendQueries/backendQueryCheckClassroomUniqueIDIsValid.js'
+
+import backendQueryGetNewUniqueClassroomID from '../customFunctions/backendQueries/backendQueryGetNewUniqueClassroomID.js'
+import backendQuerySaveNewUniqueClassroom from '../customFunctions/backendQueries/backendQuerySaveNewUniqueClassroom.js'
+
 import { width } from '@mui/system';
 
 import QuizQuestions from './quizQuestions.js';
+import LoadingScreen from './loadingScreen.js';
 
 
-
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 export default function AddClassroom(props){
@@ -96,6 +102,9 @@ export default function AddClassroom(props){
 
     const [studentClassroomUniqueUID, setStudentClassroomUniqueUID] = React.useState(null)
     const [studentClassroomDescription, setStudentClassroomDescription] = React.useState(null)
+    const [checkingValidClassroom, setCheckingValidClassroom] = React.useState(false)
+    const [serverResponseForClassroomIDValidity, setServerResponseForClassroomIDValidity] = React.useState(false)
+    
 
     const [showError, setShowError] = React.useState(false)
 
@@ -132,44 +141,97 @@ export default function AddClassroom(props){
             setMainButtonText('Next')
         }
     }
+    
+    const handleClassroomIDisValid = ()=>{        
+        setCheckingValidClassroom(true)
+        backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID)
+        
+    }
+
+    React.useEffect(()=>{
+        if(checkingValidClassroom){
+            if(serverResponseForClassroomIDValidity){                
+                setStep(step+1)
+                setMainButtonText('Finish')
+                setCheckingValidClassroom(false)
+            }else{
+                setCheckingValidClassroom(false)
+                setShowError(true)
+            }
+        }
+    },[serverResponseForClassroomIDValidity])
 
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
-            if(step==0){
-                if(studentClassroomUniqueUID==null || studentClassroomUniqueUID==undefined || studentClassroomUniqueUID==="" || isNaN(parseFloat(studentClassroomUniqueUID))){
-                    setShowError(true)
-                }else{   
-                        (setStep(step+1));                    
-                        setMainButtonText('Finish')
-                        
+            if(props.userIsStudent){
+                if(step==0){                
+                    if(studentClassroomUniqueUID==null || studentClassroomUniqueUID==undefined || studentClassroomUniqueUID==="" || isNaN(parseFloat(studentClassroomUniqueUID))){
+                        setShowError(true)
+                    }else{                        
+                        handleClassroomIDisValid()
+                    }
+                    
                 }
+                else if(step==1){
+    
+                    backendQueryCheckClassroomUniqueIDIsValid(studentClassroomUniqueUID)
+                    //setCheckingValidClassroom(true)
+                    
+
+                    newClassroom.name = userEntryClassroomName
+                    newClassroom.classroomSettings = userEntryClassroomSettings
+                    newClassroom.pastQuizzes = statefulArrayOfPastQuizzes
+                    newClassroom.ongoingLiveQuizzes = statefulArrayOfOngoingLiveQuizzes
+    
+                    console.log("saving new classroom", newClassroom)
+    
+                    //create a copy from localstorage
+                    let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+    
+                    //save the edited pastQuizzes in the copy
+                    copyOfQuizngagedUserData.classrooms.push(newClassroom)
                 
-            }
-            else if(step==1){
-
-                newClassroom.name = userEntryClassroomName
-                newClassroom.classroomSettings = userEntryClassroomSettings
-                newClassroom.pastQuizzes = statefulArrayOfPastQuizzes
-                newClassroom.ongoingLiveQuizzes = statefulArrayOfOngoingLiveQuizzes
-
-                console.log("saving new classroom", newClassroom)
-
-                //create a copy from localstorage
-                let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
-
-                //save the edited pastQuizzes in the copy
-                copyOfQuizngagedUserData.classrooms.push(newClassroom)
-            
-                //replace the old data with the new data in localstorage                
-                localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
-
-                // call the backend to sync the local changes
-                backendQuerySaveUserJSON(()=>{})
-
-                props.setAddClassroomState(false)
-                setStep(0)
-            }            
-            
+                    //replace the old data with the new data in localstorage                
+                    localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+    
+    
+                    // call the backend to sync the local changes                
+                    backendQuerySaveUserJSON(()=>{})                        
+                    props.setAddClassroomState(false)
+                    setStep(0)
+                }
+            }else{
+                if(step==0){                                        
+                    (setStep(step+1));                    
+                    setMainButtonText('Finish')                    
+                }
+                else if(step==1){
+    
+                    newClassroom.name = userEntryClassroomName
+                    newClassroom.classroomSettings = userEntryClassroomSettings
+                    newClassroom.pastQuizzes = statefulArrayOfPastQuizzes
+                    newClassroom.ongoingLiveQuizzes = statefulArrayOfOngoingLiveQuizzes
+    
+                    console.log("saving new classroom", newClassroom)
+    
+                    //create a copy from localstorage
+                    let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+    
+                    //save the edited pastQuizzes in the copy
+                    copyOfQuizngagedUserData.classrooms.push(newClassroom)
+                
+                    //replace the old data with the new data in localstorage                
+                    localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+    
+    
+                    // call the backend to sync the local changes                
+                    backendQuerySaveUserJSON(()=>{})
+                    backendQuerySaveNewUniqueClassroom(()=>{},JSON.stringify(newClassroom))
+    
+                    props.setAddClassroomState(false)
+                    setStep(0)
+                }
+            }                                    
             
         /* } */
         
@@ -177,7 +239,7 @@ export default function AddClassroom(props){
     
     return(
             (props.userIsStudent)?(
-            <div>
+            <div>                
                 <Stepper activeStep={step}>
                     {steps.map((label) => (
                     <Step key={label}>
@@ -199,36 +261,46 @@ export default function AddClassroom(props){
                                 )}
                             </Typography>
                         </Box>
-                        <Box marginTop="1em">                                  
-                            <Box marginBottom="1em">
-                                <TextField     
-                                    required={step>0?false:true}
-                                    InputProps={{
-                                        readOnly: step>0?true:false,
-                                    }}
-                                    fullWidth                                               
-                                    error={showError}        
-                                    label="Enter the teacher-provided classroom code"
-                                    placeholder="Classroom code"
-                                    onChange={(event)=>{handleStudentClassroomUniqueUIDChange(event)}}
-                                    value={studentClassroomUniqueUID}
-                                    multiline
-                                />
+                        <Box marginTop="1em">                                  {checkingValidClassroom?(
+                            <Box margin="5em" display={'flex'} justifyContent={'center'}>
+                                <CircularProgress></CircularProgress>
                             </Box>
-                            <Box marginBottom="1em">
-                                <TextField     
-                                    required={step>0?false:false}
-                                    InputProps={{
-                                        readOnly: step>0?true:false,
-                                    }}
-                                    fullWidth                   
-                                    label="Enter a description for this classroom"
-                                    placeholder="Classroom description"
-                                    onChange={(event)=>{handleStudentClassroomDescriptionChange(event)}}
-                                    value={studentClassroomDescription}
-                                    multiline
-                                />
-                            </Box>
+                            )
+                            :
+                            (
+                                <div>
+                                <Box marginBottom="1em">
+                                    <TextField     
+                                        required={step>0?false:true}
+                                        InputProps={{
+                                            readOnly: step>0?true:false,
+                                        }}
+                                        fullWidth                                               
+                                        error={showError}        
+                                        label="Enter the teacher-provided classroom code"
+                                        placeholder="Classroom code"
+                                        onChange={(event)=>{handleStudentClassroomUniqueUIDChange(event)}}
+                                        value={studentClassroomUniqueUID}
+                                        multiline
+                                    />
+                                </Box>
+                                <Box marginBottom="1em">
+                                    <TextField     
+                                        required={step>0?false:false}
+                                        InputProps={{
+                                            readOnly: step>0?true:false,
+                                        }}
+                                        fullWidth                   
+                                        label="Enter a description for this classroom"
+                                        placeholder="Classroom description"
+                                        onChange={(event)=>{handleStudentClassroomDescriptionChange(event)}}
+                                        value={studentClassroomDescription}
+                                        multiline
+                                    />
+                                </Box>
+                                </div>
+                            )
+                            }
                             {/* <Box marginBottom="0.1em">
                                 <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfPastQuizzes={statefulArrayOfPastQuizzes} setStatefulArrayOfPastQuizzes={setStatefulArrayOfPastQuizzes} step={step}></QuizQuestions>
                             </Box> */}                        
