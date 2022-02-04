@@ -26,7 +26,7 @@ const db = mysql.createConnection({
     }else{
         console.log("Connected to database");
         let sqlQuery = "CREATE TABLE IF NOT EXISTS users (uid VARCHAR(50),userjson json);"
-        let secondSqlQuery = "CREATE TABLE IF NOT EXISTS classrooms (uniqueclassroomid INT UNSIGNED NOT NULL AUTO_INCREMENT,classroomjson json,classroomOwneruid VARCHAR(50), PRIMARY KEY(uniqueclassroomid));"
+        let secondSqlQuery = "CREATE TABLE IF NOT EXISTS classrooms (uniqueclassroomid INT UNSIGNED NOT NULL AUTO_INCREMENT,classroomjson json,classroomowneruid VARCHAR(50), PRIMARY KEY(uniqueclassroomid));"
         db.query(sqlQuery,(err,result)=>{
             console.log("first table ok");
         })

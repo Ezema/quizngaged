@@ -62,19 +62,36 @@ export default function StepsToCreateAccount(props){
 
     const handleUserDataUpload = ()=>{                        
         
-        let newQuizngagedUser = JSON.parse(JSON.stringify(quizngagedUserData.quizngagedUserData))
+        if(userType.localeCompare('Teacher')==0){
+            let newQuizngagedUser = JSON.parse(JSON.stringify(quizngagedUserData.quizngagedTeacherUserData))
             
-        newQuizngagedUser.uid = JSON.parse(localStorage.federatedAuthUserData).uid
+            newQuizngagedUser.uid = JSON.parse(localStorage.federatedAuthUserData).uid
 
-        newQuizngagedUser.userType = userType
-        newQuizngagedUser.name = name
-        newQuizngagedUser.email = email
-        newQuizngagedUser.phone = phone        
+            newQuizngagedUser.userType = userType
+            newQuizngagedUser.name = name
+            newQuizngagedUser.email = email
+            newQuizngagedUser.phone = phone        
 
-        localStorage.setItem("quizngagedUserData",JSON.stringify(newQuizngagedUser))
+            localStorage.setItem("quizngagedUserData",JSON.stringify(newQuizngagedUser))
 
-        setUploadUserDataInProgress(true)        
-        backendQuerySaveUserJSON(function callback(){Router.push('my-classrooms')})
+            setUploadUserDataInProgress(true)        
+            backendQuerySaveUserJSON(function callback(){Router.push('my-classrooms')})
+        }else if(userType.localeCompare('Student')==0){
+            let newQuizngagedUser = JSON.parse(JSON.stringify(quizngagedUserData.quizngagedStudentUserData))
+            
+            newQuizngagedUser.uid = JSON.parse(localStorage.federatedAuthUserData).uid
+
+            newQuizngagedUser.userType = userType
+            newQuizngagedUser.name = name
+            newQuizngagedUser.email = email
+            newQuizngagedUser.phone = phone        
+
+            localStorage.setItem("quizngagedUserData",JSON.stringify(newQuizngagedUser))
+
+            setUploadUserDataInProgress(true)        
+            backendQuerySaveUserJSON(function callback(){Router.push('my-classrooms')})
+        }
+        
     }
 
     return(
