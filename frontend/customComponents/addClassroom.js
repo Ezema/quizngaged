@@ -141,6 +141,7 @@ export default function AddClassroom(props){
                 }else{   
                         (setStep(step+1));                    
                         setMainButtonText('Finish')
+                        
                 }
                 
             }
