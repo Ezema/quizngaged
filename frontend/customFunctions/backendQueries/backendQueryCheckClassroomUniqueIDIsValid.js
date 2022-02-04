@@ -18,6 +18,15 @@ export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroo
       timeout:10000
     }).then(async (response) => {                 
         props.callback(response.data.uniqueClassroomIDValidity)
+
+        let copy = JSON.parse(localStorage.quizngagedUserData)            
+        copy.classrooms.push(JSON.parse(response.data.classroomjson))        
+        console.log("copy",copy)
+        localStorage.setItem("quizngagedUserData",JSON.stringify(copy))
+        console.log("localStorage",JSON.parse(localStorage.quizngagedUserData))
+        /* response.data.classroomowneruid
+        response.data.uniqueclassroomid */
+        
     }).catch(e => {          
         console.log(e);                                
     })

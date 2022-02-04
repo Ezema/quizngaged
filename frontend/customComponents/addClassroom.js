@@ -159,7 +159,7 @@ export default function AddClassroom(props){
                 setShowError(true)
             }
         }
-    },[serverResponseForClassroomIDValidity])
+    },[serverResponseForClassroomIDValidity,])
 
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
@@ -176,27 +176,19 @@ export default function AddClassroom(props){
     
                     backendQueryCheckClassroomUniqueIDIsValid(studentClassroomUniqueUID)
                     //setCheckingValidClassroom(true)
-                    
 
-                    newClassroom.name = userEntryClassroomName
-                    newClassroom.classroomSettings = userEntryClassroomSettings
-                    newClassroom.pastQuizzes = statefulArrayOfPastQuizzes
-                    newClassroom.ongoingLiveQuizzes = statefulArrayOfOngoingLiveQuizzes
-    
-                    console.log("saving new classroom", newClassroom)
-    
                     //create a copy from localstorage
-                    let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+                    //let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
     
                     //save the edited pastQuizzes in the copy
-                    copyOfQuizngagedUserData.classrooms.push(newClassroom)
+                    //copyOfQuizngagedUserData.classrooms.push(newClassroom)
                 
                     //replace the old data with the new data in localstorage                
-                    localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+                    //localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
     
     
                     // call the backend to sync the local changes                
-                    backendQuerySaveUserJSON(()=>{})                        
+                    //backendQuerySaveUserJSON(()=>{})                        
                     props.setAddClassroomState(false)
                     setStep(0)
                 }

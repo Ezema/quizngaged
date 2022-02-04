@@ -67,15 +67,19 @@ export default function MyClassrooms() {
     }
     if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
       router.push('/')
-    }/* else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
-      router.push('/')
-    } */else{
-      setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
-      backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+    }else{
+      if(userIsStudent==false){
+        setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
+        backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+      }
+      
     }
 
     if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Student')!=0){
       setUserIsStudent(false)
+    }else{
+      setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))      
+      setStatefulQuizngagedUserData(JSON.parse(localStorage.quizngagedUserData))
     }
     
   },[addClassroomState,editClassroomState])
@@ -154,7 +158,7 @@ export default function MyClassrooms() {
           )
           :          
           (
-            <Box paddingTop="1em" paddingBottom="100px">
+            <Box paddingTop="1em" paddingBottom="100px">              
               <Grid container spacing={2}>
               {
                 statefulQuizngagedUserData.classrooms.map((classroom)=>                 

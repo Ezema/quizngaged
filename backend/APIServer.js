@@ -212,7 +212,7 @@ app.post("/API/checkclassroomuniqueidisvalid",(req, res)=>{
 
     admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
     () => {      
-            let sqlQuery =`SELECT uniqueclassroomid FROM classrooms WHERE uniqueclassroomid = '${req.body.classroomUniqueId}';`            
+            let sqlQuery =`SELECT * FROM classrooms WHERE uniqueclassroomid = '${req.body.classroomUniqueId}';`            
             db.query(sqlQuery, (err, result)=>{
                 if (err) {
                     
@@ -224,7 +224,8 @@ app.post("/API/checkclassroomuniqueidisvalid",(req, res)=>{
                     if(result.length==0){
                         res.send({'uniqueClassroomIDValidity':false})
                     }else{
-                        res.send({'uniqueClassroomIDValidity':true})
+                        res.send({'uniqueClassroomIDValidity':true,'classroomjson':result[0].classroomjson,'uniqueclassroomid':result[0].uniqueclassroomid,
+                        'classroomowneruid':result[0].classroomowneruid})
                     }
                     
                 }    
