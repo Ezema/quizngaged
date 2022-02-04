@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
-    quizngagedUserData: {
+    quizngagedTeacherUserData: {
         "uid":null,
         "userType":null,
         "email":null,
@@ -130,5 +130,15 @@ export default {
 
             }
         ],
+    },
+    quizngagedStudentUserData: {
+        "uid":null,
+        "userType":null,
+        "email":null,
+        "photoURL":null,
+        "name":null,
+        "phone":null,
+        "classrooms":[
+        ]
     }
 };

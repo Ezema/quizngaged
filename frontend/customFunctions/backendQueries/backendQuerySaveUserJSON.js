@@ -1,9 +1,5 @@
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 const axios = require('axios');
-
-import federatedAuthUserData from '../../customGlobalVariables/federatedAuthUserData.js'
-import quizngagedUserData from '../../customGlobalVariables/quizngagedUserData';
 
 export default function backendQuerySaveUserJSON(callback){  
 
