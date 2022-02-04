@@ -61,6 +61,8 @@ export default function MyClassrooms() {
 
   const [userIsStudent,setUserIsStudent] = React.useState(true)
 
+  const [canRender,setCanRender] = React.useState(false)
+
   React.useEffect(()=>{
     if(window.location.pathname.localeCompare("/my-classrooms")!=0){
       window.location.pathname = "/my-classrooms"
@@ -68,21 +70,22 @@ export default function MyClassrooms() {
     if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
       router.push('/')
     }else{
-      if(userIsStudent==false){
-        setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
-        backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
-      }
-      
-    }
 
-    if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Student')!=0){
-      setUserIsStudent(false)
-    }else{
-      setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))      
-      setStatefulQuizngagedUserData(JSON.parse(localStorage.quizngagedUserData))
-    }
+      if(localStorage.quizngagedUserData==undefined){
+        setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
+        backendQueryGetUserJSON({callback:()=>{}})
+        console.log("before JSON.parse(localStorage.quizngagedUserData)",JSON.parse(localStorage.quizngagedUserData))
+      }else{        
+        if(JSON.parse(localStorage.quizngagedUserData).classrooms){
+          setCanRender(true)
+          if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Student')!=0){
+            setUserIsStudent(false)
+          }
+        }        
+      }   
+    }        
     
-  },[addClassroomState,editClassroomState,userIsStudent])
+  },[addClassroomState,editClassroomState,statefulUserObject,userIsStudent])
 
   const handleEditClassroom = (event,index)=>{    
     setEditClassroomUID(index)
@@ -97,7 +100,7 @@ export default function MyClassrooms() {
   }
 
   const handleAddClassroom = ()=>{    
-    let copyOfStatefulArray = JSON.parse(JSON.stringify(statefulQuizngagedUserData.classrooms));        
+    let copyOfStatefulArray = JSON.parse(JSON.stringify(JSON.parse(localStorage.quizngagedUserData).classrooms));        
 
     if(copyOfStatefulArray.length==0){
       setNewClassroomUID(0)
@@ -116,7 +119,7 @@ export default function MyClassrooms() {
   }
 
   return (                
-      (statefulQuizngagedUserData.classrooms==undefined)?
+      (!canRender)?
       (
         <div>        
         <LoadingScreen></LoadingScreen>
@@ -161,8 +164,8 @@ export default function MyClassrooms() {
             <Box paddingTop="1em" paddingBottom="100px">              
               <Grid container spacing={2}>
               {
-                statefulQuizngagedUserData.classrooms.map((classroom)=>                 
-                  <Grid item xs={12} md={6} lg={4} key={statefulQuizngagedUserData.classrooms.indexOf(classroom)}>              
+                JSON.parse(localStorage.quizngagedUserData).classrooms.map((classroom)=>                 
+                  <Grid item xs={12} md={6} lg={4} key={JSON.parse(localStorage.quizngagedUserData).classrooms.indexOf(classroom)}>              
                     <CustomPaperReactComponent elevation={3}>
                       <Typography variant='subtitle1'>
                         #{classroom.id}
@@ -198,7 +201,7 @@ export default function MyClassrooms() {
           (
             <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
               <Toolbar>          
-                <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddClassroom(event, statefulQuizngagedUserData.classrooms.length)}>
+                <StyledFab color="secondary" aria-label="add" onClick={(event)=>handleAddClassroom(event, JSON.parse(localStorage.quizngagedUserData).classrooms.length)}>
                   <AddIcon />
                 </StyledFab>          
               </Toolbar>
