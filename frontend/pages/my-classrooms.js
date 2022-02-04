@@ -95,10 +95,20 @@ export default function MyClassrooms() {
   const handleAddClassroom = ()=>{    
     let copyOfStatefulArray = JSON.parse(JSON.stringify(statefulQuizngagedUserData.classrooms));        
 
-    setNewClassroomUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )
+    if(copyOfStatefulArray.length==0){
+      setNewClassroomUID(0)
+    }else{
+      setNewClassroomUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )
+    }
 
     setAddClassroomState(true);
-    setTopBarTitle("Add Classroom")
+
+    if(userIsStudent){
+      setTopBarTitle("Join a Classroom")  
+    }else{
+      setTopBarTitle("Add Classroom")
+    }
+    
   }
 
   return (                
@@ -125,7 +135,7 @@ export default function MyClassrooms() {
           (
             
               <Box paddingTop="1em">
-                <AddClassroom newClassroomUID={newClassroomUID} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState}></AddClassroom>
+                <AddClassroom userIsStudent={userIsStudent} newClassroomUID={newClassroomUID} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState}></AddClassroom>
               </Box>
           )
           :

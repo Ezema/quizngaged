@@ -53,12 +53,24 @@ import { width } from '@mui/system';
 
 import QuizQuestions from './quizQuestions.js';
 
-const steps = [
-  'Add Classroom',
-  'Confirm Classroom data',
-];
+
+
+
 
 export default function AddClassroom(props){
+
+    let steps;
+    if(props.userIsStudent){
+        steps = [
+            'Join Classroom',
+            'Validate Classroom data',
+        ];
+    }else{
+        steps = [
+            'Add Classroom',
+            'Confirm Classroom data',            
+        ];
+    }
     
     const newClassroomUID = props.newClassroomUID;
 
@@ -75,16 +87,32 @@ export default function AddClassroom(props){
 
     const [userEntryClassroomSettings,setUserEntryClassroomSettings] = React.useState({})
 
-    const [userEntryClassroomName,setUserEntryClassroomName] = React.useState(statefulNewQuiz.name)
+    const [userEntryClassroomName,setUserEntryClassroomName] = React.useState(statefulNewQuiz.name)    
 
     const [statefulQuestions, setStatefulQuestions] = React.useState(null)
     const [statefulArrayOfPastQuizzes, setStatefulArrayOfPastQuizzes] = React.useState([])
     const [statefulArrayOfOngoingLiveQuizzes, setStatefulArrayOfOngoingLiveQuizzes] = React.useState([])
 
-    const handleQuizTitleChange = (event)=>{
-        setUserEntryClassroomName(event.target.value)        
+
+    const [studentClassroomUniqueUID, setStudentClassroomUniqueUID] = React.useState(null)
+    const [studentClassroomDescription, setStudentClassroomDescription] = React.useState(null)
+
+    const [showError, setShowError] = React.useState(false)
+
+    
+    const handleStudentClassroomUniqueUIDChange = (event)=>{
+        setShowError(false)
+        setStudentClassroomUniqueUID(event.target.value)
+    }
+    
+
+    const handleStudentClassroomDescriptionChange = (event)=>{
+        setStudentClassroomDescription(event.target.value)        
     }
 
+    const handleClassroomTitleChange = (event)=>{
+        setUserEntryClassroomName(event.target.value)        
+    }
 
     const calculateLastQuestionAnswerUID = (array)=>{        
         return array[array.length-1].id;
@@ -108,9 +136,13 @@ export default function AddClassroom(props){
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
             if(step==0){
-                (setStep(step+1));
-                // save user changes temporary            
-                setMainButtonText('Finish')                                    
+                if(studentClassroomUniqueUID==null || studentClassroomUniqueUID==undefined || studentClassroomUniqueUID==="" || isNaN(parseFloat(studentClassroomUniqueUID))){
+                    setShowError(true)
+                }else{   
+                        (setStep(step+1));                    
+                        setMainButtonText('Finish')
+                }
+                
             }
             else if(step==1){
 
@@ -143,75 +175,153 @@ export default function AddClassroom(props){
     }
     
     return(
-        <div>   
-            <Stepper activeStep={step}>
+            (props.userIsStudent)?(
+            <div>
+                <Stepper activeStep={step}>
                     {steps.map((label) => (
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
                     </Step>
                     ))}
-                </Stepper>         
-            
-            <Container >
-                <Box style={{background:'white', bottom:'10px'}}>
-                    <Box marginTop="2em">
-                        <Typography variant='h6'>
-                            {(step==0)?
-                                ('Add a new Classroom') :
-                            (
-                                (step==1)?
-                                    'Confirm the data' :
-                                    null
-                                    
-                            )}
-                        </Typography>
-                    </Box>
-                    <Box marginTop="1em">
-                        <Box marginBottom="1em">
-                            {/* <Typography variant='subtitle1' padding={0.5} style={{color:'gray'}}>
-                                Question UID
-                            </Typography> */}
-                            <TextField     
-                                margin={'0.5em'}
-                                disabled
-                                fullWidth 
-                                label={"Quiz UID: "+newClassroomUID.toString()}
-                            />                
-                        </Box>        
-                        <Box marginBottom="1em">
-                            <TextField     
-                                required={step>0?false:true}
-                                InputProps={{
-                                    readOnly: step>0?true:false,
-                                  }}
-                                fullWidth                   
-                                label="Enter a name for the classroom"
-                                placeholder="Classroom name"
-                                onChange={(event)=>{handleQuizTitleChange(event)}}
-                                value={userEntryClassroomName}
-                                multiline
-                            />
+                </Stepper>
+                <Container >
+                    <Box style={{background:'white', bottom:'10px'}}>
+                        <Box marginTop="2em">
+                            <Typography variant='h6'>
+                                {(step==0)?
+                                    ('Join a Classroom') :
+                                (
+                                    (step==1)?
+                                        'Confirm the data' :
+                                        null
+                                        
+                                )}
+                            </Typography>
                         </Box>
-                        {/* <Box marginBottom="0.1em">
-                            <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfPastQuizzes={statefulArrayOfPastQuizzes} setStatefulArrayOfPastQuizzes={setStatefulArrayOfPastQuizzes} step={step}></QuizQuestions>
-                        </Box> */}                        
+                        <Box marginTop="1em">                                  
+                            <Box marginBottom="1em">
+                                <TextField     
+                                    required={step>0?false:true}
+                                    InputProps={{
+                                        readOnly: step>0?true:false,
+                                    }}
+                                    fullWidth                                               
+                                    error={showError}        
+                                    label="Enter the teacher-provided classroom code"
+                                    placeholder="Classroom code"
+                                    onChange={(event)=>{handleStudentClassroomUniqueUIDChange(event)}}
+                                    value={studentClassroomUniqueUID}
+                                    multiline
+                                />
+                            </Box>
+                            <Box marginBottom="1em">
+                                <TextField     
+                                    required={step>0?false:false}
+                                    InputProps={{
+                                        readOnly: step>0?true:false,
+                                    }}
+                                    fullWidth                   
+                                    label="Enter a description for this classroom"
+                                    placeholder="Classroom description"
+                                    onChange={(event)=>{handleStudentClassroomDescriptionChange(event)}}
+                                    value={studentClassroomDescription}
+                                    multiline
+                                />
+                            </Box>
+                            {/* <Box marginBottom="0.1em">
+                                <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfPastQuizzes={statefulArrayOfPastQuizzes} setStatefulArrayOfPastQuizzes={setStatefulArrayOfPastQuizzes} step={step}></QuizQuestions>
+                            </Box> */}                        
+                        </Box>
                     </Box>
-                </Box>
-            </Container>
-            <Container>
-                <Grid Container columns={2} alignContent={'center'} justifyContent={'center'} display={'flex'} width={'100%'}>
-                    <Grid item paddingRight={'2em'}     width={'50vw'}>
-                        <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handlePreviousStep()} startIcon={<NavigateBeforeIcon/>}>
-                            Back
-                        </Button>
+                </Container>
+                <Container>
+                    <Grid Container columns={2} alignContent={'center'} justifyContent={'center'} display={'flex'} width={'100%'}>
+                        <Grid item paddingRight={'2em'}     width={'50vw'}>
+                            <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handlePreviousStep()} startIcon={<NavigateBeforeIcon/>}>
+                                Back
+                            </Button>
+                        </Grid>
+                        <Grid item paddingLeft={'2em'} width={'50vw'}>
+                            <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handleNextStep()} endIcon={<NavigateNextIcon/>}>
+                                {mainButtonText}
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item paddingLeft={'2em'} width={'50vw'}>
-                        <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handleNextStep()} endIcon={<NavigateNextIcon/>}>
-                            {mainButtonText}
-                        </Button>
+                </Container>
+            </div>
+            )
+            :
+            (
+            <div>
+                <Stepper activeStep={step}>
+                        {steps.map((label) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                        ))}
+                    </Stepper>         
+                
+                <Container >
+                    <Box style={{background:'white', bottom:'10px'}}>
+                        <Box marginTop="2em">
+                            <Typography variant='h6'>
+                                {(step==0)?
+                                    ('Add a new Classroom') :
+                                (
+                                    (step==1)?
+                                        'Confirm the data' :
+                                        null
+                                        
+                                )}
+                            </Typography>
+                        </Box>
+                        <Box marginTop="1em">
+                            <Box marginBottom="1em">
+                                {/* <Typography variant='subtitle1' padding={0.5} style={{color:'gray'}}>
+                                    Question UID
+                                </Typography> */}
+                                <TextField     
+                                    margin={'0.5em'}
+                                    disabled
+                                    fullWidth 
+                                    label={"Quiz UID: "+newClassroomUID.toString()}
+                                />                
+                            </Box>        
+                            <Box marginBottom="1em">
+                                <TextField     
+                                    required={step>0?false:true}
+                                    InputProps={{
+                                        readOnly: step>0?true:false,
+                                    }}
+                                    fullWidth                   
+                                    label="Enter a name for the classroom"
+                                    placeholder="Classroom name"
+                                    onChange={(event)=>{handleClassroomTitleChange(event)}}
+                                    value={userEntryClassroomName}
+                                    multiline
+                                />
+                            </Box>
+                            {/* <Box marginBottom="0.1em">
+                                <QuizQuestions statefulQuestions={statefulQuestions} setStatefulQuestions={setStatefulQuestions} statefulArrayOfPastQuizzes={statefulArrayOfPastQuizzes} setStatefulArrayOfPastQuizzes={setStatefulArrayOfPastQuizzes} step={step}></QuizQuestions>
+                            </Box> */}                        
+                        </Box>
+                    </Box>
+                </Container>
+                <Container>
+                    <Grid Container columns={2} alignContent={'center'} justifyContent={'center'} display={'flex'} width={'100%'}>
+                        <Grid item paddingRight={'2em'}     width={'50vw'}>
+                            <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handlePreviousStep()} startIcon={<NavigateBeforeIcon/>}>
+                                Back
+                            </Button>
+                        </Grid>
+                        <Grid item paddingLeft={'2em'} width={'50vw'}>
+                            <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handleNextStep()} endIcon={<NavigateNextIcon/>}>
+                                {mainButtonText}
+                            </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Container>                
-        </div>
+                </Container>
+            </div>
+            )        
     )
 }
