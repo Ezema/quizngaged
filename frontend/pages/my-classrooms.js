@@ -82,7 +82,7 @@ export default function MyClassrooms() {
       setStatefulQuizngagedUserData(JSON.parse(localStorage.quizngagedUserData))
     }
     
-  },[addClassroomState,editClassroomState])
+  },[addClassroomState,editClassroomState,userIsStudent])
 
   const handleEditClassroom = (event,index)=>{    
     setEditClassroomUID(index)
