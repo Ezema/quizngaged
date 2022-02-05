@@ -129,7 +129,7 @@ export default function EditQuestion(props){
 
             // save user changes temporary
             let copyOfEasierQuestion = JSON.parse(JSON.stringify(userEntryEasierQuestionBody))            
-            let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
+            let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))
             let copyOfEasierAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))                     
             let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
 
@@ -147,7 +147,7 @@ export default function EditQuestion(props){
             setStep(step-1)
 
             let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
-            let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
+            let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))
             let copyOfHarderAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
             let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
@@ -170,7 +170,7 @@ export default function EditQuestion(props){
                 // save user changes temporary
                                 
                 let copyOfBaselineQuestion = JSON.parse(JSON.stringify(userEntryBaselineQuestionBody))
-                let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
+                let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))
                 let copyOfBaselineAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))                    
                 let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
@@ -189,7 +189,7 @@ export default function EditQuestion(props){
                 // save user changes temporary
                 
                 let copyOfEasierQuestion = JSON.parse(JSON.stringify(userEntryEasierQuestionBody))
-                let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
+                let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))
                 let copyOfEasierAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))     
                 let copyOfEditedQuestion = JSON.parse(JSON.stringify(statefulEditedQuestion))
                 
@@ -252,7 +252,7 @@ export default function EditQuestion(props){
     }
 
 
-    const questionType = ['Multiple Choice','Text Response']    
+    const questionType = ['Multiple Choice','Text Response', 'Binary Question']    
     
     return(
         <div>   
@@ -320,16 +320,24 @@ export default function EditQuestion(props){
                                 label="Question Type" 
                             />}
                             />
-                        </Box>        
-                        <Box marginBottom="0.1em">
+                        </Box>
+                        { (userEntryQuestionType == 'Multiple Choice' || userEntryQuestionType =='Binary Question') && 
+                        <div>
+                            <Box marginBottom="0.1em">
                             <QuestionAnswers statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
                             </QuestionAnswers>    
-                        </Box>                  
-                        <Box marginBottom="2em" textAlign={'center'}>
-                            <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>} onClick={handleEditedQuestionAnswer}>
-                                Add answer
-                            </Button>
-                        </Box>  
+                            </Box>                  
+                            { ( (userEntryQuestionType =='Binary Question' && statefulArrayOfQuestionAnswers.length < 2) || userEntryQuestionType =='Multiple Choice'  ) &&
+                             <Box marginBottom="2em" textAlign={'center'}>
+                                <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>} onClick={handleEditedQuestionAnswer}>
+                                    Add answer
+                                </Button>
+                            </Box>
+                            }
+                            
+                        </div>
+                        }       
+                         
                     </Box>
                 </Box>
             </Container>
