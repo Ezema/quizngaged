@@ -22,6 +22,7 @@ import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import ListIcon from '@mui/icons-material/List';
@@ -53,7 +54,7 @@ import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthentica
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 
 import { useRouter } from 'next/router'
-
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 
 function MyQuizzes(props) {  
 
@@ -106,6 +107,22 @@ function MyQuizzes(props) {
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Quizzes")
 
+   const deleteQuiz = ( ev, id)=> {
+      let updatedList = listOfQuizzes.filter( (el)=> { return el.id!=id})
+      // update UI 
+      setListOfQuizzes(updatedList)
+    
+      //create a copy from localstorage
+      let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+      //save the edited quizzes list to  the copy
+      copyOfQuizngagedUserData.quizzes = updatedList
+      //replace the old data with the new data in localstorage
+      localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))   
+      
+      // sync data with backend
+      backendQuerySaveUserJSON(()=>{})
+    
+  }
   const handleAddQuizState = (event, lastIndexOfListOfQuizzes) => {
     let copyOfStatefulArray = JSON.parse(JSON.stringify(listOfQuizzes));        
 
@@ -176,8 +193,8 @@ function MyQuizzes(props) {
             (<Box paddingTop="1em" paddingBottom="100px">
               <Grid container spacing={2}>
                 {
-                  statefulQuizngagedUserData.quizzes.map((quiz)=>                 
-                    <Grid item xs={12} md={6} lg={4} key={statefulQuizngagedUserData.quizzes.indexOf(quiz)}>              
+                  listOfQuizzes.map((quiz)=>                 
+                    <Grid item xs={12} md={6} lg={4} key={listOfQuizzes.indexOf(quiz)}>              
                       <CustomPaperReactComponent elevation={3}>                  
                         <Typography variant='h6'>
                             #{quiz.id}
@@ -190,6 +207,10 @@ function MyQuizzes(props) {
                         </Typography>
                         {/* <Button size="small" onClick={(event) => handleOpenQuizzState(event, quiz.id)}>VIEW</Button> */}
                         <Button size="small" onClick={(event) => handleEditQuizState(event, quiz.id)}>EDIT</Button>
+                        <Button  size="small" color="error" endIcon={<DeleteIcon />}
+                         onClick={(event)=>deleteQuiz(event, quiz.id)}>
+                            Delete
+                          </Button>
                       </CustomPaperReactComponent>
                     </Grid>      
                   )

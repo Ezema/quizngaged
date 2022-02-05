@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
+
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -23,6 +24,8 @@ import Toolbar from '@mui/material/Toolbar';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+ 
 
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
@@ -39,6 +42,7 @@ import LoadingScreen from '../customComponents/loadingScreen.js';
 import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
 
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 
 import { useRouter } from 'next/router'
 
@@ -63,7 +67,25 @@ export default function MyClassrooms(props) {
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Questions")
 
-  const handleAddQuestionState = ()=>{    
+  const deleteQuestion = ( ev, ind)=> {
+    
+    let updatedList = listOfQuestions.filter( (el,ix)=> {
+        return ix!=ind})
+    
+      setListOfQuestions(updatedList)
+    
+      //create a copy from localstorage
+      let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+      //save the edited questions in the copy
+      copyOfQuizngagedUserData.questions = updatedList
+      //replace the old data with the new data in localstorage
+      localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+      // sync with backend
+      backendQuerySaveUserJSON(()=>{})
+    
+  }
+
+  const handleAddQuestionState = ( )=>{    
     if(!addQuestionState){
       let copyOfStatefulArray = JSON.parse(JSON.stringify(listOfQuestions));      
       setNewQuestionUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )    
@@ -155,7 +177,13 @@ export default function MyClassrooms(props) {
                         <Typography variant='subtitle1'>                    
                           {question.questionBaselineBody}
                         </Typography>
-                        <Button size="small" onClick={(event)=>handleEditQuestionState(event,listOfQuestions.indexOf(question))}>EDIT</Button>
+                        <Button    size="small" onClick={(event)=>handleEditQuestionState(event,listOfQuestions.indexOf(question))}>EDIT</Button>
+                        
+                         <Button  size="small" color="error" endIcon={<DeleteIcon />}
+                         onClick={(event)=>deleteQuestion(event, listOfQuestions.indexOf(question))}>
+                            Delete
+                          </Button>
+                       
                       </CustomPaperReactComponent>
                     </Grid>      
                   )
