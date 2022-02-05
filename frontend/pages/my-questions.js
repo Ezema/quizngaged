@@ -87,8 +87,14 @@ export default function MyClassrooms(props) {
 
   const handleAddQuestionState = ( )=>{    
     if(!addQuestionState){
+      if(listOfQuestions.length > 0){
       let copyOfStatefulArray = JSON.parse(JSON.stringify(listOfQuestions));      
-      setNewQuestionUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )    
+      
+      setNewQuestionUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 ) 
+      } else {
+        setNewQuestionUID(1);
+      }
+         
       setAddQuestionState(true);
       setTopBarTitle("Add new question")
     }
