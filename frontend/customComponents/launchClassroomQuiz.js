@@ -105,9 +105,16 @@ export default function LaunchClassroomQuiz(props){
             else if(step==1){
                 
                 newOngoingLiveQuiz.eventDescription = userEntryEventDescription
-                newOngoingLiveQuiz.quizSelected = statefulQuizSelected
+                newOngoingLiveQuiz.quizSelected = JSON.parse(localStorage.quizngagedUserData).quizzes[statefulQuizSelected]
+                
+                
 
-                console.log("saving new live quizz", newOngoingLiveQuiz)
+                // EXPLANATION: a quizz.quiestions is an array that ONLY CONTAINS the ID of the questions but not the question content itself. The following for loop will check for the quiz selected questions IDs and then populate the askQuestions array with the actual content of the questions.
+                newOngoingLiveQuiz.askQuestions = []
+
+                for(let i=0;i<JSON.parse(localStorage.quizngagedUserData).quizzes[statefulQuizSelected].questions.length;i++){
+                    newOngoingLiveQuiz.askQuestions.push(JSON.parse(localStorage.quizngagedUserData).questions[JSON.parse(localStorage.quizngagedUserData).quizzes[statefulQuizSelected].questions[i]])
+                }
 
                 //create a copy from localstorage
                 let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
