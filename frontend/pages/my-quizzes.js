@@ -124,9 +124,18 @@ function MyQuizzes(props) {
     
   }
   const handleAddQuizState = (event, lastIndexOfListOfQuizzes) => {
-    let copyOfStatefulArray = JSON.parse(JSON.stringify(listOfQuizzes));        
+    
+    if(listOfQuizzes.length > 0){
+      let copyOfStatefulArray = JSON.parse(JSON.stringify(listOfQuizzes));        
+      
+      setNewQuizUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )
+      
+    } else {
+         setNewQuizUID(1);
+    }
+          
 
-    setNewQuizUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )
+    
 
     setAddQuizState(true);
     setTopBarTitle("Add Quiz")
