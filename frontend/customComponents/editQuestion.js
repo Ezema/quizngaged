@@ -24,7 +24,8 @@ import Toolbar from '@mui/material/Toolbar';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import ListIcon from '@mui/icons-material/List';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
@@ -60,7 +61,7 @@ const steps = [
 export default function EditQuestion(props){    
 
     const editedQuestionUID = props.QuestionUIDToEdit;
-
+    const [snackBar, setSnackBar] = React.useState({isOpen:false, message:'Test'})
     const editedQuestion = props.questionToEdit    
 
     const [statefulEditedQuestion,setStatefulEditedQuestion] = React.useState(editedQuestion)
@@ -102,7 +103,7 @@ export default function EditQuestion(props){
         if(array.length != 0){
             return array[array.length-1].parentQuestionId;
         }else{
-            return 0;
+           return editedQuestionUID
         } 
     }
     
@@ -114,7 +115,7 @@ export default function EditQuestion(props){
 
         let copyArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
 
-        copyArray.push({id:createNewIndex,parentQuestionId:parentQuestionUID,body:''})            
+        copyArray.push({id:createNewIndex,parentQuestionId:parentQuestionUID,body:'', isCorrect:false})            
 
         setStatefulArrayOfQuestionAnswers(copyArray)
     }
@@ -162,10 +163,63 @@ export default function EditQuestion(props){
             setMainButtonText('Next')
         }
     }
+    const isQuestionValid = () => {
+
+        let answers = statefulArrayOfQuestionAnswers
+
+        if(userEntryQuestionType == 'Text Response'){
+           // no need for option checking 
+           return true;
+        }
+
+        if(userEntryQuestionType == 'Multiple Choice' ){
+          if(answers.length<2){
+             setSnackBar({isOpen:true, message:"Multichoice questions should have at least 2 answer variants", severity:"error"}) 
+             return false;
+        }
+          }
+   
+        if  (userEntryQuestionType == 'Binary Question'){
+           if(answers.length!=2){
+             setSnackBar({isOpen:true, message:"Binary questions should have exactly 2 answer variants", severity:"error"}) 
+              return false;
+          } 
+        }
+
+        var correctAnswerIsSet = false
+        for(let i = 0; i<answers.length; i++){
+           let el = answers[i]
+           if(el.body=='') {
+              setSnackBar({isOpen:true, message:"Empty answers are not allowed", severity:"error"})
+              return false
+           } 
+          if ( el.isCorrect  == true ){
+              correctAnswerIsSet=true
+          }
+        }
+        if(!correctAnswerIsSet){
+              setSnackBar({isOpen:true, message:"PLease pick up correct answer", severity:"error"})
+              return false
+        }
+        
+
+     
+        return true;
+    }
+    const snackBarClose = () => {
+        setSnackBar({isOpen:false,message:"", severity:""})
+    }
+
+
 
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
             if(step==0){
+
+                if(!isQuestionValid()){
+                    return false;
+                }
+
                 (setStep(step+1));
                 // save user changes temporary
                                 
@@ -185,6 +239,12 @@ export default function EditQuestion(props){
                 setStatefulArrayOfQuestionAnswers(statefulEditedQuestion.questionEasierAnswers)
             }
             else if(step==1){
+
+                 // easy question has body  so we need to perform  validation
+                if(userEntryEasierQuestionBody && !isQuestionValid()){
+                    return false;
+                }
+
                 setStep(step+1)                
                 // save user changes temporary
                 
@@ -211,6 +271,12 @@ export default function EditQuestion(props){
             
         /* } */
         else if(step==2){
+
+            // harder  question has body  so we need to perform  validation
+            if(userEntryHarderQuestionBody && !isQuestionValid()){
+                return false;
+            }
+
             //save last changes
             let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
             let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
@@ -354,7 +420,14 @@ export default function EditQuestion(props){
                         </Button>
                     </Grid>
                 </Grid>
-            </Container>                
+            </Container> 
+            <Snackbar
+            open={snackBar.isOpen}
+            autoHideDuration={6000}
+            onClose={snackBarClose}
+            >
+                    <Alert severity={snackBar.severity}>{snackBar.message}</Alert>
+            </Snackbar>                
         </div>
     )
 }
