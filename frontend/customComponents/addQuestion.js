@@ -8,6 +8,9 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+ 
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -63,10 +66,19 @@ export default function AddQuestion(props){
     const setListOfQuestions = props.setListOfQuestions;
     const newQuestionUID = props.newQuestionUID;
 
-    const newQuestion = {id:newQuestionUID,questionType:'Multiple Choice',questionBaselineBody:"",questionBaselineAnswers:[{id:1,parentQuestionId:newQuestionUID,body:''}],questionEasierBody:"",questionEasierAnswers:[{id:1,parentQuestionId:newQuestionUID,body:''}],questionHarderBody:"",questionHarderAnswers:[{id:1,parentQuestionId:newQuestionUID,body:''}]}
+    const newQuestion = {id:newQuestionUID,
+        questionType:'Multiple Choice',
+        questionBaselineBody:"",
+        questionBaselineAnswers:[{id:1,parentQuestionId:newQuestionUID,body:'', isCorrect:false}],
+        questionEasierBody:"",
+        questionEasierAnswers:[], //{id:1,parentQuestionId:newQuestionUID,body:'', isCorrect:false}
+        questionHarderBody:"",
+        questionHarderAnswers:[]} //{id:1,parentQuestionId:newQuestionUID,body:'', isCorrect:false}]
 
     const [statefulNewQuestion,setStatefulNewQuestion] = React.useState(newQuestion)
     const nonStatefulNewQuestion = newQuestion
+
+    const [snackBar, setSnackBar] = React.useState({isOpen:false, message:'Test'})
 
     const [statefulArrayOfQuestionAnswers,setStatefulArrayOfQuestionAnswers] = React.useState(statefulNewQuestion.questionBaselineAnswers)
     
@@ -94,10 +106,20 @@ export default function AddQuestion(props){
 
 
     const calculateLastQuestionAnswerUID = (array)=>{        
-        return array[array.length-1].id;
+        if(array.length>0){
+           return array[array.length-1].id;
+        } else{
+            return 0
+        }
+       
     }
     const getParentQuestionUID = (array)=>{
-        return array[array.length-1].parentQuestionId;
+        if(array.length>0){
+            return array[array.length-1].parentQuestionId;
+        } else{
+            return newQuestionUID
+        }
+       
     }
     
 
@@ -108,7 +130,7 @@ export default function AddQuestion(props){
 
         let copyArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
 
-        copyArray.push({id:createNewIndex,parentQuestionId:parentQuestionUID,body:''})
+        copyArray.push({id:createNewIndex,parentQuestionId:parentQuestionUID,body:'',isCorrect:false})
         
 
         setStatefulArrayOfQuestionAnswers(copyArray)
@@ -159,9 +181,60 @@ export default function AddQuestion(props){
         }
     }
 
+    const isQuestionValid = () => {
+
+        let answers = statefulArrayOfQuestionAnswers
+
+        if(userEntryQuestionType == 'Text Response'){
+           // no need for option checking 
+           return true;
+        }
+
+        if(userEntryQuestionType == 'Multiple Choice' ){
+          if(answers.length<2){
+             setSnackBar({isOpen:true, message:"Multichoice questions should have at least 2 answer variants", severity:"error"}) 
+             return false;
+        }
+          }
+   
+        if  (userEntryQuestionType == 'Binary Question'){
+           if(answers.length!=2){
+             setSnackBar({isOpen:true, message:"Binary questions should have exactly 2 answer variants", severity:"error"}) 
+              return false;
+          } 
+        }
+
+        var correctAnswerIsSet = false
+        for(let i = 0; i<answers.length; i++){
+           let el = answers[i]
+           if(el.body=='') {
+              setSnackBar({isOpen:true, message:"Empty answers are not allowed", severity:"error"})
+              return false
+           } 
+          if ( el.isCorrect  == true ){
+              correctAnswerIsSet=true
+          }
+        }
+        if(!correctAnswerIsSet){
+              setSnackBar({isOpen:true, message:"PLease pick up correct answer", severity:"error"})
+              return false
+        }
+        
+
+     
+        return true;
+    }
+    const snackBarClose = () => {
+        setSnackBar({isOpen:false,message:"", severity:""})
+    }
+
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
             if(step==0){
+                if(!isQuestionValid()){
+                    return false;
+                }
+
                 (setStep(step+1));
                 // save user changes temporary
                                 
@@ -181,6 +254,13 @@ export default function AddQuestion(props){
                 setStatefulArrayOfQuestionAnswers(statefulNewQuestion.questionEasierAnswers)
             }
             else if(step==1){
+                
+                // easy question has body  so we need to perform  validation
+                if(userEntryEasierQuestionBody && !isQuestionValid()){
+                    return false;
+                }
+
+
                 setStep(step+1)                
                 // save user changes temporary
                 
@@ -204,6 +284,11 @@ export default function AddQuestion(props){
                 setMainButtonText('Finish')
             }
             else if(step==2){
+
+                 // harder  question has body  so we need to perform  validation
+                if(userEntryHarderQuestionBody && !isQuestionValid()){
+                    return false;
+                }
                 //save last changes
                 let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
                 let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))//statefulNewQuestion.questionType
@@ -318,7 +403,7 @@ export default function AddQuestion(props){
                          { (userEntryQuestionType == 'Multiple Choice' || userEntryQuestionType =='Binary Question') && 
                         <div>
                             <Box marginBottom="0.1em">
-                            <QuestionAnswers statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
+                            <QuestionAnswers  statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
                             </QuestionAnswers>    
                             </Box>                  
                             { ( (userEntryQuestionType =='Binary Question' && statefulArrayOfQuestionAnswers.length < 2) || userEntryQuestionType =='Multiple Choice'  ) &&
@@ -347,7 +432,15 @@ export default function AddQuestion(props){
                         </Button>
                     </Grid>
                 </Grid>
-            </Container>                
+            </Container> 
+            
+             <Snackbar
+                open={snackBar.isOpen}
+                autoHideDuration={6000}
+                onClose={snackBarClose}
+                >
+                     <Alert severity={snackBar.severity}>{snackBar.message}</Alert>
+                </Snackbar> 
         </div>
     )
 }
