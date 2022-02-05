@@ -61,7 +61,7 @@ const steps = [
 export default function AddQuiz(props){
 
     const listOfQuizzes = props.listOfQuizzes;
-    const setListOfQuestions = props.setListOfQuestions;
+    const setListOfQuizzes = props.setListOfQuizzes;
     const newQuizUID = props.newQuizUID;
 
     const newQuiz = {id:newQuizUID,quizTitle:null,quizTopic:null,isDeleted:false,questions:[]}
@@ -126,7 +126,7 @@ export default function AddQuiz(props){
 
                 //save the edited questions in the copy
                 copyOfQuizngagedUserData.quizzes.push(newQuiz)
-            
+                setListOfQuizzes(copyOfQuizngagedUserData.quizzes)
                 //replace the old data with the new data in localstorage                
                 localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
 
