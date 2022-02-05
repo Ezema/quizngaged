@@ -18,6 +18,7 @@ import ViewClassroomOngoingQuizzes from './viewClassroomOngoingQuizzes.js'
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 
 import LiveTvIcon from '@mui/icons-material/LiveTv';
+import { Typography } from '@mui/material';
 
 export default function ViewClassroom(props){
 
@@ -119,6 +120,17 @@ export default function ViewClassroom(props){
             (
                 <Container>
                     <Grid Container display={'grid'}>
+                        <Grid item marginBottom={'1em'}>
+                            <Paper elevation={5}>
+                                <Grid Container display={'flex'} justifyContent={'center'} alignContent={'center'} alignItems={'center'} minHeight={'5em'}>                                    
+                                    <Grid item right={'0.1em'}>
+                                        <Typography variant='h5'>
+                                        <b>Share this code with your students:</b> {JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].globalQuizngagedId}
+                                        </Typography>
+                                    </Grid>                            
+                                </Grid>
+                            </Paper>
+                        </Grid>
                         <Grid item marginBottom={'1em'}>
                             <Paper elevation={3}>
                                 <Grid Container display={'flex'} /* justifyContent={'center'}  */alignContent={'center'} alignItems={'center'}>
