@@ -169,16 +169,16 @@ export default function MyClassrooms() {
                   (JSON.parse(localStorage.quizngagedUserData).classrooms.length==0)?
                   (
                     <Grid item>
-                      <Box textAlign={'center'}>
-                        <Container>
-                          <Typography variant='h5'>
-                            No classrooms joined.                          
-                          </Typography>
-                          <Typography variant='h5'>                          
-                            Click below to join a classroom
-                          </Typography>
-                        </Container>
-                      </Box>
+                      <Grid container display={'grid'} alignContent={'center'} justifyContent={'center'} justifyItems={'center'} justifySelf={'center'}>
+                        <Grid item>
+                            <Typography variant='h5'>
+                              No classrooms joined.                          
+                            </Typography>
+                            <Typography variant='h5'>                          
+                              Click below to join a classroom
+                            </Typography>                          
+                        </Grid>
+                      </Grid>
                     </Grid>
                   )
                   :
@@ -192,7 +192,7 @@ export default function MyClassrooms() {
                         <Typography variant='h5'>
                           {classroom.name}
                         </Typography>                      
-                        <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.globalQuizngagedId)}>OPEN</Button>
+                        <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id)}>OPEN</Button>
                         {(userIsStudent)?null:<Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>}
                       </CustomPaperReactComponent>
                     </Grid>      

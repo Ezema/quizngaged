@@ -128,8 +128,7 @@ export default function AddClassroom(props){
     }
     const getParentQuestionUID = (array)=>{
         return array[array.length-1].parentQuestionId;
-    }
-    
+    }    
 
     const handlePreviousStep = ()=>{
         if(step==0){
@@ -190,7 +189,7 @@ export default function AddClassroom(props){
                     newClassroom.pastQuizzes = statefulArrayOfPastQuizzes
                     newClassroom.ongoingLiveQuizzes = statefulArrayOfOngoingLiveQuizzes
 
-                    newClassroom.globalQuizngagedId = backendQuerySaveNewUniqueClassroom(newClassroomUID,JSON.stringify(newClassroom))
+                    backendQuerySaveNewUniqueClassroom(newClassroomUID,JSON.stringify(newClassroom))                    
     
                     console.log("saving new classroom", newClassroom)
     

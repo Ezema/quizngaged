@@ -5,18 +5,34 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
 
 import CustomPaperReactComponent from './customPaperReactComponent.js';
+
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { Icon } from '@mui/material';
+
+import backendQueryUpdateOngoingQuizzes from '../customFunctions/backendQueries/backendQueryUpdateOngoingQuizzes.js'
 
 export default function ViewClassroomOngoingQuizzes(props){
 
     React.useEffect(()=>{
         //console.log("ongoing quizzes after load: ",JSON.parse(localStorage.quizngagedUserData).classrooms)
-    },[])
+    },[refreshingOngoingQuizzes])
 
+    const [refreshingOngoingQuizzes,setRefreshingOngoingQuizzes] = React.useState(false)
+
+
+    const handleRefreshLiveOngoingQuizzes = ()=>{        
+        setRefreshingOngoingQuizzes(true)
+        backendQueryUpdateOngoingQuizzes(props.viewClassroomUID,{callback:setRefreshingOngoingQuizzes},JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].globalQuizngagedId)
+    }
     const handleViewLiveOngoingQuiz = ()=>{}
+
     return(
         <div>
+            {console.log("JSON.parse(localStorage.quizngagedUserData).classrooms",JSON.parse(localStorage.quizngagedUserData).classrooms)}
+            {console.log("props.viewClassroomUID",props.viewClassroomUID)}
             <Container>
                 {(JSON.parse(localStorage.quizngagedUserData).classrooms==undefined)?
                 (
@@ -25,9 +41,21 @@ export default function ViewClassroomOngoingQuizzes(props){
                 :
                 (JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.length==0)?
                 (
-                    <Typography variant='h4'>
-                        No active quizzes at this time
-                    </Typography>
+                    <Container>
+                        <Grid container display={'grid'} justifyContent={'center'}>
+                            <Grid item textAlign={'center'}>                                
+                                <IconButton size="large" onClick={handleRefreshLiveOngoingQuizzes}>
+                                    <RefreshIcon color='primary' size="large"></RefreshIcon>
+                                </IconButton>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant='h4'>
+                                    No active quizzes at this time
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Container>
+                    
                 )
                 :
                 (

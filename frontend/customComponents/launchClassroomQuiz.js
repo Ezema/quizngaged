@@ -53,6 +53,8 @@ import { width } from '@mui/system';
 
 import ListOfQuizzes from './listOfQuizzes.js';
 
+import backendQueryUpdateUniqueClassroom from '../customFunctions/backendQueries/backendQueryUpdateUniqueClassroom.js'
+
 const steps = [
   'Select one quiz',
   'Launch quiz',
@@ -118,6 +120,8 @@ export default function LaunchClassroomQuiz(props){
 
                 // call the backend to sync the local changes
                 backendQuerySaveUserJSON(()=>{})
+                backendQueryUpdateUniqueClassroom(JSON.stringify(copyOfQuizngagedUserData.classrooms[props.viewClassroomUID]),copyOfQuizngagedUserData.classrooms[props.viewClassroomUID].globalQuizngagedId)
+                
 
                 props.setLaunchClassroomQuizState(false)
                 setStep(0)

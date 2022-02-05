@@ -188,6 +188,33 @@ app.post("/API/savenewuniqueclassroom",(req, res)=>{
     () => {      
             let sqlQuery = `INSERT INTO classrooms (classroomjson,classroomowneruid) VALUES ('${req.body.classroomjson}','${req.body.uid}');`
             console.log("sql query: ", sqlQuery)
+            console.log("\n")
+            db.query(sqlQuery, (err, result)=>{
+                if (err) {
+                    
+                    console.log("error with db query")
+                    //throw err;
+                } 
+                else { 
+                    res.send({'globalUniqueID':result.insertId})
+                }    
+            });
+            return
+    }).catch((error)=>{
+        //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+        console.log("error: ", error)
+        return
+    });
+})
+
+app.post("/API/updateuniqueclassroom",(req, res)=>{
+    console.log("\n")
+    console.log("/API/updateuniqueclassroom: ")
+
+    admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
+    () => {      
+            let sqlQuery = `UPDATE classrooms SET classroomjson=('${req.body.classroomjson}') WHERE uniqueclassroomid="${req.body.uniqueclassroomid}";`
+            console.log("sql query: ", sqlQuery)
             db.query(sqlQuery, (err, result)=>{
                 if (err) {
                     
@@ -237,6 +264,7 @@ app.post("/API/checkclassroomuniqueidisvalid",(req, res)=>{
         return
     });
 })
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9090;
