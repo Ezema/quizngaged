@@ -25,14 +25,18 @@ node static-frontend-server.js && node APIServer.js
 ```
 #### With NPM
 ```bash
-npm run servers
+    npm run servers
 ```
 OR
 ```bash
-npm run API
+    npm run API
 ```
-
-### First create the database schema and populate it with initial test data
+OR
+```bash
+    npm run APIServer
+```
+<!-- section below is deprecated due to change in data schema>
+<!-- ### First create the database schema and populate it with initial test data
 navigate to ./db/design, where create_db.sql and initial_test_data.sql files are:
 ```bash
 cd ./db/design
@@ -45,18 +49,18 @@ cd ./db/design
 connect mysql to docker database:
 
 ```bash
-mysql -h127.0.0.1 -uroot -pTest1234
-```
+mysql -h127.0.0.1 -uroot -ppassword
+``` -->
 
-run script to create the schema (in db/design folder):
+<!-- run script to create the schema (in db/design folder):
 
 ```bash
 mysql> use appdb;
 mysql> source create_db.sql
-```
+``` -->
 
-run script to populate the test data (in db/design folder):
+<!-- run script to populate the test data (in db/design folder):
 
 ```bash
 mysql> source initial_test_data.sql
-```
+``` -->

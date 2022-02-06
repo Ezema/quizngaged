@@ -4,8 +4,8 @@
   },
   "scripts": {
     "servers": "node static-frontend-server.js && node APIServer.js",
-    "APIServer": "node APIServer.js",
-    "APIServer.js": "node APIServer.js"
+    "API": "node APIServer.js",
+    "APIServer": "node APIServer.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
