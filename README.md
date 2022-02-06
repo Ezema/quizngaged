@@ -23,8 +23,8 @@ With the docker container not running and the APIServer not running:
     ```bash
     sudo mysql -h127.0.0.1 -uroot -pppassword
     ```
-5. drop the table users and the table classrooms
-6. in chrome dev tools go to the application tab and remove all content (children too!) from localStorage and from the indexedDB that firebase uses
+5. drop the table users and the table classrooms (See README.md in db folder)
+6. in chrome dev tools go to the application tab and remove all content (children too!) from localStorage and from the indexedDB that firebase uses (See README.MD in db folder)
 7. run the APIServer and check that it gets connected to the DB
 
 ## Folders

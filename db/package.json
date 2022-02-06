@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "sudo docker-compose -f stack.yml up",
-    "mac-start": "sudo docker-compose -f mac-stack.yml up",
-    "db": "sudo docker-compose -f stack.yml up",
-    "db-cli": "mysql -h127.0.0.1 -uroot -pTest1234"
+    "start": "sudo docker-compose -f docker-compose.yml up",
+    "ubuntu-start": "sudo docker-compose -f docker-compose.yml up",
+    "db": "sudo docker-compose -f docker-compose.yml up",
+    "db-cli": "mysql -h127.0.0.1 -uroot -ppassword",
+    "drop-tables": "docker-compose down -v",
+    "recreate-tables": "docker-compose up -d"
   },
   "author": "",
   "license": "ISC"
