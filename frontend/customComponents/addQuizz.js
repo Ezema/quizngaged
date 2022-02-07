@@ -24,6 +24,7 @@ import Toolbar from '@mui/material/Toolbar';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import Snackbar from '@mui/material/Snackbar';
 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import ListIcon from '@mui/icons-material/List';
@@ -50,6 +51,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 
 import { width } from '@mui/system';
+import { Alert } from '@mui/material';
 
 import QuizQuestions from './quizQuestions.js';
 
@@ -60,6 +62,7 @@ const steps = [
 
 export default function AddQuiz(props){
 
+    const [snackBar, setSnackBar] = React.useState({isOpen:false, message:'Test'})
     const listOfQuizzes = props.listOfQuizzes;
     const setListOfQuizzes = props.setListOfQuizzes;
     const newQuizUID = props.newQuizUID;
@@ -83,11 +86,15 @@ export default function AddQuiz(props){
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState([])
 
     const handleQuizTitleChange = (event)=>{
-        var changedTitle = event.target.value;
-        setUserEntryQuizTitle(changedTitle)
-        setEntriesAreValid(changedTitle.length != 0);
+      let regExp = /^\s*$/;      
+      let changedTitle = event.target.value;
+      let isEmpty = regExp.test(changedTitle);
+      setUserEntryQuizTitle(changedTitle)
+      setEntriesAreValid(changedTitle.length != 0 && !isEmpty);
     }
-
+    const snackBarClose = () => {
+      setSnackBar({isOpen:false,message:"", severity:""})
+    }
 
     const calculateLastQuestionAnswerUID = (array)=>{        
         return array[array.length-1].id;
@@ -109,40 +116,43 @@ export default function AddQuiz(props){
     }
 
     const handleNextStep = ()=>{
-        if(step<2 && entriesAreValid){ 
-            if(step==0){
-                (setStep(step+1));
-                // save user changes temporary            
-                setMainButtonText('Finish')                                    
-            }
-            else if(step==1){
+      let titleNotEntered = step == 0 && (userEntryQuizTitle == undefined || userEntryQuizTitle.length == 0);
+      if (titleNotEntered) {
+        setEntriesAreValid(false);
+        setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"}) 
+      }
+      else if (statefulArrayOfQuestionSelected.length == 0) {
+        setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"}) 
+      }
+      else if(step==0){
+        (setStep(step+1));
+        // save user changes temporary            
+        setMainButtonText('Finish')                                    
+      }
+      else if(step==1){
 
-                newQuiz.quizTitle = userEntryQuizTitle
-                newQuiz.quizTopic = userEntryQuizTopic
-                newQuiz.questions = statefulArrayOfQuestionSelected
+        newQuiz.quizTitle = userEntryQuizTitle
+        newQuiz.quizTopic = userEntryQuizTopic
+        newQuiz.questions = statefulArrayOfQuestionSelected
 
-                console.log("saving new quizz", newQuiz)
+        console.log("saving new quizz", newQuiz)
 
-                //create a copy from localstorage
-                let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+        //create a copy from localstorage
+        let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
 
-                //save the edited questions in the copy
-                copyOfQuizngagedUserData.quizzes.push(newQuiz)
-                setListOfQuizzes(copyOfQuizngagedUserData.quizzes)
-                //replace the old data with the new data in localstorage                
-                localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+        //save the edited questions in the copy
+        copyOfQuizngagedUserData.quizzes.push(newQuiz)
+        setListOfQuizzes(copyOfQuizngagedUserData.quizzes)
+        //replace the old data with the new data in localstorage                
+        localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
 
-                // call the backend to sync the local changes
-                backendQuerySaveUserJSON(()=>{})
+        // call the backend to sync the local changes
+        backendQuerySaveUserJSON(()=>{})
 
-                props.setAddQuizState(false)
-                setStep(0)
-            }            
-            
-            
-        } 
-        
-    }
+        props.setAddQuizState(false)
+        setStep(0)
+    }            
+  }
 
     //This will be fetched from the API too
     const quizTopics = ['Geography','Mathematics']    
@@ -183,39 +193,22 @@ export default function AddQuiz(props){
                                 label={"Quiz UID: "+newQuizUID.toString()}
                             />                
                         </Box>
-                        {entriesAreValid ?
-                            <Box marginBottom="1em">
-                                <TextField     
-                                    required={step>0?false:true}
-                                    InputProps={{
-                                        readOnly: step>0?true:false,
-                                    }}
-                                    fullWidth                   
-                                    label="Enter a title for the quiz"
-                                    placeholder="Quiz title"
-                                    onChange={(event)=>{handleQuizTitleChange(event)}}
-                                    value={userEntryQuizTitle}
-                                    multiline
-                                />
-                            </Box>
-                        :
-                            <Box marginBottom="1em">
-                                <TextField     
-                                    required={step>0?false:true}
-                                    InputProps={{
-                                        readOnly: step>0?true:false,
-                                    }}
-                                    fullWidth                   
-                                    label="Enter a title for the quiz"
-                                    placeholder="Quiz title"
-                                    onChange={(event)=>{handleQuizTitleChange(event)}}
-                                    value={userEntryQuizTitle}
-                                    multiline
-                                    error
-                                    helperText="Title cannot be blank"
-                                />
-                            </Box>
-                        }
+                        <Box marginBottom="1em">
+                            <TextField     
+                                required={step>0?false:true}
+                                InputProps={{
+                                    readOnly: step>0?true:false,
+                                }}
+                                fullWidth                   
+                                label="Enter a title for the quiz"
+                                placeholder="Quiz title"
+                                onChange={(event)=>{handleQuizTitleChange(event)}}
+                                value={userEntryQuizTitle}
+                                multiline
+                                error={!entriesAreValid}
+                                helperText={entriesAreValid?'':"Title cannot be blank"}
+                            />
+                        </Box>
                         <Box marginBottom="1em">
                             <Autocomplete
                                 disabled={step>0?true:false}                                
@@ -255,6 +248,13 @@ export default function AddQuiz(props){
                     </Grid>
                 </Grid>
             </Container>                
+            <Snackbar
+            open={snackBar.isOpen}
+            autoHideDuration={6000}
+            onClose={snackBarClose}
+            >
+              <Alert severity={snackBar.severity}>{snackBar.message}</Alert>
+            </Snackbar>                
         </div>
     )
 }
