@@ -67,7 +67,7 @@ OR
 ### 2. Clear browser local storage
 
 Google Chrome:
-Go to View -> Developer -> Developer Tools -> Application Tab. Delete Key-Value pairs in 'Local Storage' and all databases from 'IndexedDB'.
+Go to View -> Developer -> Developer Tools -> Application   Tab. Delete Key-Value pairs in 'Local Storage' and all databases from 'IndexedDB'.
 
 Firefox:
 Go to Tools -> Browser Tools -> Web Developer Tools -> Storage Tab. Delete Key-Value pairs from 'Local Storage' and from 'IndexedDB'.
