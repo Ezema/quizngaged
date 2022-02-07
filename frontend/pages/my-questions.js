@@ -25,6 +25,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+
  
 
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
@@ -43,6 +44,7 @@ import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthentica
 
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+import DeleteDialog from '../customComponents/deleteDialog.js';
 
 import { useRouter } from 'next/router'
 
@@ -67,7 +69,7 @@ export default function MyClassrooms(props) {
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Questions")
 
-  const deleteQuestion = ( ev, ind)=> {
+  const deleteQuestion = (ind)=> {
     
     let updatedList = listOfQuestions.filter( (el,ix)=> {
         return ix!=ind})
@@ -185,11 +187,11 @@ export default function MyClassrooms(props) {
                         </Typography>
                         <Button    size="small" onClick={(event)=>handleEditQuestionState(event,listOfQuestions.indexOf(question))}>EDIT</Button>
                         
-                         <Button  size="small" color="error" endIcon={<DeleteIcon />}
-                         onClick={(event)=>deleteQuestion(event, listOfQuestions.indexOf(question))}>
+                         {/* <Button  size="small" color="error" endIcon={<DeleteIcon />}
+                         onClick={()=>deleteQuestion(listOfQuestions.indexOf(question))}>
                             Delete
-                          </Button>
-                       
+                          </Button> */}
+                        <DeleteDialog dialogTitle = {"Delete Question?"} message="You will be deleting this question." deleteFunction={deleteQuestion} entityId={listOfQuestions.indexOf(question)}/>
                       </CustomPaperReactComponent>
                     </Grid>      
                   )

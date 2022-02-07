@@ -23,6 +23,7 @@ import Toolbar from '@mui/material/Toolbar';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import ListIcon from '@mui/icons-material/List';
@@ -55,6 +56,8 @@ import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQu
 
 import { useRouter } from 'next/router'
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+import AlertDialog from '../customComponents/deleteDialog.js';
+import DeleteDialog from '../customComponents/deleteDialog.js';
 
 function MyQuizzes(props) {  
 
@@ -107,7 +110,8 @@ function MyQuizzes(props) {
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Quizzes")
 
-   const deleteQuiz = ( ev, id)=> {
+  //  const deleteQuiz = ( ev, id)=> {
+   const deleteQuiz = (id)=> {  
       let updatedList = listOfQuizzes.filter( (el)=> { return el.id!=id})
       // update UI 
       setListOfQuizzes(updatedList)
@@ -215,11 +219,12 @@ function MyQuizzes(props) {
                           Number of questions: {quiz.questions.length}
                         </Typography>
                         {/* <Button size="small" onClick={(event) => handleOpenQuizzState(event, quiz.id)}>VIEW</Button> */}
-                        <Button size="small" onClick={(event) => handleEditQuizState(event, quiz.id)}>EDIT</Button>
-                        <Button  size="small" color="error" endIcon={<DeleteIcon />}
-                         onClick={(event)=>deleteQuiz(event, quiz.id)}>
+                        <Button size="large" onClick={(event) => handleEditQuizState(event, quiz.id)} endIcon={<EditIcon />}>EDIT</Button>
+                        {/* <Button  size="small" color="error" endIcon={<DeleteIcon />}
+                         onClick={()=>deleteQuiz(quiz.id)}>
                             Delete
-                          </Button>
+                          </Button> */}
+                        <DeleteDialog dialogTitle = {"Delete Quiz?"} message="You will be deleting your quiz contents." deleteFunction={deleteQuiz} entityId={quiz.id}/>
                       </CustomPaperReactComponent>
                     </Grid>      
                   )
