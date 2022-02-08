@@ -167,6 +167,11 @@ export default function EditQuestion(props){
 
         let answers = statefulArrayOfQuestionAnswers
 
+        if(userEntryBaselineQuestionBody.length == 0){
+            setSnackBar({isOpen:true, message:"Question Body cannot be empty", severity:"error"}) 
+            return false;
+        }
+
         if(userEntryQuestionType == 'Text Response'){
            // no need for option checking 
            return true;
