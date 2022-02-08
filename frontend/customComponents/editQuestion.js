@@ -82,8 +82,12 @@ export default function EditQuestion(props){
     const [userEntryHarderQuestionBody,setUserEntryHarderQuestionBody] = React.useState(statefulEditedQuestion.questionHarderBody)
 
     const handleQuestionBodyChange = (event, questionDifficulty)=>{
-        if(questionDifficulty==0){            
-            setUserEntryBaselineQuestionBody(event.target.value)
+        let regExp = /^\s*$/;      
+        let changedBody = event.target.value;
+        let isEmpty = regExp.test(changedBody);
+        if(questionDifficulty==0){  
+            setUserEntryBaselineQuestionBody(changedBody)
+            setEntriesAreValid(changedBody.length != 0 && !isEmpty);
         }else if(questionDifficulty==1){
             setUserEntryEasierQuestionBody(event.target.value)
         }else if(questionDifficulty==2){
@@ -168,7 +172,6 @@ export default function EditQuestion(props){
         let answers = statefulArrayOfQuestionAnswers
 
         if(userEntryBaselineQuestionBody.length == 0){
-            setSnackBar({isOpen:true, message:"Question Body cannot be empty", severity:"error"}) 
             return false;
         }
 
@@ -219,12 +222,16 @@ export default function EditQuestion(props){
 
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
+            let quizBodyNotEntered = (userEntryBaselineQuestionBody == undefined || userEntryBaselineQuestionBody.length == 0);
             if(step==0){
-
                 if(!isQuestionValid()){
+                    if(quizBodyNotEntered){
+                        setEntriesAreValid(false);
+                        setSnackBar({isOpen:true, message:"Question body cannot be blank", severity:"error"}) 
+                    }
                     return false;
                 }
-
+                
                 (setStep(step+1));
                 // save user changes temporary
                                 
@@ -371,6 +378,8 @@ export default function EditQuestion(props){
                                 onChange={(event)=>{handleQuestionBodyChange(event,(step==0?(0):(step==1?(1):(2))))}}
                                 value={step==0?(userEntryBaselineQuestionBody):((step==1)?(userEntryEasierQuestionBody):(userEntryHarderQuestionBody))}
                                 multiline
+                                error={!entriesAreValid}
+                                helperText={entriesAreValid?'':"Question body cannot be blank"}
                             />
                         </Box>
                         <Box marginBottom="1em">
