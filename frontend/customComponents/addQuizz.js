@@ -116,13 +116,20 @@ export default function AddQuiz(props){
     }
 
     const handleNextStep = ()=>{
+        let titleNotEntered = step == 0 && (userEntryQuizTitle == undefined || userEntryQuizTitle.length ==0);
+        if (titleNotEntered) {
+            setEntriesAreValid(false);
+            setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"})
+        }
+        else if (statefulArrayOfQuestionSelected.length ==0) {
+            setSnackBar({isOpen:true, mesage:"A quiz must include at least one question", severity:"error"})
+        }
         /* if(step<2 && entriesAreValid){ */
-            if(step==0){
+        else if(step==0){
                 (setStep(step+1));
                 // save user changes temporary            
                 setMainButtonText('Finish')                                    
-            }
-            else if(step==1){
+        }   else if(step==1){
                 newQuiz.quizTitle = userEntryQuizTitle
                 newQuiz.quizTopic = userEntryQuizTopic
                 newQuiz.questions = statefulArrayOfQuestionSelected
