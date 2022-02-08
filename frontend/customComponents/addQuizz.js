@@ -116,43 +116,39 @@ export default function AddQuiz(props){
     }
 
     const handleNextStep = ()=>{
-      let titleNotEntered = step == 0 && (userEntryQuizTitle == undefined || userEntryQuizTitle.length == 0);
-      if (titleNotEntered) {
-        setEntriesAreValid(false);
-        setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"}) 
-      }
-      else if (statefulArrayOfQuestionSelected.length == 0) {
-        setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"}) 
-      }
-      else if(step==0){
-        (setStep(step+1));
-        // save user changes temporary            
-        setMainButtonText('Finish')                                    
-      }
-      else if(step==1){
+        /* if(step<2 && entriesAreValid){ */
+            if(step==0){
+                (setStep(step+1));
+                // save user changes temporary            
+                setMainButtonText('Finish')                                    
+            }
+            else if(step==1){
+                newQuiz.quizTitle = userEntryQuizTitle
+                newQuiz.quizTopic = userEntryQuizTopic
+                newQuiz.questions = statefulArrayOfQuestionSelected
 
-        newQuiz.quizTitle = userEntryQuizTitle
-        newQuiz.quizTopic = userEntryQuizTopic
-        newQuiz.questions = statefulArrayOfQuestionSelected
+                console.log("saving new quizz", newQuiz)
 
-        console.log("saving new quizz", newQuiz)
+                //create a copy from localstorage
+                let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
 
-        //create a copy from localstorage
-        let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+                //save the edited questions in the copy
+                copyOfQuizngagedUserData.quizzes.push(newQuiz)
+                setListOfQuizzes(copyOfQuizngagedUserData.quizzes)
+                //replace the old data with the new data in localstorage                
+                localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
 
-        //save the edited questions in the copy
-        copyOfQuizngagedUserData.quizzes.push(newQuiz)
-        setListOfQuizzes(copyOfQuizngagedUserData.quizzes)
-        //replace the old data with the new data in localstorage                
-        localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+                // call the backend to sync the local changes
+                backendQuerySaveUserJSON(()=>{})
 
-        // call the backend to sync the local changes
-        backendQuerySaveUserJSON(()=>{})
-
-        props.setAddQuizState(false)
-        setStep(0)
-    }            
-  }
+                props.setAddQuizState(false)
+                setStep(0)
+            }            
+            
+            
+        /* } */
+        
+    }
 
     //This will be fetched from the API too
     const quizTopics = ['Geography','Mathematics']    

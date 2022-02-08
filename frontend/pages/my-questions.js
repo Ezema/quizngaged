@@ -24,8 +24,7 @@ import Toolbar from '@mui/material/Toolbar';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-
+import EditIcon from '@mui/icons-material/Edit';
  
 
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
@@ -185,7 +184,7 @@ export default function MyClassrooms(props) {
                         <Typography variant='subtitle1'>                    
                           {question.questionBaselineBody}
                         </Typography>
-                        <Button    size="small" onClick={(event)=>handleEditQuestionState(event,listOfQuestions.indexOf(question))}>EDIT</Button>
+                        <Button    size="large" onClick={(event)=>handleEditQuestionState(event,listOfQuestions.indexOf(question))} endIcon={<EditIcon />}>EDIT</Button>
                         
                          {/* <Button  size="small" color="error" endIcon={<DeleteIcon />}
                          onClick={()=>deleteQuestion(listOfQuestions.indexOf(question))}>
