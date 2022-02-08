@@ -180,10 +180,14 @@ export default function AddQuestion(props){
             setMainButtonText('Next')
         }
     }
-
     const isQuestionValid = () => {
 
         let answers = statefulArrayOfQuestionAnswers
+
+        if(userEntryBaselineQuestionBody.length == 0){
+            setSnackBar({isOpen:true, message:"Question Body cannot be empty", severity:"error"}) 
+            return false;
+        }
 
         if(userEntryQuestionType == 'Text Response'){
            // no need for option checking 
@@ -234,7 +238,6 @@ export default function AddQuestion(props){
                 if(!isQuestionValid()){
                     return false;
                 }
-
                 (setStep(step+1));
                 // save user changes temporary
                                 
@@ -324,7 +327,7 @@ export default function AddQuestion(props){
 
                 setAddQuestionState(false)
                 setStep(0)
-            }            
+            }           
             
             
         /* } */
