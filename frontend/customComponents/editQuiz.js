@@ -55,6 +55,8 @@ import { Alert } from '@mui/material';
 
 import QuizQuestions from './quizQuestions.js';
 
+import findArrayIndex from '../customFunctions/findArrayIndex.js';
+
 const steps = [
   'Edit Quiz',
   'Confirm Quiz data',
@@ -68,7 +70,9 @@ export default function EditQuiz(props){
     const editQuizUID = props.editQuizUID;
 
     
-    const editQuiz = JSON.parse(localStorage.quizngagedUserData).quizzes[props.editQuizUID]    
+    const quizIndexNumber = findArrayIndex(JSON.parse(localStorage.quizngagedUserData).quizzes, "id", editQuizUID)
+    
+    const editQuiz = JSON.parse(localStorage.quizngagedUserData).quizzes[quizIndexNumber]
 
     const [statefuleditQuiz,setStatefuleditQuiz] = React.useState(editQuiz)
     const nonStatefuleditQuiz = editQuiz    
