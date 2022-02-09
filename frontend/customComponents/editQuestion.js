@@ -89,9 +89,19 @@ export default function EditQuestion(props){
             setUserEntryBaselineQuestionBody(changedBody)
             setEntriesAreValid(changedBody.length != 0 && !isEmpty);
         }else if(questionDifficulty==1){
-            setUserEntryEasierQuestionBody(event.target.value)
+            setUserEntryEasierQuestionBody(changedBody)
+            if(statefulArrayOfQuestionAnswers.length == 0){
+                setEntriesAreValid(true);
+            }else{
+                setEntriesAreValid(changedBody.length != 0 && !isEmpty);
+            }
         }else if(questionDifficulty==2){
-            setUserEntryHarderQuestionBody(event.target.value)
+            setUserEntryHarderQuestionBody(changedBody)
+            if(statefulArrayOfQuestionAnswers.length == 0){
+                setEntriesAreValid(true);
+            }else{
+                setEntriesAreValid(changedBody.length != 0 && !isEmpty);
+            }
         }
     }
 
@@ -206,7 +216,7 @@ export default function EditQuestion(props){
           }
         }
         if(!correctAnswerIsSet){
-              setSnackBar({isOpen:true, message:"PLease pick up correct answer", severity:"error"})
+              setSnackBar({isOpen:true, message:"Please pick up correct answer", severity:"error"})
               return false
         }
         
@@ -223,6 +233,9 @@ export default function EditQuestion(props){
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
             let quizBodyNotEntered = (userEntryBaselineQuestionBody == undefined || userEntryBaselineQuestionBody.length == 0);
+            let easierQuizBodyNotEntered = (userEntryEasierQuestionBody == undefined || userEntryEasierQuestionBody.length == 0);
+            let harderQuizBodyNotEntered = (userEntryHarderQuestionBody == undefined || userEntryHarderQuestionBody.length == 0);
+
             if(step==0){
                 if(!isQuestionValid()){
                     if(quizBodyNotEntered){
@@ -256,7 +269,14 @@ export default function EditQuestion(props){
                 if(userEntryEasierQuestionBody && !isQuestionValid()){
                     return false;
                 }
-
+                
+                if(statefulArrayOfQuestionAnswers.length != 0 && easierQuizBodyNotEntered){
+                    setEntriesAreValid(false);
+                    setSnackBar({isOpen:true, message:"Question body cannot be blank", severity:"error"}) 
+                    return false
+                }else if(statefulArrayOfQuestionAnswers.length == 0){
+                    setEntriesAreValid(true);
+                }
                 setStep(step+1)                
                 // save user changes temporary
                 
@@ -289,6 +309,13 @@ export default function EditQuestion(props){
                 return false;
             }
 
+            if(statefulArrayOfQuestionAnswers.length != 0 && harderQuizBodyNotEntered){
+                setEntriesAreValid(false);
+                setSnackBar({isOpen:true, message:"Question body cannot be blank", severity:"error"}) 
+                return false
+            }else if(statefulArrayOfQuestionAnswers.length == 0){
+                setEntriesAreValid(true);
+            }
             //save last changes
             let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
             let copyOfQuestionType = JSON.parse(JSON.stringify(statefulEditedQuestion.questionType))
@@ -371,7 +398,7 @@ export default function EditQuestion(props){
                         </Box>        
                         <Box marginBottom="1em">
                             <TextField     
-                                required={step>0?false:true}
+                                required={step==0?true:((step==1 && statefulArrayOfQuestionAnswers.length!=0)?true:(step==2 && statefulArrayOfQuestionAnswers.length!=0)?true:false)}
                                 fullWidth                   
                                 label="Enter the question body"
                                 placeholder={step==0?"Question with baseline difficulty":step==1?"Question with easy difficulty":"Question with hard difficulty"}
