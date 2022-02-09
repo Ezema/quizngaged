@@ -24,7 +24,6 @@ import Toolbar from '@mui/material/Toolbar';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import Snackbar from '@mui/material/Snackbar';
 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import ListIcon from '@mui/icons-material/List';
@@ -51,9 +50,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 
 import { width } from '@mui/system';
-import { Alert } from '@mui/material';
 
 import QuizQuestions from './quizQuestions.js';
+
+import ValidatingSnackBar from './validatingSnackBar.js';
+import isMandatoryTextValid from '../customFunctions/validateMandatoryText.js';
+
 
 const steps = [
   'Edit Quiz',
@@ -62,7 +64,6 @@ const steps = [
 
 export default function EditQuiz(props){
 
-    const [snackBar, setSnackBar] = React.useState({isOpen:false, message:'Test'})
     const listOfQuizzes = props.listOfQuizzes;
     const setListOfQuestions = props.setListOfQuestions;
     const editQuizUID = props.editQuizUID;
@@ -74,7 +75,6 @@ export default function EditQuiz(props){
     const nonStatefuleditQuiz = editQuiz    
 
     const [step,setStep] = React.useState(0)
-    const [entriesAreValid,setEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
     const [userEntryQuizTopic,setUserEntryQuizTopic] = React.useState(editQuiz.quizTopic)
@@ -83,16 +83,32 @@ export default function EditQuiz(props){
     const [statefulQuestions, setStatefulQuestions] = React.useState(null)
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editQuiz.questions)    
 
-    const handleQuizTitleChange = (event)=>{
-      let regExp = /^\s*$/;      
-      let changedTitle = event.target.value;
-      let isEmpty = regExp.test(changedTitle);
-      setUserEntryQuizTitle(changedTitle)
-      setEntriesAreValid(changedTitle.length != 0 && !isEmpty);
-    }
-    const snackBarClose = () => {
-      setSnackBar({isOpen:false,message:"", severity:""})
-    }
+    const [validStatus, setValidStatus] = React.useState({isTitleValid: true, isFormValid: true});
+    const validators = {
+      title: {
+        handleChange: (text) => {
+          setUserEntryQuizTitle(text)
+          setValidStatus({isTitleValid: isMandatoryTextValid(text), isFormValid: validStatus.isFormValid});
+        },
+        errorMessage: 'Title cannot be blank',
+      },
+      form: {
+        isValid: () => {
+          let titleIsEntered = validStatus.isTitleValid && userEntryQuizTitle != undefined && userEntryQuizTitle.length != 0;
+          let hasQuestion = statefulArrayOfQuestionSelected.length != 0;
+          let isFormValid = titleIsEntered && hasQuestion;
+
+          validators.form.errorMessage = isFormValid ? ''
+                                        : titleIsEntered ? 'A quiz must include at least one question'
+                                        :'Quiz title cannot be blank';     
+
+          setValidStatus({isTitleValid: titleIsEntered, isFormValid: isFormValid});
+          console.log("return from isValid="+isFormValid+" title="+titleIsEntered+" ques="+hasQuestion)
+          return isFormValid;
+        },
+        errorMessage: '',
+      },
+    };
 
     const calculateLastQuestionAnswerUID = (array)=>{        
         return array[array.length-1].id;
@@ -114,13 +130,8 @@ export default function EditQuiz(props){
     }
 
     const handleNextStep = ()=>{
-      let titleNotEntered = step == 0 && (userEntryQuizTitle == undefined || userEntryQuizTitle.length == 0);
-      if (titleNotEntered) {
-        setEntriesAreValid(false);
-        setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"}) 
-      }
-      else if (statefulArrayOfQuestionSelected.length == 0) {
-        setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"}) 
+      if (!validators.form.isValid()) {
+        return;
       }
       else if(step==0){
         (setStep(step+1));
@@ -198,11 +209,11 @@ export default function EditQuiz(props){
                                 fullWidth                   
                                 label="Enter a title for the quiz"
                                 placeholder="Quiz title"
-                                onChange={(event)=>{handleQuizTitleChange(event)}}
+                                onChange={(event)=>{validators.title.handleChange(event.target.value)}}
                                 value={userEntryQuizTitle}
                                 multiline
-                                error={!entriesAreValid}
-                                helperText={entriesAreValid?'':"Title cannot be blank"}
+                                error={!validStatus.isTitleValid}
+                                helperText={validStatus.isTitleValid?'':validators.title.errorMessage}
                             />
                         </Box>
                         <Box marginBottom="1em">
@@ -245,13 +256,7 @@ export default function EditQuiz(props){
                     </Grid>
                 </Grid>
             </Container>
-            <Snackbar
-            open={snackBar.isOpen}
-            autoHideDuration={6000}
-            onClose={snackBarClose}
-            >
-              <Alert severity={snackBar.severity}>{snackBar.message}</Alert>
-            </Snackbar>                
+            <ValidatingSnackBar isValid={validStatus.isFormValid} message={validators.form.errorMessage} />   
         </div>
     )
 }
