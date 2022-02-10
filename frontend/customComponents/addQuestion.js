@@ -87,6 +87,7 @@ export default function AddQuestion(props){
 
     const [step,setStep] = React.useState(0)
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
+    const [questionTypeEntriesAreValid,setQuestionTypeEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
     const [userEntryQuestionType,setUserEntryQuestionType] = React.useState(statefulNewQuestion.questionType)
@@ -202,6 +203,12 @@ export default function AddQuestion(props){
             return false;
         }
 
+        if(userEntryQuestionType == '' || (userEntryQuestionType !== 'Text Response' && userEntryQuestionType !== 'Multiple Choice' && userEntryQuestionType !== 'Binary Question')){
+            setSnackBar({isOpen:true, message:"Question type is wrong", severity:"error"}) 
+            setQuestionTypeEntriesAreValid(false);
+            return false;
+        }
+
         if(userEntryQuestionType == 'Text Response'){
            // no need for option checking 
            return true;
@@ -250,7 +257,6 @@ export default function AddQuestion(props){
             let quizBodyNotEntered = (userEntryBaselineQuestionBody == undefined || userEntryBaselineQuestionBody.length == 0);
             let easierQuizBodyNotEntered = (userEntryEasierQuestionBody == undefined || userEntryEasierQuestionBody.length == 0);
             let harderQuizBodyNotEntered = (userEntryHarderQuestionBody == undefined || userEntryHarderQuestionBody.length == 0);
-            
             if(step==0){
                 if(!isQuestionValid()){
                     if(quizBodyNotEntered){
@@ -262,7 +268,6 @@ export default function AddQuestion(props){
                 
                 (setStep(step+1));
                 // save user changes temporary
-                                
                 let copyOfBaselineQuestion = JSON.parse(JSON.stringify(userEntryBaselineQuestionBody))
                 let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))//statefulNewQuestion.questionType
                 let copyOfBaselineAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))                    
@@ -426,18 +431,23 @@ export default function AddQuestion(props){
                                 disabled={step>0?true:false}
                                 value={userEntryQuestionType}
                                 onChange={(event, newValue) => {
-                                setUserEntryQuestionType(newValue);
+                                (newValue===null)?(setQuestionTypeEntriesAreValid(false)):
+                                setUserEntryQuestionType(newValue)
+                                setQuestionTypeEntriesAreValid(true);
                                 }}
-                                disableClearable="true"
+                                disableClearable
                                 inputValue={userEntryQuestionType}
                                 onInputChange={(event, newInputValue) => {
-                                setUserEntryQuestionType(newInputValue);
+                                setUserEntryQuestionType(newInputValue)
                                 }}
                                 disablePortal
                                 options={questionType}
                                 fullWidth
                                 renderInput={(questionOption) => <TextField {...questionOption} 
                                 label="Question Type" 
+                                required
+                                error={!questionTypeEntriesAreValid}
+                                helperText={questionTypeEntriesAreValid?'':"Question type is wrong"}
                             />}
                             />
                         </Box>
