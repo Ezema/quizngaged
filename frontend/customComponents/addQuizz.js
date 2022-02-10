@@ -77,7 +77,6 @@ export default function AddQuiz(props){
     const [step,setStep] = React.useState(0)
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
-
     const [userEntryQuizTopic,setUserEntryQuizTopic] = React.useState("Geography")
 
     const [userEntryQuizTitle,setUserEntryQuizTitle] = React.useState(statefulNewQuiz.quizTitle)
@@ -102,8 +101,6 @@ export default function AddQuiz(props){
     const getParentQuestionUID = (array)=>{
         return array[array.length-1].parentQuestionId;
     }
-    
-
     const handlePreviousStep = ()=>{
         if(step==0){
             setStep(0)
@@ -117,39 +114,42 @@ export default function AddQuiz(props){
 
     const handleNextStep = ()=>{
         let titleNotEntered = step == 0 && (userEntryQuizTitle == undefined || userEntryQuizTitle.length ==0);
-        if (titleNotEntered) {
-            setEntriesAreValid(false);
-            setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"})
-        }
-        else if (statefulArrayOfQuestionSelected.length ==0) {
-            setSnackBar({isOpen:true, mesage:"A quiz must include at least one question", severity:"error"})
-        }
+        
         /* if(step<2 && entriesAreValid){ */
-        else if(step==0){
-                (setStep(step+1));
-                // save user changes temporary            
-                setMainButtonText('Finish')                                    
-        }   else if(step==1){
-                newQuiz.quizTitle = userEntryQuizTitle
-                newQuiz.quizTopic = userEntryQuizTopic
-                newQuiz.questions = statefulArrayOfQuestionSelected
+        if(step==0){
+            if (titleNotEntered) {
+                setEntriesAreValid(false);
+                setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"})
+                return false
+            }else if (statefulArrayOfQuestionSelected.length==0) {
+                setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"})
+                return false
+            }
+            
+            (setStep(step+1));
+            // save user changes temporary            
+            setMainButtonText('Finish')                                    
+        }else if(step==1){
+            newQuiz.quizTitle = userEntryQuizTitle
+            newQuiz.quizTopic = userEntryQuizTopic
+            newQuiz.questions = statefulArrayOfQuestionSelected
 
-                console.log("saving new quizz", newQuiz)
+            console.log("saving new quizz", newQuiz)
 
-                //create a copy from localstorage
-                let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
+            //create a copy from localstorage
+            let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
 
-                //save the edited questions in the copy
-                copyOfQuizngagedUserData.quizzes.push(newQuiz)
-                setListOfQuizzes(copyOfQuizngagedUserData.quizzes)
-                //replace the old data with the new data in localstorage                
-                localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
+            //save the edited questions in the copy
+            copyOfQuizngagedUserData.quizzes.push(newQuiz)
+            setListOfQuizzes(copyOfQuizngagedUserData.quizzes)
+            //replace the old data with the new data in localstorage                
+            localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
 
-                // call the backend to sync the local changes
-                backendQuerySaveUserJSON(()=>{})
+            // call the backend to sync the local changes
+            backendQuerySaveUserJSON(()=>{})
 
-                props.setAddQuizState(false)
-                setStep(0)
+            props.setAddQuizState(false)
+            setStep(0)
             }            
             
             
@@ -199,6 +199,7 @@ export default function AddQuiz(props){
                         <Box marginBottom="1em">
                             <TextField     
                                 required={step>0?false:true}
+                                disabled={step>0?true:false}  
                                 InputProps={{
                                     readOnly: step>0?true:false,
                                 }}
@@ -217,12 +218,12 @@ export default function AddQuiz(props){
                                 disabled={step>0?true:false}                                
                                 value={userEntryQuizTopic}
                                 onChange={(event, newValue) => {
-                                setUserEntryQuizTopic(newValue);
+                                setUserEntryQuizTopic(newValue)
                                 }}
-                                disableClearable="true"
+                                disableClearable
                                 inputValue={userEntryQuizTopic}
                                 onInputChange={(event, newInputValue) => {
-                                setUserEntryQuizTopic(newInputValue);
+                                setUserEntryQuizTopic(newInputValue)
                                 }}
                                 disablePortal
                                 options={quizTopics}    

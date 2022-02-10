@@ -119,14 +119,16 @@ export default function EditQuiz(props){
 
     const handleNextStep = ()=>{
       let titleNotEntered = step == 0 && (userEntryQuizTitle == undefined || userEntryQuizTitle.length == 0);
-      if (titleNotEntered) {
-        setEntriesAreValid(false);
-        setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"}) 
-      }
-      else if (statefulArrayOfQuestionSelected.length == 0) {
-        setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"}) 
-      }
-      else if(step==0){
+
+      if(step==0){
+        if (titleNotEntered) {
+            setEntriesAreValid(false);
+            setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"}) 
+            return false;
+        }else if (statefulArrayOfQuestionSelected.length ==0) {
+            setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"})
+            return false;
+        }
         (setStep(step+1));
         // save user changes temporary            
         setMainButtonText('Finish')                                    
@@ -196,6 +198,7 @@ export default function EditQuiz(props){
                         <Box marginBottom="1em">
                             <TextField     
                                 required={step>0?false:true}
+                                disabled={step>0?true:false}  
                                 InputProps={{
                                     readOnly: step>0?true:false,
                                 }}
@@ -214,12 +217,12 @@ export default function EditQuiz(props){
                                 disabled={step>0?true:false}                                
                                 value={userEntryQuizTopic}
                                 onChange={(event, newValue) => {
-                                setUserEntryQuizTopic(newValue);
+                                setUserEntryQuizTopic(newValue)
                                 }}
-                                disableClearable="true"
+                                disableClearable
                                 inputValue={userEntryQuizTopic}
                                 onInputChange={(event, newInputValue) => {
-                                setUserEntryQuizTopic(newInputValue);
+                                setUserEntryQuizTopic(newInputValue)
                                 }}
                                 disablePortal
                                 options={quizTopics}    

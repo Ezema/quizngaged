@@ -74,6 +74,7 @@ export default function EditQuestion(props){
 
     const [step,setStep] = React.useState(0)
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
+    const [questionTypeEntriesAreValid,setQuestionTypeEntriesAreValid] = React.useState('true')
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
     const [userEntryQuestionType,setUserEntryQuestionType] = React.useState(statefulEditedQuestion.questionType)
@@ -182,6 +183,12 @@ export default function EditQuestion(props){
         let answers = statefulArrayOfQuestionAnswers
 
         if(userEntryBaselineQuestionBody.length == 0){
+            return false;
+        }
+
+        if(userEntryQuestionType == '' || (userEntryQuestionType !== 'Text Response' && userEntryQuestionType !== 'Multiple Choice' && userEntryQuestionType !== 'Binary Question')){
+            setSnackBar({isOpen:true, message:"Question type is wrong", severity:"error"}) 
+            setQuestionTypeEntriesAreValid(false);
             return false;
         }
 
@@ -414,18 +421,23 @@ export default function EditQuestion(props){
                                 disabled={step>0?true:false}
                                 value={userEntryQuestionType}
                                 onChange={(event, newValue) => {
-                                setUserEntryQuestionType(newValue);
+                                (newValue===null)?(setQuestionTypeEntriesAreValid(false)):
+                                setUserEntryQuestionType(newValue)
+                                setQuestionTypeEntriesAreValid(true);
                                 }}
-                                disableClearable="true"
+                                disableClearable
                                 inputValue={userEntryQuestionType}
                                 onInputChange={(event, newInputValue) => {
-                                setUserEntryQuestionType(newInputValue);
+                                setUserEntryQuestionType(newInputValue)
                                 }}
                                 disablePortal
                                 options={questionType}
                                 fullWidth
                                 renderInput={(questionOption) => <TextField {...questionOption} 
                                 label="Question Type" 
+                                required
+                                error={!questionTypeEntriesAreValid}
+                                helperText={questionTypeEntriesAreValid?'':"Question type is wrong"}
                             />}
                             />
                         </Box>
