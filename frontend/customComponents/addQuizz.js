@@ -219,6 +219,7 @@ export default function AddQuiz(props){
                                 onChange={(event, newValue) => {
                                 setUserEntryQuizTopic(newValue);
                                 }}
+                                disableClearable="true"
                                 inputValue={userEntryQuizTopic}
                                 onInputChange={(event, newInputValue) => {
                                 setUserEntryQuizTopic(newInputValue);

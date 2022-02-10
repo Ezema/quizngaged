@@ -428,6 +428,7 @@ export default function AddQuestion(props){
                                 onChange={(event, newValue) => {
                                 setUserEntryQuestionType(newValue);
                                 }}
+                                disableClearable="true"
                                 inputValue={userEntryQuestionType}
                                 onInputChange={(event, newInputValue) => {
                                 setUserEntryQuestionType(newInputValue);
