@@ -56,6 +56,7 @@ import { Alert } from '@mui/material';
 import QuizQuestions from './quizQuestions.js';
 
 import findArrayIndex from '../customFunctions/findArrayIndex.js';
+import * as formValidator from '../customFunctions/formValidation.js';
 
 const steps = [
   'Edit Quiz',
@@ -88,11 +89,10 @@ export default function EditQuiz(props){
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editQuiz.questions)    
 
     const handleQuizTitleChange = (event)=>{
-      let regExp = /^\s*$/;      
       let changedTitle = event.target.value;
-      let isEmpty = regExp.test(changedTitle);
+      let isValid = formValidator.isValidMandatoryText(changedTitle);
       setUserEntryQuizTitle(changedTitle)
-      setEntriesAreValid(changedTitle.length != 0 && !isEmpty);
+      setEntriesAreValid(isValid);
     }
     const snackBarClose = () => {
       setSnackBar({isOpen:false,message:"", severity:""})
@@ -118,14 +118,13 @@ export default function EditQuiz(props){
     }
 
     const handleNextStep = ()=>{
-      let titleNotEntered = step == 0 && (userEntryQuizTitle == undefined || userEntryQuizTitle.length == 0);
 
       if(step==0){
-        if (titleNotEntered) {
+        if (!formValidator.isValidMandatoryText(userEntryQuizTitle)) {
             setEntriesAreValid(false);
             setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"}) 
             return false;
-        }else if (statefulArrayOfQuestionSelected.length ==0) {
+        }else if (!formValidator.isValidNonEmptyArray(statefulArrayOfQuestionSelected)) {
             setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"})
             return false;
         }
