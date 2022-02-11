@@ -138,12 +138,12 @@ export default function EditQuiz(props){
         editQuiz.quizTitle = userEntryQuizTitle
         editQuiz.quizTopic = userEntryQuizTopic
         editQuiz.questions = statefulArrayOfQuestionSelected
-
+        
         //create a copy from localstorage
         let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
 
         //save the edited questions in the copy                
-        copyOfQuizngagedUserData.quizzes[props.editQuizUID]=editQuiz                
+        copyOfQuizngagedUserData.quizzes[quizIndexNumber]=editQuiz                
     
         //replace the old data with the new data in localstorage                
         localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
@@ -158,7 +158,6 @@ export default function EditQuiz(props){
 
     //This will be fetched from the API too
     const quizTopics = ['Geography','Mathematics']    
-    
     return(
         <div>   
             <Stepper activeStep={step}>
