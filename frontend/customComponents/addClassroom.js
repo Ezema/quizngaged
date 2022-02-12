@@ -63,7 +63,7 @@ import LoadingScreen from './loadingScreen.js';
 
 
 import CircularProgress from '@mui/material/CircularProgress';
-
+import * as formValidator from '../customFunctions/formValidation.js';
 
 export default function AddClassroom(props){
 
@@ -113,10 +113,8 @@ export default function AddClassroom(props){
     
     const handleStudentClassroomUniqueUIDChange = (event)=>{
         let changedUID = event.target.value;
+        let isValid = formValidator.isValidMandatoryText(changedUID);
         setStudentClassroomUniqueUID(changedUID);
-        let regExp = /^\s*$/;
-        let isEmpty = regExp.test(changedUID);
-        let isValid = changedUID.length != 0 && !isEmpty;
         setShowError(!isValid);
     }
     
@@ -126,12 +124,9 @@ export default function AddClassroom(props){
     }
 
     const handleClassroomNameChange = (event)=>{
-      let regExp = /^\s*$/;      
       let changedTitle = event.target.value;
-      let isEmpty = regExp.test(changedTitle);
+      let isValid = formValidator.isValidMandatoryText(changedTitle);
       setUserEntryClassroomName(changedTitle)
-      let isValid = changedTitle.length != 0 && !isEmpty;
-      // setCheckingValidClassroom(isValid);
       setShowError(!isValid);
     }
     const snackBarClose = () => {
@@ -178,7 +173,10 @@ export default function AddClassroom(props){
     },[serverResponseForClassroomIDValidity,])
 
     const handleNextStep = ()=>{
-        let teacherAddIncomplete = step == 0 && !props.userIsStudent && (userEntryClassroomName == undefined || userEntryClassroomName.length == 0);
+        let teacherAddIncomplete = step == 0 && 
+            !props.userIsStudent && 
+            !formValidator.isValidMandatoryText(userEntryClassroomName);
+
         if (teacherAddIncomplete) {
             setShowError(true)
         }

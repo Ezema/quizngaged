@@ -52,6 +52,7 @@ import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQ
 
 import { width } from '@mui/system';
 import { Alert } from '@mui/material';
+import * as formValidator from '../customFunctions/formValidation.js';
 
 const steps = [
   'Edit Classroom',
@@ -81,11 +82,10 @@ export default function EditClassroom(props){
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState(editClassroom.questions)    
 
     const handleClassroomNameChange = (event)=>{
-      let regExp = /^\s*$/;      
       let changedTitle = event.target.value;
-      let isEmpty = regExp.test(changedTitle);
+      let isValid = formValidator.isValidMandatoryText(changedTitle);
       setUserEntryClassroomName(changedTitle);
-      setEntriesAreValid(changedTitle.length != 0 && !isEmpty);
+      setEntriesAreValid(isValid);
     }
     const snackBarClose = () => {
       setSnackBar({isOpen:false,message:"", severity:""})
