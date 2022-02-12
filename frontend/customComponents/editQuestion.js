@@ -51,6 +51,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { width } from '@mui/system';
 
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+import * as formValidator from '../customFunctions/formValidation.js';
 
 const steps = [
   'Add base question',
@@ -69,7 +70,6 @@ export default function EditQuestion(props){
 
     const [statefulArrayOfQuestionAnswers,setStatefulArrayOfQuestionAnswers] = React.useState(statefulEditedQuestion.questionBaselineAnswers)
     
-
     const setEditQuestionState = props.setEditQuestionState;
 
     const [step,setStep] = React.useState(0)
@@ -82,30 +82,33 @@ export default function EditQuestion(props){
     const [userEntryEasierQuestionBody,setUserEntryEasierQuestionBody] = React.useState(statefulEditedQuestion.questionEasierBody)
     const [userEntryHarderQuestionBody,setUserEntryHarderQuestionBody] = React.useState(statefulEditedQuestion.questionHarderBody)
 
+    const questionTypes = ['Multiple Choice', 'Text Response', 'Binary Question'];
+    const multipleChoiceQuestionIdx = 0;
+    const textQuestionIdx = 1;
+    const binaryQuestionIdx = 2;
+
     const handleQuestionBodyChange = (event, questionDifficulty)=>{
-        let regExp = /^\s*$/;      
         let changedBody = event.target.value;
-        let isEmpty = regExp.test(changedBody);
+        let isValid = formValidator.isValidMandatoryText(changedBody);
         if(questionDifficulty==0){  
             setUserEntryBaselineQuestionBody(changedBody)
-            setEntriesAreValid(changedBody.length != 0 && !isEmpty);
+            setEntriesAreValid(isValid);
         }else if(questionDifficulty==1){
             setUserEntryEasierQuestionBody(changedBody)
             if(statefulArrayOfQuestionAnswers.length == 0){
                 setEntriesAreValid(true);
             }else{
-                setEntriesAreValid(changedBody.length != 0 && !isEmpty);
+                setEntriesAreValid(isValid);
             }
         }else if(questionDifficulty==2){
             setUserEntryHarderQuestionBody(changedBody)
             if(statefulArrayOfQuestionAnswers.length == 0){
                 setEntriesAreValid(true);
             }else{
-                setEntriesAreValid(changedBody.length != 0 && !isEmpty);
+                setEntriesAreValid(isValid);
             }
         }
     }
-
 
     const calculateLastQuestionAnswerUID = (array)=>{        
         if(array.length != 0){
@@ -182,31 +185,31 @@ export default function EditQuestion(props){
 
         let answers = statefulArrayOfQuestionAnswers
 
-        if(userEntryBaselineQuestionBody.length == 0){
+        if(!formValidator.isValidMandatoryText(userEntryBaselineQuestionBody)){
             return false;
         }
 
-        if(userEntryQuestionType == '' || (userEntryQuestionType !== 'Text Response' && userEntryQuestionType !== 'Multiple Choice' && userEntryQuestionType !== 'Binary Question')){
-            setSnackBar({isOpen:true, message:"Question type is wrong", severity:"error"}) 
+        if(!formValidator.isValidEntryChoice(userEntryQuestionType, questionTypes)) {
+            setSnackBar({isOpen:true, message:"Question type is invalid", severity:"error"}) 
             setQuestionTypeEntriesAreValid(false);
             return false;
         }
 
-        if(userEntryQuestionType == 'Text Response'){
+        if(userEntryQuestionType == questionTypes[textQuestionIdx]){
            // no need for option checking 
            return true;
         }
 
-        if(userEntryQuestionType == 'Multiple Choice' ){
+        if(userEntryQuestionType == questionTypes[multipleChoiceQuestionIdx]){
           if(answers.length<2){
-             setSnackBar({isOpen:true, message:"Multichoice questions should have at least 2 answer variants", severity:"error"}) 
+             setSnackBar({isOpen:true, message:"Multichoice questions should have at least 2 possible answers", severity:"error"}) 
              return false;
         }
           }
    
-        if  (userEntryQuestionType == 'Binary Question'){
+        if (userEntryQuestionType == questionTypes[binaryQuestionIdx]){
            if(answers.length!=2){
-             setSnackBar({isOpen:true, message:"Binary questions should have exactly 2 answer variants", severity:"error"}) 
+              setSnackBar({isOpen:true, message:"Binary questions should have exactly 2 possible answers", severity:"error"}) 
               return false;
           } 
         }
@@ -223,7 +226,7 @@ export default function EditQuestion(props){
           }
         }
         if(!correctAnswerIsSet){
-              setSnackBar({isOpen:true, message:"Please pick up correct answer", severity:"error"})
+              setSnackBar({isOpen:true, message:"Please select the correct answer", severity:"error"})
               return false
         }
         
@@ -239,9 +242,9 @@ export default function EditQuestion(props){
 
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
-            let quizBodyNotEntered = (userEntryBaselineQuestionBody == undefined || userEntryBaselineQuestionBody.length == 0);
-            let easierQuizBodyNotEntered = (userEntryEasierQuestionBody == undefined || userEntryEasierQuestionBody.length == 0);
-            let harderQuizBodyNotEntered = (userEntryHarderQuestionBody == undefined || userEntryHarderQuestionBody.length == 0);
+            let quizBodyNotEntered = !formValidator.isValidMandatoryText(userEntryBaselineQuestionBody);
+            let easierQuizBodyNotEntered = !formValidator.isValidMandatoryText(userEntryEasierQuestionBody);
+            let harderQuizBodyNotEntered = !formValidator.isValidMandatoryText(userEntryHarderQuestionBody);
 
             if(step==0){
                 if(!isQuestionValid()){
@@ -362,9 +365,6 @@ export default function EditQuestion(props){
             setStep(0)
         }            
     }
-
-
-    const questionType = ['Multiple Choice','Text Response', 'Binary Question']    
     
     return(
         <div>   
@@ -431,23 +431,23 @@ export default function EditQuestion(props){
                                 setUserEntryQuestionType(newInputValue)
                                 }}
                                 disablePortal
-                                options={questionType}
+                                options={questionTypes}
                                 fullWidth
                                 renderInput={(questionOption) => <TextField {...questionOption} 
                                 label="Question Type" 
                                 required
                                 error={!questionTypeEntriesAreValid}
-                                helperText={questionTypeEntriesAreValid?'':"Question type is wrong"}
+                                helperText={questionTypeEntriesAreValid?'':"Question type is invalid"}
                             />}
                             />
                         </Box>
-                        { (userEntryQuestionType == 'Multiple Choice' || userEntryQuestionType =='Binary Question') && 
+                        { (userEntryQuestionType == questionTypes[multipleChoiceQuestionIdx] || userEntryQuestionType == questionTypes[binaryQuestionIdx]) && 
                         <div>
                             <Box marginBottom="0.1em">
                             <QuestionAnswers statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
                             </QuestionAnswers>    
-                            </Box>                  
-                            { ( (userEntryQuestionType =='Binary Question' && statefulArrayOfQuestionAnswers.length < 2) || userEntryQuestionType =='Multiple Choice'  ) &&
+                            </Box>
+                            { (statefulArrayOfQuestionAnswers.length < 2 || userEntryQuestionType == questionTypes[multipleChoiceQuestionIdx]) &&
                              <Box marginBottom="2em" textAlign={'center'}>
                                 <Button size='medium' variant='contained' color='secondary' startIcon={<AddIcon/>} onClick={handleEditedQuestionAnswer}>
                                     Add answer
