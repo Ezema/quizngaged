@@ -54,6 +54,7 @@ import { width } from '@mui/system';
 import { Alert } from '@mui/material';
 
 import QuizQuestions from './quizQuestions.js';
+import * as formValidator from '../customFunctions/formValidation.js';
 
 const steps = [
   'Add Quiz',
@@ -85,11 +86,10 @@ export default function AddQuiz(props){
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState([])
 
     const handleQuizTitleChange = (event)=>{
-      let regExp = /^\s*$/;      
       let changedTitle = event.target.value;
-      let isEmpty = regExp.test(changedTitle);
+      let isValid = formValidator.isValidMandatoryText(changedTitle);
       setUserEntryQuizTitle(changedTitle)
-      setEntriesAreValid(changedTitle.length != 0 && !isEmpty);
+      setEntriesAreValid(isValid);
     }
     const snackBarClose = () => {
       setSnackBar({isOpen:false,message:"", severity:""})
@@ -117,15 +117,14 @@ export default function AddQuiz(props){
         
         /* if(step<2 && entriesAreValid){ */
         if(step==0){
-            if (titleNotEntered) {
-                setEntriesAreValid(false);
-                setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"})
-                return false
-            }else if (statefulArrayOfQuestionSelected.length==0) {
-                setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"})
-                return false
-            }
-            
+          if (!formValidator.isValidMandatoryText(userEntryQuizTitle)) {
+            setEntriesAreValid(false);
+            setSnackBar({isOpen:true, message:"Quiz title cannot be blank", severity:"error"}) 
+            return false;
+        }else if (!formValidator.isValidNonEmptyArray(statefulArrayOfQuestionSelected)) {
+            setSnackBar({isOpen:true, message:"A quiz must include at least one question", severity:"error"})
+            return false;
+        }
             (setStep(step+1));
             // save user changes temporary            
             setMainButtonText('Finish')                                    
