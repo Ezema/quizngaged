@@ -19,3 +19,19 @@ function isValidNonEmptyArray(array) {
 
 module.exports.isValidNonEmptyArray = isValidNonEmptyArray;
 
+function isValidEntryChoice(chosenText, entriesArray) {
+  if (isValidMandatoryText(chosenText)
+      && isValidNonEmptyArray(entriesArray)) {
+
+    for (var i = 0; i < entriesArray.length; i++) {
+      if (chosenText == entriesArray[i]) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+module.exports.isValidEntryChoice = isValidEntryChoice;
+
