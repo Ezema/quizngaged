@@ -13,8 +13,13 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { Icon } from '@mui/material';
 
 import backendQueryUpdateOngoingQuizzes from '../customFunctions/backendQueries/backendQueryUpdateOngoingQuizzes.js'
+/* router */
+import { useRouter } from 'next/router'
+
 
 export default function ViewClassroomOngoingQuizzes(props){
+
+    const Router = useRouter()
 
     React.useEffect(()=>{
         //console.log("ongoing quizzes after load: ",JSON.parse(localStorage.quizngagedUserData).classrooms)
@@ -81,8 +86,9 @@ export default function ViewClassroomOngoingQuizzes(props){
                                 </Typography>                            
                                 {/* <Typography variant='subtitle1'>
                                     {"Quiz Title in use: "+ongoingLiveQuiz.quizTitle}
-                                </Typography>*/}                            
-                                <Button size="small" onClick={(event) => handleViewLiveOngoingQuiz(event, ongoingLiveQuiz.id)}>VIEW</Button>
+                                </Typography>*/}  
+                                <Button size="small" onClick={(event) => Router.push(`/quiz?id=${ongoingLiveQuiz.id}` )}>VIEW</Button>                          
+                                {/* <Button size="small" onClick={(event) => handleViewLiveOngoingQuiz(event, ongoingLiveQuiz.id)}>VIEW</Button>*/}
                                 {/* <Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button> */}
                                 </CustomPaperReactComponent>
                             </Grid>      
