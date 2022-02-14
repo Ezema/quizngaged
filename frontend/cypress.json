@@ -1,3 +1,10 @@
-{
-    "baseUrl": "http://localhost:3000"
+{"baseUrl": "http://localhost:3000",
+"env": {
+    "db_test":{
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "password",
+        "database": "appdb"
+    }
+}
 }
