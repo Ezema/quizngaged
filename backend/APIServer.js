@@ -25,16 +25,36 @@ const db = mysql.createConnection({
       //throw err;
     }else{
         console.log("Connected to database");
-        let sqlQuery = "CREATE TABLE IF NOT EXISTS users (uid VARCHAR(50),userjson json);"
-        let secondSqlQuery = "CREATE TABLE IF NOT EXISTS classrooms (uniqueclassroomid INT UNSIGNED NOT NULL AUTO_INCREMENT,classroomjson json,classroomowneruid VARCHAR(50), PRIMARY KEY(uniqueclassroomid));"
-        db.query(sqlQuery,(err,result)=>{
-            console.log("first table ok");
-        })
-        db.query(secondSqlQuery,(err,result)=>{
-            console.log("second table ok");
-        })
-    }
-
+        let createUsers = "CREATE TABLE IF NOT EXISTS users (uid VARCHAR(50),userjson json);"
+        let createClassrooms = "CREATE TABLE IF NOT EXISTS classrooms (uniqueclassroomid INT UNSIGNED NOT NULL AUTO_INCREMENT,classroomjson json,classroomowneruid VARCHAR(50), PRIMARY KEY(uniqueclassroomid));"
+        let createLaunchedQuizzes = "CREATE TABLE IF NOT EXISTS launched_quizzes (launchedquizid INT UNSIGNED NOT NULL AUTO_INCREMENT,uniqueclassroomid INT UNSIGNED NOT NULL, quiz_state ENUM('IN_PROGRESS', 'IN_REVIEW', 'REVIEWED') NOT NULL, quizjson json, PRIMARY KEY(launchedquizid));"
+        let createUserQuizzes = "CREATE TABLE IF NOT EXISTS user_quizzes (userquizzid INT UNSIGNED NOT NULL AUTO_INCREMENT,launchedquizid INT UNSIGNED NOT NULL,uid VARCHAR(50), answersjson json, PRIMARY KEY(userquizzid));"
+        db.query(createUsers,(err,result)=>{
+          if (err) {
+            console.log("error creating users", err);
+            throw err;
+          }
+        });
+        db.query(createClassrooms,(err,result)=>{
+          if (err) {
+            console.log("error creating classrooms", err);
+            throw err;
+          }
+        });
+        db.query(createLaunchedQuizzes,(err,result)=>{
+          if (err) {
+            console.log("error creating launched quizzes", err);
+            throw err;
+          }
+        });
+        db.query(createUserQuizzes,(err,result)=>{
+          if (err) {
+            console.log("error creating user quizzes", err);
+            throw err;
+          }
+        });
+        console.log("db initialized");
+      }
     
   });
   global.db = db;
@@ -234,35 +254,86 @@ app.post("/API/updateuniqueclassroom",(req, res)=>{
 })
 
 app.post("/API/checkclassroomuniqueidisvalid",(req, res)=>{
-    console.log("\n")
-    console.log("/API/checkclassroomuniqueidisvalid: ")
+  console.log("\n")
+  console.log("/API/checkclassroomuniqueidisvalid: ")
 
-    admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
-    () => {      
-            let sqlQuery =`SELECT * FROM classrooms WHERE uniqueclassroomid = '${req.body.classroomUniqueId}';`            
-            db.query(sqlQuery, (err, result)=>{
-                if (err) {
-                    
-                    console.log("error with db query")                    
-                    //throw err;
-                } 
-                else {
-                    console.log("query result: ", result)
-                    if(result.length==0){
-                        res.send({'uniqueClassroomIDValidity':false})
-                    }else{
-                        res.send({'uniqueClassroomIDValidity':true,'classroomjson':result[0].classroomjson,'uniqueclassroomid':result[0].uniqueclassroomid,
-                        'classroomowneruid':result[0].classroomowneruid})
-                    }
-                    
-                }    
-            });
-            return
-    }).catch((error)=>{
-        //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
-        console.log("error: ", error)
-        return
-    });
+  admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
+  () => {      
+          let sqlQuery =`SELECT * FROM classrooms WHERE uniqueclassroomid = '${req.body.classroomUniqueId}';`            
+          db.query(sqlQuery, (err, result)=>{
+              if (err) {
+                  
+                  console.log("error with db query")                    
+                  //throw err;
+              } 
+              else {
+                  console.log("query result: ", result)
+                  if(result.length==0){
+                      res.send({'uniqueClassroomIDValidity':false})
+                  }else{
+                      res.send({'uniqueClassroomIDValidity':true,'classroomjson':result[0].classroomjson,'uniqueclassroomid':result[0].uniqueclassroomid,
+                      'classroomowneruid':result[0].classroomowneruid})
+                  }
+                  
+              }    
+          });
+          return
+  }).catch((error)=>{
+      //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+      console.log("error: ", error)
+      return
+  });
+})
+
+app.post("/API/launchquiz",(req, res)=>{
+  console.log("\n/API/launchquiz: "+req.body);
+
+  admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
+  () => {      
+    let insertQuery ="INSERT INTO launched_quizzes (uniqueclassroomid, quiz_state, quizjson) VALUES (?, 'IN_PROGRESS', ?)";
+    db.query(insertQuery, [req.body.uniqueclassroomid, req.body.quizJson], (err, result)=>{
+              if (err) {
+                  console.log("error inserting launched quiz")                    
+              } 
+              else {
+                  console.log("inserted launched quiz, id="+result.insertId);
+              }    
+          });
+          return
+  }).catch((error)=>{
+      //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+      console.log("error: ", error)
+      return
+  });
+})
+
+app.post("/API/studentjoinquiz",(req, res)=>{
+  console.log("\n/API/studentjoinquiz: "+req.body);
+
+  admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
+  () => {      
+    let sqlQuery =`SELECT * FROM classrooms WHERE uniqueclassroomid = '${req.body.classroomUniqueId}';`            
+    db.query(sqlQuery, (err, result)=>{
+              if (err) {
+                  console.log("error with db query")                    
+              } 
+              else {
+                  if(result.length==0){
+                    console.log("query result: no data: ", result);
+                    res.send({'uniqueClassroomIDValidity':false});
+                  }else{
+                    console.log("query result: classroomjson: ", result[0].classroomjson);
+                    res.send({'uniqueClassroomIDValidity':true,'quiz':result[0].classroomjson})
+                  }
+                  
+              }    
+          });
+          return
+  }).catch((error)=>{
+      //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+      console.log("error: ", error)
+      return
+  });
 })
 
 
