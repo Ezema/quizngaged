@@ -47,13 +47,11 @@ import QuestionAnswers from './questionAnswer.js';
 
 import Autocomplete from '@mui/material/Autocomplete';
 
-import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-
 import { width } from '@mui/system';
 
 import ListOfQuizzes from './listOfQuizzes.js';
 
-import backendQueryUpdateUniqueClassroom from '../customFunctions/backendQueries/backendQueryUpdateUniqueClassroom.js'
+import backendQueryCreateLaunchQuiz from '../customFunctions/backendQueries/backendQueryCreateLaunchQuiz.js';
 
 const steps = [
   'Select one quiz',
@@ -104,31 +102,29 @@ export default function LaunchClassroomQuiz(props){
             }
             else if(step==1){
                 
-                newOngoingLiveQuiz.eventDescription = userEntryEventDescription
-                newOngoingLiveQuiz.quizSelected = JSON.parse(localStorage.quizngagedUserData).quizzes[statefulQuizSelected]
-                
-                
+                let parsedJson = JSON.parse(localStorage.quizngagedUserData);
+                let parsedQuiz = parsedJson.quizzes[statefulQuizSelected];
 
-                // EXPLANATION: a quizz.quiestions is an array that ONLY CONTAINS the ID of the questions but not the question content itself. The following for loop will check for the quiz selected questions IDs and then populate the askQuestions array with the actual content of the questions.
-                newOngoingLiveQuiz.askQuestions = []
+                let launchQuiz = {
+                  id: parsedQuiz.id,
+                  eventDescription: userEntryEventDescription,
+                  isDeleted: false,
+                  quizTitle: parsedQuiz.quizTitle,
+                  quizTopic: parsedQuiz.quizTopic,
+                  questions: [],                
+                };
 
-                for(let i=0;i<JSON.parse(localStorage.quizngagedUserData).quizzes[statefulQuizSelected].questions.length;i++){
-                    newOngoingLiveQuiz.askQuestions.push(JSON.parse(localStorage.quizngagedUserData).questions[JSON.parse(localStorage.quizngagedUserData).quizzes[statefulQuizSelected].questions[i]])
+                for(let i=0;i<parsedQuiz.questions.length;i++){
+                    let question = parsedJson.questions[parsedQuiz.questions[i]];
+                    if (!question.isDeleted) {
+                      launchQuiz.questions.push(question);
+                      console.log("question #"+i, question);
+                    }
                 }
 
-                //create a copy from localstorage
-                let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
-
-                //save the edited questions in the copy
-                copyOfQuizngagedUserData.classrooms[props.viewClassroomUID].ongoingLiveQuizzes.push(newOngoingLiveQuiz)
-            
-                //replace the old data with the new data in localstorage                
-                localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
-
-                // call the backend to sync the local changes
-                backendQuerySaveUserJSON(()=>{})
-                backendQueryUpdateUniqueClassroom(JSON.stringify(copyOfQuizngagedUserData.classrooms[props.viewClassroomUID]),copyOfQuizngagedUserData.classrooms[props.viewClassroomUID].globalQuizngagedId)
-                
+                let globalQuizngagedId = parsedJson.classrooms[props.viewClassroomUID].globalQuizngagedId;
+                console.log("classroom="+globalQuizngagedId+" launched quiz: ", launchQuiz);
+                backendQueryCreateLaunchQuiz(JSON.stringify(launchQuiz), globalQuizngagedId);
 
                 props.setLaunchClassroomQuizState(false)
                 setStep(0)
