@@ -4,13 +4,13 @@ const axios = require('axios');
 
 import backendQuerySaveUserJSON from './backendQuerySaveUserJSON';
 
-export default function backendQueryUpdateOngoingQuizzes(classroomUID,props,classroomUniqueId){
+export default function backendQueryUpdateOngoingQuizzes(viewClassroomId,props,classroomUniqueId){
     console.log("inside")
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
     console.log("sending update")
     axios({
       method: "POST",        
-      url: 'http://localhost:9090/API/checkclassroomuniqueidisvalid', 
+      url: 'http://localhost:9090/API/addlivequizzesforclassroom', 
       data: {            
           //the idToken is only for Firebase, it is used to check that the user is authentic and not a bot.
           federatedAuthDecodedToken:JSON.parse(localStorage.federatedAuthDecodedToken),
@@ -26,7 +26,16 @@ export default function backendQueryUpdateOngoingQuizzes(classroomUID,props,clas
         let modifiedJSON = JSON.parse(response.data.classroomjson)
         modifiedJSON.globalQuizngagedId = response.data.uniqueclassroomid
         modifiedJSON.classroomowneruid = response.data.uniqueclassroomid
-        copy.classrooms[classroomUID]=(modifiedJSON)
+        modifiedJSON.ongoingLiveQuizzes = [];
+        for (var i = 0; i < response.data.ongoingQuizzes.length; i++) {
+          modifiedJSON.ongoingLiveQuizzes.push(
+            {
+              launchedquizid: response.data.ongoingQuizzes[i].launchedquizid,
+              quizjson: JSON.parse(response.data.ongoingQuizzes[i].quizjson),
+            }
+          );
+        }
+        copy.classrooms[viewClassroomId]=(modifiedJSON)
         
         localStorage.setItem("quizngagedUserData",JSON.stringify(copy))        
         backendQuerySaveUserJSON(()=>{})

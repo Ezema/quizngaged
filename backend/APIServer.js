@@ -258,23 +258,71 @@ app.post("/API/checkclassroomuniqueidisvalid",(req, res)=>{
   console.log("/API/checkclassroomuniqueidisvalid: ")
 
   admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
+    () => {      
+            let sqlQuery =`SELECT * FROM classrooms WHERE uniqueclassroomid = '${req.body.classroomUniqueId}';`            
+            db.query(sqlQuery, (err, result)=>{
+                if (err) {
+
+                    console.log("error with db query")                    
+                    //throw err;
+                } 
+                else {
+                    console.log("query result: ", result)
+                    if(result.length==0){
+                        res.send({'uniqueClassroomIDValidity':false})
+                    }else{
+                        res.send({'uniqueClassroomIDValidity':true,'classroomjson':result[0].classroomjson,'uniqueclassroomid':result[0].uniqueclassroomid,
+                        'classroomowneruid':result[0].classroomowneruid})
+                    }
+
+                }    
+            });
+            return
+    }).catch((error)=>{
+        //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+        console.log("error: ", error)
+        return
+    });
+});
+
+app.post("/API/addlivequizzesforclassroom",(req, res)=>{
+  console.log("\n")
+  console.log("/API/addlivequizzesforclassroom: ")
+
+  admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
   () => {      
-          let sqlQuery =`SELECT * FROM classrooms WHERE uniqueclassroomid = '${req.body.classroomUniqueId}';`            
-          db.query(sqlQuery, (err, result)=>{
+          let sqlQuery ="SELECT * FROM classrooms WHERE uniqueclassroomid = ?";
+          db.query(sqlQuery, [req.body.classroomUniqueId], (err, result)=>{
               if (err) {
-                  
-                  console.log("error with db query")                    
-                  //throw err;
+                  console.log("error with db query")
               } 
               else {
                   console.log("query result: ", result)
                   if(result.length==0){
                       res.send({'uniqueClassroomIDValidity':false})
                   }else{
-                      res.send({'uniqueClassroomIDValidity':true,'classroomjson':result[0].classroomjson,'uniqueclassroomid':result[0].uniqueclassroomid,
-                      'classroomowneruid':result[0].classroomowneruid})
+                      let launchQuizQuery = "SELECT * FROM launched_quizzes WHERE uniqueclassroomid = ?";
+                      let ongoingQuizzes = [];
+                      db.query(launchQuizQuery, [req.body.classroomUniqueId], (err, resultQuizzes)=>{
+                          if (err) {
+                              console.log("error querying launched quizzes: ", err);
+                          } else {
+                              for (var i = 0; i < resultQuizzes.length; i++) {
+                                  console.log("launched quizzes: #"+i+": ", resultQuizzes[i]);
+                                  ongoingQuizzes.push(
+                                      {
+                                          launchedquizid: resultQuizzes[i].launchedquizid,
+                                          uniqueclassroomid: resultQuizzes[i].uniqueclassroomid,
+                                          quiz_state: resultQuizzes[i].quiz_state,
+                                          quizjson: resultQuizzes[i].quizjson,
+                                      }
+                                  );
+                              } 
+                              res.send({'uniqueClassroomIDValidity':true,'classroomjson':result[0].classroomjson,'uniqueclassroomid':result[0].uniqueclassroomid,
+                                'classroomowneruid':result[0].classroomowneruid, 'ongoingQuizzes':ongoingQuizzes});
+                          }
+                      });
                   }
-                  
               }    
           });
           return
@@ -308,27 +356,31 @@ app.post("/API/launchquiz",(req, res)=>{
 })
 
 app.post("/API/studentjoinquiz",(req, res)=>{
-  console.log("\n/API/studentjoinquiz: "+req.body);
+  console.log("/API/studentjoinquiz: "+req.body);
 
   admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
   () => {      
-    let sqlQuery =`SELECT * FROM classrooms WHERE uniqueclassroomid = '${req.body.classroomUniqueId}';`            
-    db.query(sqlQuery, (err, result)=>{
-              if (err) {
-                  console.log("error with db query")                    
-              } 
-              else {
-                  if(result.length==0){
-                    console.log("query result: no data: ", result);
-                    res.send({'uniqueClassroomIDValidity':false});
-                  }else{
-                    console.log("query result: classroomjson: ", result[0].classroomjson);
-                    res.send({'uniqueClassroomIDValidity':true,'quiz':result[0].classroomjson})
-                  }
-                  
-              }    
-          });
-          return
+    let launchQuizQuery = "SELECT * FROM launched_quizzes WHERE launchedquizid = ?";
+    db.query(launchQuizQuery, [req.body.quizId], (err, resultQuizzes)=>{
+        if (err) {
+          console.log("error querying launched quizzes: ", err);
+        }
+        else if (resultQuizzes.length == 0) {
+          console.log("error querying launched quizzes: no quiz found for id="+req.body.quizId);
+        } else {
+            let i = 0;
+            console.log("launched quizzes: #"+i+": ", resultQuizzes[i]);
+            res.send({'joinedQuiz':
+              {
+                  launchedquizid: resultQuizzes[i].launchedquizid,
+                  uniqueclassroomid: resultQuizzes[i].uniqueclassroomid,
+                  quiz_state: resultQuizzes[i].quiz_state,
+                  quizjson: resultQuizzes[i].quizjson,
+              },
+            });
+        }
+    });
+    return
   }).catch((error)=>{
       //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
       console.log("error: ", error)

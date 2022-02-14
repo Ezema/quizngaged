@@ -22,7 +22,8 @@ export default function ViewClassroomOngoingQuizzes(props){
     const Router = useRouter()
 
     React.useEffect(()=>{
-        //console.log("ongoing quizzes after load: ",JSON.parse(localStorage.quizngagedUserData).classrooms)
+        handleRefreshLiveOngoingQuizzes();
+        console.log("ongoing quizzes after load: ",JSON.parse(localStorage.quizngagedUserData).classrooms)
     },[refreshingOngoingQuizzes])
 
     const [refreshingOngoingQuizzes,setRefreshingOngoingQuizzes] = React.useState(false)
@@ -41,7 +42,7 @@ export default function ViewClassroomOngoingQuizzes(props){
             <Container>
                 {(JSON.parse(localStorage.quizngagedUserData).classrooms==undefined)?
                 (
-                    <div></div>
+                    <div>Data error</div>
                 )
                 :
                 (JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.length==0)?
@@ -73,23 +74,17 @@ export default function ViewClassroomOngoingQuizzes(props){
                                     <RefreshIcon color={refreshingOngoingQuizzes?'grey':'primary'} size="large"></RefreshIcon>
                                 </IconButton>
                             </Grid>
-                        {                        
+                        {
                             JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.map((ongoingLiveQuiz)=>
-                            <Grid item xs={12} md={6} lg={4} key={JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.indexOf(ongoingLiveQuiz)} >
+                            <Grid item xs={12} md={6} lg={4} key={ongoingLiveQuiz.launchedquizid}>
                                 <CustomPaperReactComponent elevation={3}>                            
                                 <Typography variant='h5' inline>
-                                    #{ongoingLiveQuiz.id+" "+"Event description: "+ongoingLiveQuiz.eventDescription}
-                                </Typography>                      
+                                    #{ongoingLiveQuiz.launchedquizid+" "+(ongoingLiveQuiz.quizjson.eventDescription.length == 0 ? "[No description]" : ongoingLiveQuiz.quizjson.eventDescription)}
+                                </Typography>
                                 <Typography variant='subtitle1'>
-                                    {console.log("ongoingLiveQuiz",ongoingLiveQuiz)}
-                                    {"Quiz ID in use: "+ongoingLiveQuiz.quizSelected.id}
-                                </Typography>                            
-                                {/* <Typography variant='subtitle1'>
-                                    {"Quiz Title in use: "+ongoingLiveQuiz.quizTitle}
-                                </Typography>*/}  
-                                <Button size="small" onClick={(event) => Router.push(`/quiz?id=${ongoingLiveQuiz.id}` )}>VIEW</Button>                          
-                                {/* <Button size="small" onClick={(event) => handleViewLiveOngoingQuiz(event, ongoingLiveQuiz.id)}>VIEW</Button>*/}
-                                {/* <Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button> */}
+                                    {"Title: "+ongoingLiveQuiz.quizjson.quizTitle}
+                                </Typography>     
+                                <Button size="small" onClick={(event) => Router.push(`/quiz?id=${ongoingLiveQuiz.launchedquizid}` )}>JOIN</Button>                                                 
                                 </CustomPaperReactComponent>
                             </Grid>      
                             )
@@ -101,19 +96,16 @@ export default function ViewClassroomOngoingQuizzes(props){
                     (
                         <Box paddingBottom="100px">        
                         <Grid container spacing={2}display={'grid'}>
-                        {                        
+                        {         
                             JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.map((ongoingLiveQuiz)=>
-                            <Grid item xs={12} md={6} lg={4} key={JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.indexOf(ongoingLiveQuiz)}>
+                            <Grid item xs={12} md={6} lg={4} key={ongoingLiveQuiz.launchedquizid}>
                                 <CustomPaperReactComponent elevation={3}>                            
                                 <Typography variant='h5' inline>
-                                    #{ongoingLiveQuiz.id+" "+"Event description: "+ongoingLiveQuiz.eventDescription}
-                                </Typography>                      
+                                    #{ongoingLiveQuiz.launchedquizid+" "+(ongoingLiveQuiz.quizjson.eventDescription.length == 0 ? "[No description]" : ongoingLiveQuiz.quizjson.eventDescription)}
+                                </Typography>
                                 <Typography variant='subtitle1'>
-                                    {"Quiz ID in use: "+ongoingLiveQuiz.quizSelected}
+                                    {"Title: "+ongoingLiveQuiz.quizjson.quizTitle}
                                 </Typography>                            
-                                {/* <Typography variant='subtitle1'>
-                                    {"Quiz Title in use: "+ongoingLiveQuiz.quizTitle}
-                                </Typography>*/}                            
                                 <Button size="small" onClick={(event) => handleViewLiveOngoingQuiz(event, ongoingLiveQuiz.id)}>VIEW</Button>
                                 {/* <Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button> */}
                                 </CustomPaperReactComponent>
