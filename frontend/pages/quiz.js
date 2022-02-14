@@ -19,14 +19,13 @@ import { BASEPATH, quizDummy }  from '../config.js'
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 import  RunQuiz   from '../customComponents/runQuiz.js'
+import backendQueryGetQuiz from '../customFunctions/backendQueries/backendQueryGetQuiz.js';
 
 
 
 export default function Quiz() {
 
   const router = useRouter()
-  
-  
 
   var quizData = {}
   const [dataLoaded, setDataLoaded] =  React.useState({})
@@ -48,20 +47,61 @@ export default function Quiz() {
 
   const fetchData = async () => {
     var urlParams = new URLSearchParams(window.location.search);
-    var qid = urlParams.get('id')
+    var qid = parseInt(urlParams.get('id'));
     try{
-      const quizDataResponse = await fetch(BASEPATH+'getquiz&quiz='+parseInt(qid))
-     
-      quizData = await quizDataResponse.json()
+      backendQueryGetQuiz(qid, {callback: (res) => {
+          if (res.launchedquizid == qid) {
+            parseQuizData(res);
+          }
+          else {
+            console.log("quiz id returned nothing valid");
+            loadDummyData();
+          }
+        }
+      });
+
     } catch (err) {
       // fall back to dummy data if we have an error while retrieving data from server (it is not implemented yet)
-      console.log('issue with fetching exam data')
-      quizData = await quizDummy
+      console.log('issue with fetching quiz data')
+      loadDummyData();
     }
+  }
+
+  const loadDummyData = async () => {
+    console.log('loading dummy data')
+    quizData = await quizDummy
     setQuiz(quizData)
     setDataLoaded(true)
   }
 
+
+  const parseQuizData = (quiz) => {
+    try{
+      let parsedJson = JSON.parse(quiz.quizjson);
+      quizData = {
+        "id": parsedJson.launchedquizid,
+        "isDeleted": false,
+        "quizTitle": parsedJson.quizTitle,
+        "quizTopic": parsedJson.quizTopic,
+        "questions": parsedJson.questions,
+      };
+      console.log("formatted data=", quizData);
+      setQuiz(quizData);
+      setDataLoaded(true);
+
+    } catch (err) {
+      // fall back to dummy data if we have an error while retrieving data from server (it is not implemented yet)
+      console.log('issue with fetched quiz data')
+      loadDummyData();
+    }
+  }
+
+  const formatQuestions = (quiz) => {
+    console.log("formatQuestions: parse the quiz data and put the questions in place", quiz);
+    var questions = [quiz.askQuestions[0]];
+
+    return questions;
+  }
 
   /* data required to render  TOP barNOt sure if we need top bar on the quiz page*/
   const [launchClassroomQuizState,setLaunchClassroomQuizState] = React.useState(false)
