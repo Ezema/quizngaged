@@ -113,8 +113,15 @@ function MyQuizzes(props) {
    const deleteQuiz = (id)=> {  
       let updatedList = listOfQuizzes.filter( (el)=> { return el.id!=id})
       // update UI 
+      //ex. we have three quizzes with id's 0, 1 and 2, if we delete the quiz with id 1
+      //we need to update the quiz with id 2 with id 1
+      //id's have to be updated according to the position of the array
+      //otherwise when launching a quiz it will choose a wrong quiz or throw an error because the
+      //position of the quiz does not match with the chosen quiz or it does not exist
+      for(let i= 0; i< updatedList.length; i++){
+        updatedList[i].id = i
+      }
       setListOfQuizzes(updatedList)
-    
       //create a copy from localstorage
       let copyOfQuizngagedUserData = JSON.parse(localStorage.quizngagedUserData)
       //save the edited quizzes list to  the copy
@@ -134,7 +141,7 @@ function MyQuizzes(props) {
       setNewQuizUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 )
       
     } else {
-         setNewQuizUID(1);
+         setNewQuizUID(0);
     }
           
 
