@@ -297,7 +297,6 @@ app.post("/API/addlivequizzesforclassroom",(req, res)=>{
                   console.log("error with db query")
               } 
               else {
-                  console.log("query result: ", result)
                   if(result.length==0){
                       res.send({'uniqueClassroomIDValidity':false})
                   }else{
@@ -308,7 +307,6 @@ app.post("/API/addlivequizzesforclassroom",(req, res)=>{
                               console.log("error querying launched quizzes: ", err);
                           } else {
                               for (var i = 0; i < resultQuizzes.length; i++) {
-                                  console.log("launched quizzes: #"+i+": ", resultQuizzes[i]);
                                   ongoingQuizzes.push(
                                       {
                                           launchedquizid: resultQuizzes[i].launchedquizid,
@@ -340,14 +338,14 @@ app.post("/API/launchquiz",(req, res)=>{
   () => {      
     let insertQuery ="INSERT INTO launched_quizzes (uniqueclassroomid, quiz_state, quizjson) VALUES (?, 'IN_PROGRESS', ?)";
     db.query(insertQuery, [req.body.uniqueclassroomid, req.body.quizJson], (err, result)=>{
-              if (err) {
-                  console.log("error inserting launched quiz")                    
-              } 
-              else {
-                  console.log("inserted launched quiz, id="+result.insertId);
-              }    
-          });
-          return
+        if (err) {
+            console.log("error inserting launched quiz")                    
+        } 
+        else {
+            console.log("inserted launched quiz, id="+result.insertId);
+        }    
+    });
+    return
   }).catch((error)=>{
       //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
       console.log("error: ", error)
@@ -362,32 +360,104 @@ app.post("/API/studentjoinquiz",(req, res)=>{
   () => {      
     let launchQuizQuery = "SELECT * FROM launched_quizzes WHERE launchedquizid = ?";
     db.query(launchQuizQuery, [req.body.quizId], (err, resultQuizzes)=>{
-        if (err) {
-          console.log("error querying launched quizzes: ", err);
-        }
-        else if (resultQuizzes.length == 0) {
-          console.log("error querying launched quizzes: no quiz found for id="+req.body.quizId);
-        } else {
-            let i = 0;
-            console.log("launched quizzes: #"+i+": ", resultQuizzes[i]);
-            res.send({'joinedQuiz':
-              {
-                  launchedquizid: resultQuizzes[i].launchedquizid,
-                  uniqueclassroomid: resultQuizzes[i].uniqueclassroomid,
-                  quiz_state: resultQuizzes[i].quiz_state,
-                  quizjson: resultQuizzes[i].quizjson,
-              },
-            });
-        }
+      if (err) {
+        console.log("error querying launched quizzes: ", err);
+      }
+      else if (resultQuizzes.length == 0) {
+        console.log("error querying launched quizzes: no quiz found for id="+req.body.quizId);
+      } 
+      else {
+        // provide a callback, the selects/inserts that might happen appear to be async
+        getOrInsertStudentAnswers(req.body.uid, resultQuizzes[0].launchedquizid, (answers) => {
+          console.log("callback, answers: ", answers);
+          res.send({
+            'joinedQuiz': {
+              launchedquizid: resultQuizzes[0].launchedquizid,
+              uniqueclassroomid: resultQuizzes[0].uniqueclassroomid,
+              quiz_state: resultQuizzes[0].quiz_state,
+              quizjson: resultQuizzes[0].quizjson,
+            },
+            'studentAnswers': answers,
+          });
+        });
+      }
     });
     return
   }).catch((error)=>{
-      //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
-      console.log("error: ", error)
-      return
+    //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+    console.log("error: ", error)
+    return
   });
 })
 
+app.post("/API/updatestudentquiz",(req, res)=>{
+  console.log("/API/updatestudentquiz: "+req.body);
+
+  admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
+  () => {      
+    let updateUserQuiz = "UPDATE user_quizzes SET answersjson = ? WHERE userquizzid = ?";
+    db.query(updateUserQuiz, [req.body.answersjson, req.body.userquizzid], (err, result)=>{
+      if (err) {
+        console.log("error updating user quiz: ", err);
+      }
+      else {
+        console.log("success");
+      }
+    });
+    return
+  }).catch((error)=>{
+    //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+    console.log("error: ", error)
+    return
+  });
+})
+
+getOrInsertStudentAnswers = (studentUid, launchedquizid, callback) => {
+
+  let studentQuery = "SELECT * FROM user_quizzes WHERE launchedquizid = ? AND uid = ?";
+  db.query(studentQuery, [launchedquizid, studentUid], (err, result) => {
+    if (err) {
+      console.log("error selecting student answers, err: ", err);
+      throw err;
+    }
+    else if (result.length == 0) {
+      // no rows, so insert one, and return that via the callback
+      let insertAnswers = "INSERT INTO user_quizzes (launchedquizid, uid, answersjson) VALUES (?, ?, '{}')";
+      db.query(insertAnswers, [launchedquizid, studentUid], (err, result) => {
+        if (err) {
+          console.log("error inserting new student answers, err: ", err);
+          throw err;
+        }
+        else {
+          let studentQuery = "SELECT * FROM user_quizzes WHERE launchedquizid = ? AND uid = ?";
+          db.query(studentQuery, [launchedquizid, studentUid], (err, result) => {
+            if (err) {
+              console.log("error selecting student answers, err: ", err);
+              throw err;
+            }
+            else {
+              callback({
+                userquizzid: result[0].userquizzid,
+                answersjson: result[0].answersjson,
+              });
+            }
+          });
+        }
+      });
+    }
+    else if (result.length != 1) {
+      console.log("error selecting student answers, too many rows ("+result.length+")", result);
+      throw "too many student answers for "+studentUid;
+    }
+    else {
+      // there was a single row at the start
+      callback({
+        userquizzid: result[0].userquizzid,
+        answersjson: result[0].answersjson,
+      });
+    }
+  });
+}
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9090;
