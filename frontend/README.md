@@ -33,8 +33,11 @@ To run the testing suite with cypress cd into /frontend
 A graphical UI will pop up and is populated with a list of tests. A sample test named 'teacher_can_login.js' is at the bottom of that list.
 Clicking it will launch the browser of choice displayed on the GUI window's top right corner. The test should run immediately.
 
-To have an easier time with selecting components in react, Testing Playground Chrome extension was installed in Chrome to help aid with the selectors. To make use of this extension, @testing-library/cypress was added via npm to extend cypress' functionality. 
+To have an easier time with selecting components in react, Testing Playground Chrome extension was installed in Chrome to help aid with the selectors. 
 
-Note that 'screen.getByRole('...") becomes cy.findByRole('...')
+To make use of this extension, @testing-library/cypress was added via npm to extend cypress' functionality. 
 
+Note that 'screen.getByRole('...") becomes cy.findByRole('...') when using the Chrome extension
+
+Npm package cypress-localstorage-commands is installed to facilitate routine of keeping state between tests inside localStorage
 

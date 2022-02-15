@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import '@testing-library/cypress/add-commands';
+import "cypress-localstorage-commands"
+
 
 Cypress.Commands.add("clear_mysql_and_indexedDB", () => {
     cy.task('queryDb', 'DELETE FROM users;').then(result => {
@@ -45,4 +47,43 @@ Cypress.Commands.add("clear_mysql_and_indexedDB", () => {
             console.log("the indexedDB firebaseLocalStorageDb is empty")
         } //should log an empty array
     }) 
+})
+
+Cypress.Commands.add("teacher_login", () => {
+    cy.visit('/')
+    cy.findByRole('button', {  name: /sign in with email/i}).click()
+    cy.get('#firebaseui_container > div > form > div:nth-child(2) > div > div:nth-child(1)').type('hello@Cypress.io')
+    cy.findByRole('button', {name: /next/i}).click()
+    cy.findByLabelText(/password/i).type('testpassword1234')
+    cy.findByRole('button', {name: /sign in/i}).click()
+    cy.findByRole('button', {  name: /create teacher acccount/i}).click()
+    cy.findByRole('button', {  name: /next/i}).click()
+    cy.findByRole('button', { name: /confirm/i}).click()
+    cy.findByText(/my classroooms/i)
+})
+
+Cypress.Commands.add("student_login", () => {
+    cy.visit('/')
+    cy.findByRole('button', {  name: /sign in with email/i}).click()
+    cy.get('#firebaseui_container > div > form > div:nth-child(2) > div > div:nth-child(1)').type('hello@Cypress.io')
+    cy.findByRole('button', {name: /next/i}).click()
+    cy.findByLabelText(/password/i).type('testpassword1234')
+    cy.findByRole('button', {name: /sign in/i}).click()
+    cy.findByRole('button', {  name: /create student acccount/i}).click()
+    cy.findByRole('button', {  name: /next/i}).click()
+    cy.findByRole('button', { name: /confirm/i}).click()
+    cy.findByText(/my classroooms/i)
+})
+
+/** assumes UI is already in the my-classrooms page 
+ * takes in an array of strings and adds classrooms with names equal to each string element */ 
+Cypress.Commands.add("add_classrooms", (classroomNames) => {
+    classroomNames.forEach(classroomName => {
+        cy.findByRole('button', {  name: /add/i}).click()
+        cy.get('#__next > div > div:nth-child(2) > div > div > div:nth-child(2) > div')
+        .findByRole('textbox', {  name: /enter name/i}).type(classroomName)
+        cy.findByRole('button', {  name: /next/i}).click()
+        cy.findByRole('button', {  name: /finish/i}).click()
+        cy.get('#__next > div > div').contains(classroomName)
+    })
 })
