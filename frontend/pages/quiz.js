@@ -20,8 +20,7 @@ import CustomTopNavBar from '../customComponents/customTopNavBar'
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 import  RunQuiz   from '../customComponents/runQuiz.js'
 import backendQueryGetQuiz from '../customFunctions/backendQueries/backendQueryGetQuiz.js';
-
-
+import backendUpdateQuizAnswers from '../customFunctions/backendQueries/backendUpdateQuizAnswers.js';
 
 export default function Quiz() {
 
@@ -45,16 +44,20 @@ export default function Quiz() {
   }
   const [state, setState] =  React.useState(initialState)
 
+  const [tempPreviousAnswers, setTempPrevAnswers] = React.useState({}); // Mihail, this is only here for testing until you can use the previous answers 
+
   const fetchData = async () => {
     var urlParams = new URLSearchParams(window.location.search);
     var qid = parseInt(urlParams.get('id'));
     try{
-      backendQueryGetQuiz(qid, {callback: (res) => {
-          if (res.launchedquizid == qid) {
-            parseQuizData(res);
+      backendQueryGetQuiz(qid, {callback: (quizResult, previousAnswers) => {
+          if (quizResult.launchedquizid == qid) {
+            parseQuizData(quizResult);
+            console.log("quiz.js - backendQueryGetQuiz: returned student answers: ", previousAnswers);
+            setTempPrevAnswers({userquizzid: previousAnswers.userquizzid, answersjson: previousAnswers.answersjson});
           }
           else {
-            console.log("quiz id returned nothing valid");
+            console.log("quiz id returned invalid");
             loadDummyData();
           }
         }
@@ -140,23 +143,30 @@ export default function Quiz() {
 
   const sendQuizToServer = async () =>{
    
-    let quizSubmitted = false
+    let newAnswer = JSON.stringify(studentAnswers);
+    backendUpdateQuizAnswers(tempPreviousAnswers.userquizzid, newAnswer);
 
-    let uid = JSON.parse(localStorage.quizngagedUserData).uid;
+
+    let quizSubmitted = true
+    // Mihail, I left this code doing nothing:... I guess it should return a response...
+
+  //    let quizSubmitted = false
+
+  //   let uid = JSON.parse(localStorage.quizngagedUserData).uid;
     
-      const quizResponse = await fetch(BASEPATH+'submitquiz',
-      {
-        method: 'POST', 
-        headers: {
-         'Content-Type': 'application/json'
-         },
-         body: JSON.stringify({answers:studentAnswers,studentid:uid,qid:1}) 
-      })
-      quizSubmitted = await quizResponse.json()
-   try{ } catch (err) {
-      // fall back to default data
-      console.log('issue while submitting exam data')
-    }
+  //     const quizResponse = await fetch(BASEPATH+'submitquiz',
+  //     {
+  //       method: 'POST', 
+  //       headers: {
+  //        'Content-Type': 'application/json'
+  //        },
+  //        body: JSON.stringify({answers:studentAnswers,studentid:uid,qid:1}) 
+  //     })
+  //     quizSubmitted = await quizResponse.json()
+  //  try{ } catch (err) {
+  //     // fall back to default data
+  //     console.log('issue while submitting exam data')
+  //   }
        
   }
   
