@@ -69,9 +69,7 @@ export default function MyClassrooms() {
     }else{
       if(localStorage.quizngagedUserData==undefined){
         setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
-        backendQueryGetUserJSON({callback:(response)=>{
-          console.log(response)
-        }})
+        backendQueryGetUserJSON({callback:(response)=>{console.log(response)}})
         // the line below seems to want to call on the localStorage record before there is anything in there as the line above
         // is an asynchronous call to the backend 
         // console.log("before JSON.parse(localStorage.quizngagedUserData)",JSON.parse(localStorage.quizngagedUserData))
