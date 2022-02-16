@@ -37,3 +37,29 @@ describe('app should allow teacher to log in and log out', () =>{
         cy.end()
     })    
 })
+
+describe('the app should allow a subsequent login', () => {
+    before(() => {
+        // cy.clearLocalStorageSnapshot();
+        // cy.clear_mysql_and_indexedDB();
+        cy.restoreLocalStorage
+    })
+    beforeEach(() => {
+        cy.restoreLocalStorage();
+    })
+    afterEach(() => {
+        cy.saveLocalStorage();
+    })
+    it('visits homepage', () => {
+        cy.visit('/')
+    })
+    it('finds sign in with email button', () => {
+        cy.findByRole('button', {  name: /sign in with email/i}).click()
+    })
+    it('types in username and password', () => {
+        cy.get('#firebaseui_container > div > form > div:nth-child(2) > div > div:nth-child(1)').type('hello@Cypress.io', {log:false})
+        cy.findByRole('button', {name: /next/i}).click()
+        cy.findByLabelText(/password/i).type('testpassword1234', {log:false})
+        cy.findByRole('button', {name: /sign in/i}).click()
+    })
+})

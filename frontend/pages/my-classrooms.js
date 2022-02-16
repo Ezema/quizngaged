@@ -64,27 +64,29 @@ export default function MyClassrooms() {
   const [canRender,setCanRender] = React.useState(false)
 
   React.useEffect(()=>{
-    if(window.location.pathname.localeCompare("/my-classrooms")!=0){
-      window.location.pathname = "/my-classrooms"
-    }
     if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
       router.push('/')
     }else{
-
       if(localStorage.quizngagedUserData==undefined){
         setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
-        backendQueryGetUserJSON({callback:()=>{}})
-        console.log("before JSON.parse(localStorage.quizngagedUserData)",JSON.parse(localStorage.quizngagedUserData))
+        backendQueryGetUserJSON({callback:(response)=>{
+          console.log(response)
+        }})
+        // the line below seems to want to call on the localStorage record before there is anything in there as the line above
+        // is an asynchronous call to the backend 
+        // console.log("before JSON.parse(localStorage.quizngagedUserData)",JSON.parse(localStorage.quizngagedUserData))
       }else{        
         if(JSON.parse(localStorage.quizngagedUserData).classrooms){
           setCanRender(true)
           if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Student')!=0){
             setUserIsStudent(false)
           }
+        if(window.location.pathname.localeCompare("/my-classrooms")!=0){
+            window.location.pathname = "/my-classrooms"
+        }
         }        
       }   
     }        
-    
   },[addClassroomState,editClassroomState,statefulUserObject,userIsStudent])
 
   const handleEditClassroom = (event,index)=>{    
