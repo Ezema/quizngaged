@@ -44,7 +44,7 @@ export default function StepsToCreateAccount(props){
     const [phone, setPhone] = React.useState(JSON.parse(localStorage.federatedAuthUserData).phoneNumber);    
     const [userType, setUserType] = React.useState(props.userType); 
     
-    const handleUserEntryChange = (event,type)=>{
+    const handleUserEntryChange = (event,type="")=>{
         if(type.localeCompare('email')){
             setEmail(event.target.value)
         }else if(type.localeCompare('name')){
@@ -139,7 +139,7 @@ export default function StepsToCreateAccount(props){
                                         id="email"
                                         label="Email"
                                         value={email}
-                                        onClick={(event)=>handleUserEntryChange(event.target,email)}
+                                        onClick={(event)=>handleUserEntryChange(event,email)}
                                         defaultValue={JSON.parse(localStorage.federatedAuthUserData).email}
                                     />
                                 </Grid>
@@ -149,7 +149,7 @@ export default function StepsToCreateAccount(props){
                                         id="user-type"
                                         label="User type"
                                         value={userType}
-                                        onClick={(event)=>handleUserEntryChange(event.target,userType)}
+                                        onClick={(event)=>handleUserEntryChange(event,userType)}
                                         defaultValue={props.userProfile}
                                     />
                                 </Grid>
@@ -160,7 +160,7 @@ export default function StepsToCreateAccount(props){
                                         id="name-required"
                                         label="Name"
                                         value={name}
-                                        onClick={(event)=>handleUserEntryChange(event.target,name)}
+                                        onClick={(event)=>handleUserEntryChange(event,name)}
                                         defaultValue={JSON.parse(localStorage.federatedAuthUserData).displayName}
                                     />
                                 </Grid>
@@ -170,7 +170,7 @@ export default function StepsToCreateAccount(props){
                                         id="phone-option"
                                         label="Phone"
                                         value={phone}
-                                        onClick={(event)=>handleUserEntryChange(event.target,phone)}
+                                        onClick={(event)=>handleUserEntryChange(event,phone)}
                                         defaultValue={(JSON.parse(localStorage.federatedAuthUserData).phoneNumber)}
                                     />
                                 </Grid>                                

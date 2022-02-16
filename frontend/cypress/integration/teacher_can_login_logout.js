@@ -21,8 +21,16 @@ describe('app should allow teacher to log in and log out', () =>{
         cy.findByLabelText(/password/i).type('testpassword1234', {log:false})
         cy.findByRole('button', {name: /sign in/i}).click()
     })
-    it('creates a teacher account', () => {
+    it('navigates to create a teacher account', () => {
         cy.findByRole('button', {  name: /create teacher acccount/i}).click()
+        
+    })
+    it('interacting with the role, name, and phone number fields does not give error', () => {
+        cy.findByRole('textbox', {  name: /user type/i}).click().type("role change")
+        cy.findByRole('textbox', {  name: /name/i}).click().type("name change")
+        cy.findByRole('textbox', { name: /phone/i}).click().type("1234567890").clear()
+    })
+    it('submitting form to create teacher account', () => {
         cy.findByRole('button', {  name: /next/i}).click()
         cy.findByRole('button', { name: /confirm/i}).click()
     })
@@ -61,5 +69,8 @@ describe('the app should allow a subsequent login', () => {
         cy.findByRole('button', {name: /next/i}).click()
         cy.findByLabelText(/password/i).type('testpassword1234', {log:false})
         cy.findByRole('button', {name: /sign in/i}).click()
+    })
+    it('confirms that it is in the my classrooms page', () => {
+        cy.findByText(/my classroooms/i)
     })
 })
