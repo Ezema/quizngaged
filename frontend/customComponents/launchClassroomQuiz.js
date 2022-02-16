@@ -115,7 +115,7 @@ export default function LaunchClassroomQuiz(props){
                 };
 
                 for(let i=0;i<parsedQuiz.questions.length;i++){
-                    let question = parsedJson.questions[parsedQuiz.questions[i]];
+                    let question = parsedJson.questions[i];
                     if (!question.isDeleted) {
                       launchQuiz.questions.push(question);
                       console.log("question #"+i, question);
