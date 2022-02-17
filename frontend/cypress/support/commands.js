@@ -87,3 +87,18 @@ Cypress.Commands.add("add_classrooms", (classroomNames) => {
         cy.get('#__next > div > div').contains(classroomName)
     })
 })
+
+/** assumes is logged in as a teacher and in the my-questions page 
+ * takes in an array of strings and adds questions of type text-response with each string as the body of the question
+*/
+Cypress.Commands.add("add_text_response_questions", (questions) => {
+    questions.forEach(question => {
+        cy.findByTestId('AddIcon').click()
+        cy.findByRole('textbox', {  name: /enter the question body/i}).type(question)
+        cy.findByRole('textbox', {  name: /question type/i}).type('{downarrow}{enter}')
+        cy.findByRole('button', { name: /next/i}).click()
+        cy.findByRole('button', { name: /next/i}).click()
+        cy.findByRole('button', { name: /finish/i}).click()
+        cy.get('#__next > div > div').contains(question)
+    })
+})
