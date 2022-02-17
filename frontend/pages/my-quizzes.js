@@ -93,7 +93,7 @@ function MyQuizzes(props) {
       router.push('/')
     }else{
       setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
-      backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
+      backendQueryGetUserJSON({callback:(response)=>{setStatefulQuizngagedUserData(response)}})
     }
         
     if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Student')!=0){
