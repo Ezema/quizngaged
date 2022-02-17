@@ -67,7 +67,7 @@ export default function EditQuiz(props){
 
     const [snackBar, setSnackBar] = React.useState({isOpen:false, message:'Test'})
     const listOfQuizzes = props.listOfQuizzes;
-    const setListOfQuestions = props.setListOfQuestions;
+    const setListOfQuizzes = props.setListOfQuizzes;
     const editQuizUID = props.editQuizUID;
 
     
@@ -143,7 +143,7 @@ export default function EditQuiz(props){
 
         //save the edited questions in the copy                
         copyOfQuizngagedUserData.quizzes[quizIndexNumber]=editQuiz                
-    
+        setListOfQuizzes(copyOfQuizngagedUserData.quizzes)
         //replace the old data with the new data in localstorage                
         localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
 
