@@ -1,0 +1,45 @@
+
+> test
+> node_modules/.bin/mocha
+
+
+
+  Set of tests
+    Mandatory text cannot be null
+      ✔ should fail if null
+    Mandatory text cannot be empty
+      ✔ should fail if empty
+    Mandatory text cannot be spaces
+      ✔ should fail if just spaces
+    Mandatory text may have text
+      ✔ should pass if string with value
+    Mandatory array cannot be null
+      ✔ should fail if null
+    Mandatory array must have at least one element
+      ✔ should fail if empty
+    Mandatory array must have at least one element
+      ✔ should pass if has one value
+    Mandatory array can have more elements
+      ✔ should pass if has >1 value
+    Check option choice with no arguments fails
+      ✔ should fail with no arguments
+    Check array for option choice is not null
+      ✔ should fail with null array
+    Check option choice from array is not null
+      ✔ should fail with just one parameter
+    Check array for option choice is not empty
+      ✔ should fail with zero length array
+    Check option choice is not in the array
+      ✔ should fail with invalid choice
+    Check option choice is only element in the array
+      ✔ should pass with valid choice
+    Check option choice is not first element in the array
+      ✔ should pass with valid choice
+    Check option choice is not first or last element in the array
+      ✔ should pass with valid choice
+    Check option choice is not in the array with many elements
+      ✔ should fail with invalid choice
+
+
+  17 passing (21ms)
+
