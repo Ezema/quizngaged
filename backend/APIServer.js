@@ -414,7 +414,6 @@ app.post("/API/updatestudentquiz",(req, res)=>{
 
 
 app.post("/API/studentsquizzesforclassroom",(req, res)=>{
-  console.log("/API/studentsquizzesforclassroom: "+req.body);
 
   admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
   () => {
@@ -443,7 +442,9 @@ app.post("/API/studentsquizzesforclassroom",(req, res)=>{
         // but also that may not be in that classroom, so filter those out
         let studentResults = [];
         for (var i = 0; i < results.length; i++) {
-          if (results[i].answersjson != null) {
+          // presence of a student id in the request means only want that student's results
+          if (results[i].answersjson != null && 
+              (req.body.studentUID == null || results[i].uid == req.body.studentUID)) {
             studentResults.push({
               uid: results[i].uid,
               name: results[i].name,
@@ -453,8 +454,9 @@ app.post("/API/studentsquizzesforclassroom",(req, res)=>{
               answersJson: results[i].answersjson
             });
           }
-          else {
-            // got a student who hasn't answered, test to see if they are in the classroom
+          else if (req.body.studentUID == null) {
+            // for teacher's view return students that have not joined a quiz yet
+            // test to see if they are in the classroom
             let parsedClassrooms = JSON.parse(results[i].classrooms);
             for (var j = 0; j < parsedClassrooms.length; j++) {
               let classroom = parsedClassrooms[j];

@@ -1,8 +1,10 @@
 import * as React from 'react';
 
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import CustomPaperReactComponent from './customPaperReactComponent.js';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -12,92 +14,96 @@ import backendQueryStudentsQuizzesForClassroom from '../customFunctions/backendQ
 
 export default function ViewClassroomResults(props){
 
-  const classRoomJson = JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID];
-  const [studentData, setStudentData] = React.useState([])
+  const parsedUser = JSON.parse(localStorage.quizngagedUserData);
+  const classRoomJson = parsedUser.classrooms[props.viewClassroomUID];
+  const [studentData, setStudentData] = React.useState([]);
+  const [openDialog, setOpenDialog] = React.useState(false);
 
   React.useEffect(()=>{
-    console.log("data after load: ", classRoomJson);
-    console.log("classroom global id="+classRoomJson.globalQuizngagedId);
     fetchData();
   },[])
 
   const fetchData = async () => {
-    try{
-      backendQueryStudentsQuizzesForClassroom(classRoomJson.globalQuizngagedId, {callback: (studentResults) => {
+    try {
+      backendQueryStudentsQuizzesForClassroom(classRoomJson.globalQuizngagedId, 
+        props.userIsStudent ? parsedUser.uid : null,
+        {callback: (studentResults) => {
           console.log("ViewClassroomResults.fetchData: studentResults:", studentResults);
           setStudentData(studentResults);
-          // if (quizResult.launchedquizid == qid) {
-          //   parseQuizData(quizResult);
-          //   console.log("quiz.js - backendQueryGetQuiz: returned student answers: ", previousAnswers);
-          //   setTempPrevAnswers({userquizzid: previousAnswers.userquizzid, answersjson: previousAnswers.answersjson});
-          // }
-          // else {
-          //   console.log("quiz id returned invalid");
-          //   loadDummyData();
-          // }
-        }
-      });
+          }
+        });
 
     } catch (err) {
       console.log('ViewClassroomResults: data fetch error', err);
-      // loadDummyData();
     }
   }
 
-
   return(
     <div>
-      { props.userIsStudent ? 
-      (
-        <div>Student view not implemented yet</div>
-      )
-      : (studentData.length == 0) ?
-      (
-        <Container>
-          <Grid container display={'grid'} justifyContent={'center'}>
-              <Grid item textAlign={'center'}>
-                  <IconButton size="large" onClick={fetchData}>
-                      <RefreshIcon color='primary' size="large"></RefreshIcon>
-                  </IconButton>
-              </Grid>
-              <Grid item>
-                  <Typography variant='h4'>
-                      Classroom has no students
-                  </Typography>
-              </Grid>
+      { props.userIsStudent 
+        ? ""
+        : <Grid container display={'grid'} justifyContent={'center'}>
+            <Grid item textAlign={'center'}>
+              <IconButton size="large" onClick={fetchData}>
+                <RefreshIcon color='primary' size="large"></RefreshIcon>
+              </IconButton>
+            </Grid>
           </Grid>
-        </Container>
-      )
+      }
+      { studentData.length == 0 ?
+        <Grid container display={'grid'} justifyContent={'center'}>
+          <Grid item>
+            <Typography variant='h4'>{props.userIsStudent ? "You have not joined a quiz yet" : "Classroom has no students"}</Typography>
+          </Grid>
+        </Grid>
       : 
-      (
-        <Box paddingBottom="100px">        
-        <Grid container spacing={2}display={'grid'}>
-        {         
+        <Grid container spacing={2} justifyContent={'flex-start'}>
+          {
             studentData.map((student)=>
-              <Grid item xs={12} md={6} lg={4} key={student.uid}>
+              <Grid item xs={12} md={6} lg={6} key={student.uid}>
                 <CustomPaperReactComponent elevation={3}>                            
-                <Typography variant='h5' inline>
-                    {student.name}
-                </Typography>
-                <Typography variant='subtitle1' inline>
-                    { typeof(student.quizTitle) == 'undefined' ? "[No quizzes yet]" 
-                    : student.quizDescription.length == 0 ? "" : student.quizDescription}
-                </Typography>
-                  { typeof(student.quizTitle) != 'undefined' ?
-                    <Typography variant='subtitle1'>
-                        {"Title: "+student.quizTitle}
-                    </Typography>
-                  
-                  : ""}
-                {/* <Button size="small" onClick={(event) => handleViewLiveOngoingQuiz(event, student.id)}>VIEW</Button> */}
-                {/* <Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button> */}
+                  <Typography variant='h5' inline>{student.name}</Typography> 
+                  { typeof(student.quizTitle) == 'undefined' 
+                    ? <Typography variant='subtitle1' inline>[No quizzes yet]</Typography>
+                    : <div>
+                        { student.quizDescription.length == 0 
+                        ? "" 
+                        : <Typography variant='subtitle1'>{student.quizDescription}</Typography>
+                        }
+                        { typeof(student.quizTitle) == 'undefined' 
+                        ? ""
+                        : <Typography variant='subtitle1'>Title: {student.quizTitle} {student.quizState == 'IN_PROGRESS' ? "(in progress)" : ""}</Typography>
+                        }
+                      </div>
+                  }
                 </CustomPaperReactComponent>
+                { typeof(student.quizTitle) == 'undefined' 
+                  ? ""
+                  : <Accordion elevation={3}>
+                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant='subtitle1'>todo/{JSON.parse(student.answersJson).length} questions, mark: todo%</Typography>
+                      </AccordionSummary>
+                      {
+                        JSON.parse(student.answersJson).map((answers)=>
+                        <AccordionDetails>
+                        <Typography>
+                          {answers.qtype}: 
+                          "{answers.questiondata.questionBaselineBody}"
+                          {/* {console.log('answers',answers)} */}
+                        </Typography>
+                        <Typography>
+                          Answer (todo): {answers.questiondata.questionBaselineAnswers[0].body}
+                        </Typography>
+                      </AccordionDetails>
+                        )
+                      }
+                    </Accordion>
+                }
               </Grid>      
             )
-        }                        
+          }
         </Grid>
-        </Box>
-)}
+      }
     </div>
   )
 }

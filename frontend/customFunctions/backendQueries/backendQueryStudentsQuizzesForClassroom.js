@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-export default function backendQueryStudentsQuizzesForClassroom(globalQuizngagedId, props){
+export default function backendQueryStudentsQuizzesForClassroom(globalQuizngagedId, studentUID, props){
     console.log("inside backendQueryStudentsQuizzesForClassroom globalQuizngagedId="+globalQuizngagedId);
 
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
@@ -13,7 +13,8 @@ export default function backendQueryStudentsQuizzesForClassroom(globalQuizngaged
           federatedAuthDecodedToken:JSON.parse(localStorage.federatedAuthDecodedToken),
           //the id or uid is our internal id for each user in the database of quizngaged app.
           uid:JSON.parse(localStorage.federatedAuthUserData).uid,  
-          globalQuizngagedId:globalQuizngagedId
+          globalQuizngagedId:globalQuizngagedId,
+          studentUID:studentUID
       },
       timeout:10000      
     }).then(async (response) => {
