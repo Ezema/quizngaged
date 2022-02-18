@@ -412,6 +412,76 @@ app.post("/API/updatestudentquiz",(req, res)=>{
   });
 })
 
+
+app.post("/API/studentsquizzesforclassroom",(req, res)=>{
+  console.log("/API/studentsquizzesforclassroom: "+req.body);
+
+  admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
+  () => {
+    let studentQuizzes = 
+        "select usr.uid, usr.userjson->>'$.name' name, userjson->>'$.classrooms' classrooms,"+
+        " qzs.answersjson, qzs.quiz_state, qzs.launchedquizid, qzs.quizjson->>'$.eventDescription' event, qzs.quizjson->>'$.quizTitle' title"+
+        " from users as usr"+
+        " left join (select uqz.uid, uqz.answersjson, lqz.*"+
+        " from user_quizzes uqz, launched_quizzes lqz"+
+        " where uqz.launchedquizid = lqz.launchedquizid"+
+        " and lqz.uniqueclassroomid = ?) as qzs"+
+        " on qzs.uid = usr.uid"+
+        " where usr.userjson->>'$.userType' = 'Student'"+
+        " order by usr.userjson->>'$.name'";
+
+    db.query(studentQuizzes, [req.body.globalQuizngagedId], (err, results)=>{
+      if (err) {
+        console.log("error querying users and launched quizzes: ", err);
+      }
+      else if (results.length == 0) {
+        console.log("no students for globalQuizngagedId="+req.body.globalQuizngagedId);
+      } 
+      else {
+        // left joined on launched quizzes that are in the classroom
+        // this means there are students that didn't yet join a quiz in that classroom
+        // but also that may not be in that classroom, so filter those out
+        let studentResults = [];
+        for (var i = 0; i < results.length; i++) {
+          if (results[i].answersjson != null) {
+            studentResults.push({
+              uid: results[i].uid,
+              name: results[i].name,
+              quizTitle: results[i].title,
+              quizDescription: results[i].event,
+              quizState: results[i].quiz_state,
+              answersJson: results[i].answersjson
+            });
+          }
+          else {
+            // got a student who hasn't answered, test to see if they are in the classroom
+            let parsedClassrooms = JSON.parse(results[i].classrooms);
+            for (var j = 0; j < parsedClassrooms.length; j++) {
+              let classroom = parsedClassrooms[j];
+              if (classroom.globalQuizngagedId == req.body.globalQuizngagedId) {
+                // is in the classroom, but not joined the quiz
+                studentResults.push({
+                  uid: results[i].uid,
+                  name: results[i].name,
+                });
+                break;
+              }
+            }
+          }
+        }
+
+        res.send({'studentResults': studentResults});
+      }
+    });
+    return
+  }).catch((error)=>{
+    //The auth token was forked (trying to by-pass user authentication for DDoS attack for example); 
+    console.log("error: ", error)
+    return
+  });
+})
+
+
 getOrInsertStudentAnswers = (studentUid, launchedquizid, callback) => {
 
   let studentQuery = "SELECT * FROM user_quizzes WHERE launchedquizid = ? AND uid = ?";
