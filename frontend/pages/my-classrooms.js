@@ -58,6 +58,7 @@ export default function MyClassrooms() {
   const [newClassroomUID,setNewClassroomUID] = React.useState(null)
   const [editClassroomUID,setEditClassroomUID] = React.useState(null)
   const [viewClassroomUID,setViewClassroomUID] = React.useState(null)
+  const [viewClassroomGlobalQuizngagedId,setViewClassroomGlobalQuizngagedId] = React.useState(null)
 
   const [userIsStudent,setUserIsStudent] = React.useState(true)
 
@@ -93,8 +94,9 @@ export default function MyClassrooms() {
     setTopBarTitle("Edit Classroom");
   }
 
-  const handleViewClassroom = (event,index)=>{    
+  const handleViewClassroom = (event,index,globalQuizngagedId)=>{    
     setViewClassroomUID(index)
+    setViewClassroomGlobalQuizngagedId(globalQuizngagedId);
     setViewClassroomState(true);
     setTopBarTitle("Classroom");
   }
@@ -150,7 +152,7 @@ export default function MyClassrooms() {
           (
             
               <Box paddingTop="1em">
-                <ViewClassroom userIsStudent={userIsStudent} viewClassroomUID={viewClassroomUID} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} 
+                <ViewClassroom userIsStudent={userIsStudent} viewClassroomUID={viewClassroomUID} viewClassroomGlobalQuizngagedId={viewClassroomGlobalQuizngagedId} viewClassroomState={viewClassroomState} setViewClassroomState={setViewClassroomState} 
                 topBarTitle={topBarTitle} setTopBarTitle={setTopBarTitle}
                 launchClassroomQuizState={launchClassroomQuizState} setLaunchClassroomQuizState={setLaunchClassroomQuizState} 
                 viewClassroomResultsState={viewClassroomResultsState}
@@ -192,7 +194,7 @@ export default function MyClassrooms() {
                         <Typography variant='h5'>
                           {classroom.name}
                         </Typography>                      
-                        <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id)}>OPEN</Button>
+                        <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id,classroom.globalQuizngagedId)}>OPEN</Button>
                         {(userIsStudent)?null:<Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>}
                       </CustomPaperReactComponent>
                     </Grid>      
@@ -210,7 +212,7 @@ export default function MyClassrooms() {
                         <Typography variant='h5'>
                           {classroom.name}
                         </Typography>                      
-                        <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id)}>OPEN</Button>
+                        <Button size="small" onClick={(event) => handleViewClassroom(event, classroom.id,classroom.globalQuizngagedId)}>OPEN</Button>
                         {(userIsStudent)?null:<Button size="small" onClick={(event) => handleEditClassroom(event, classroom.id)}>EDIT</Button>}
                       </CustomPaperReactComponent>
                     </Grid>      

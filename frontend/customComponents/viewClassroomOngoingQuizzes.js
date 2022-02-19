@@ -12,6 +12,7 @@ import CustomPaperReactComponent from './customPaperReactComponent.js';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Icon } from '@mui/material';
 
+import findArrayIndex from '../customFunctions/findArrayIndex.js';
 import backendQueryUpdateOngoingQuizzes from '../customFunctions/backendQueries/backendQueryUpdateOngoingQuizzes.js'
 /* router */
 import { useRouter } from 'next/router'
@@ -19,11 +20,14 @@ import { useRouter } from 'next/router'
 
 export default function ViewClassroomOngoingQuizzes(props){
 
+    let classroomsJson = JSON.parse(localStorage.quizngagedUserData).classrooms;
+    const classroomIndex = findArrayIndex(classroomsJson, 'globalQuizngagedId', props.globalQuizngagedId);
+    const [classroom, setClassroom] = React.useState(classroomsJson[classroomIndex]);
+
     const Router = useRouter()
 
     React.useEffect(()=>{
         handleRefreshLiveOngoingQuizzes();
-        console.log("ongoing quizzes after load: ",JSON.parse(localStorage.quizngagedUserData).classrooms)
     },[refreshingOngoingQuizzes])
 
     const [refreshingOngoingQuizzes,setRefreshingOngoingQuizzes] = React.useState(false)
@@ -31,21 +35,22 @@ export default function ViewClassroomOngoingQuizzes(props){
 
     const handleRefreshLiveOngoingQuizzes = ()=>{        
         setRefreshingOngoingQuizzes(true)
-        backendQueryUpdateOngoingQuizzes(props.viewClassroomUID,{callback:setRefreshingOngoingQuizzes},JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].globalQuizngagedId)
+        backendQueryUpdateOngoingQuizzes(classroomIndex, {callback: (isOngoing, updatedClassroom) => {
+          setRefreshingOngoingQuizzes(isOngoing);
+          setClassroom(updatedClassroom);
+        }}, props.globalQuizngagedId);
     }
     const handleViewLiveOngoingQuiz = ()=>{}
 
     return(
         <div>
-            {console.log("JSON.parse(localStorage.quizngagedUserData).classrooms",JSON.parse(localStorage.quizngagedUserData).classrooms)}
-            {console.log("props.viewClassroomUID",props.viewClassroomUID)}
             <Container>
-                {(JSON.parse(localStorage.quizngagedUserData).classrooms==undefined)?
+                {(classroom==undefined)?
                 (
                     <div>Data error</div>
                 )
                 :
-                (JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.length==0)?
+                (classroom.ongoingLiveQuizzes.length==0)?
                 (
                     <Container>
                         <Grid container display={'grid'} justifyContent={'center'}>
@@ -75,7 +80,7 @@ export default function ViewClassroomOngoingQuizzes(props){
                                 </IconButton>
                             </Grid>
                         {
-                            JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.map((ongoingLiveQuiz)=>
+                            classroom.ongoingLiveQuizzes.map((ongoingLiveQuiz)=>
                             <Grid item xs={12} md={6} lg={4} key={ongoingLiveQuiz.launchedquizid}>
                                 <CustomPaperReactComponent elevation={3}>                            
                                 <Typography variant='h5' inline>
@@ -97,7 +102,7 @@ export default function ViewClassroomOngoingQuizzes(props){
                         <Box paddingBottom="100px">        
                         <Grid container spacing={2}display={'grid'}>
                         {         
-                            JSON.parse(localStorage.quizngagedUserData).classrooms[props.viewClassroomUID].ongoingLiveQuizzes.map((ongoingLiveQuiz)=>
+                            classroom.ongoingLiveQuizzes.map((ongoingLiveQuiz)=>
                             <Grid item xs={12} md={6} lg={4} key={ongoingLiveQuiz.launchedquizid}>
                                 <CustomPaperReactComponent elevation={3}>                            
                                 <Typography variant='h5' inline>
