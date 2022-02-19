@@ -4,7 +4,7 @@ const axios = require('axios');
 
 import backendQuerySaveUserJSON from './backendQuerySaveUserJSON';
 
-export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroomUniqueId){
+export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroomUniqueId,checkOnly){
 
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
     axios({
@@ -20,16 +20,17 @@ export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroo
       timeout:10000
     }).then(async (response) => {                 
         props.callback(response.data.uniqueClassroomIDValidity)
-
+      if(checkOnly == false){
         let copy = JSON.parse(localStorage.quizngagedUserData)            
         //modify the server json object
         let modifiedJSON = JSON.parse(response.data.classroomjson)
         modifiedJSON.globalQuizngagedId = response.data.uniqueclassroomid
         modifiedJSON.classroomowneruid = response.data.uniqueclassroomid
         copy.classrooms.push(modifiedJSON)
-        
         localStorage.setItem("quizngagedUserData",JSON.stringify(copy))        
         backendQuerySaveUserJSON(()=>{})
+      }
+        
         /* response.data.classroomowneruid
         response.data.uniqueclassroomid */
         
