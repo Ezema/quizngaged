@@ -105,7 +105,7 @@ export default function AddClassroom(props){
     const [studentClassroomUniqueUID, setStudentClassroomUniqueUID] = React.useState(null)
     const [studentClassroomDescription, setStudentClassroomDescription] = React.useState(null)
     const [checkingValidClassroom, setCheckingValidClassroom] = React.useState(false)
-    const [serverResponseForClassroomIDValidity, setServerResponseForClassroomIDValidity] = React.useState(false)
+    const [serverResponseForClassroomIDValidity, setServerResponseForClassroomIDValidity] = React.useState("nada")
     
 
     const [showError, setShowError] = React.useState(false)
@@ -146,14 +146,14 @@ export default function AddClassroom(props){
             props.setAddClassroomState(false)
         }else if(step==1){
             setStep(step-1)
-            
+            setServerResponseForClassroomIDValidity("nada")
             setMainButtonText('Next')
         }
     }
     
     const handleClassroomIDisValid = ()=>{        
         setCheckingValidClassroom(true)
-        backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID)
+        backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID,true)
         
     }
 
@@ -164,10 +164,12 @@ export default function AddClassroom(props){
                 setStep(step+1)
                 setMainButtonText('Finish')
                 setCheckingValidClassroom(false)
+                setServerResponseForClassroomIDValidity("nada")
             }else{
                 console.log('got invalid id');
                 setCheckingValidClassroom(false)
                 setShowError(true)
+                setServerResponseForClassroomIDValidity("nada")
             }
         }
     },[serverResponseForClassroomIDValidity,])
@@ -191,7 +193,7 @@ export default function AddClassroom(props){
                     }                    
                 }
                 else if(step==1){
-                    backendQueryCheckClassroomUniqueIDIsValid(studentClassroomUniqueUID)
+                    backendQueryCheckClassroomUniqueIDIsValid({callback:()=>{}},studentClassroomUniqueUID, false)
                     props.setAddClassroomState(false)
                     setStep(0)
                 }
@@ -272,7 +274,7 @@ export default function AddClassroom(props){
                                     <TextField     
                                         required={step>0?false:true}
                                         InputProps={{
-                                            readOnly: step>0?true:false,
+                                            disabled: step>0?true:false,
                                         }}
                                         fullWidth                                               
                                         label="Enter the teacher-provided classroom code"
@@ -288,7 +290,7 @@ export default function AddClassroom(props){
                                     <TextField     
                                         required={step>0?false:false}
                                         InputProps={{
-                                            readOnly: step>0?true:false,
+                                            disabled: step>0?true:false,
                                         }}
                                         fullWidth                   
                                         label="Enter a description for this classroom"
@@ -315,8 +317,8 @@ export default function AddClassroom(props){
                             </Button>
                         </Grid>
                         <Grid item paddingLeft={'2em'} width={'50vw'}>
-                            <Button fullWidth size='large' variant='contained' color='success' onClick={()=>handleNextStep()} endIcon={<NavigateNextIcon/>}>
-                                {mainButtonText}
+                            <Button fullWidth InputProps={{disabled: showError?true:false}} size='large' variant='contained' color='success' onClick={()=>handleNextStep()} endIcon={<NavigateNextIcon/>}>
+                                {mainButtonText} 
                             </Button>
                         </Grid>
                     </Grid>
