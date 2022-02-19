@@ -54,6 +54,8 @@ import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQ
 import * as formValidator from '../customFunctions/formValidation.js';
 
 import { width } from '@mui/system';
+import { Checkbox, FormGroup, FormControlLabel } from '@mui/material';
+
 
 const steps = [
   'Add base question',
@@ -75,10 +77,13 @@ export default function AddQuestion(props){
     const newQuestion = {id:newQuestionUID,
         questionType: questionTypes[multipleChoiceQuestionIdx],
         questionBaselineBody:"",
-        questionBaselineAnswers:[{id:1,parentQuestionId:newQuestionUID,body:'', isCorrect:false}],
+        questionBaselineTimer: {isAssigned: false, minutes: null, seconds: null},
+        questionBaselineAnswers:[{id:1,parentQuestionId:newQuestionUID,body:'', isCorrect:false}, {id:2,parentQuestionId:newQuestionUID,body:'', isCorrect:false}],
         questionEasierBody:"",
+        questionEasierTimer: {isAssigned: false, minutes: null, seconds: null},
         questionEasierAnswers:[], //{id:1,parentQuestionId:newQuestionUID,body:'', isCorrect:false}
         questionHarderBody:"",
+        questionHarderTimer: {isAssigned: false, minutes: null, seconds: null},
         questionHarderAnswers:[]} //{id:1,parentQuestionId:newQuestionUID,body:'', isCorrect:false}]
 
     const [statefulNewQuestion,setStatefulNewQuestion] = React.useState(newQuestion)
@@ -94,12 +99,48 @@ export default function AddQuestion(props){
     const [step,setStep] = React.useState(0)
     const [entriesAreValid,setEntriesAreValid] = React.useState('true')
     const [questionTypeEntriesAreValid,setQuestionTypeEntriesAreValid] = React.useState('true')
+    const [timerMinutesEntries,setTimerMinutesEntries] = React.useState(true)
+    const [timerSecondsEntries,setTimerSecondsEntries] = React.useState(true)
     const [mainButtonText,setMainButtonText] = React.useState('Next')
 
     const [userEntryQuestionType,setUserEntryQuestionType] = React.useState(statefulNewQuestion.questionType)
     const [userEntryBaselineQuestionBody,setUserEntryBaselineQuestionBody] = React.useState(statefulNewQuestion.questionBaselineBody)
     const [userEntryEasierQuestionBody,setUserEntryEasierQuestionBody] = React.useState(statefulNewQuestion.questionEasierBody)
     const [userEntryHarderQuestionBody,setUserEntryHarderQuestionBody] = React.useState(statefulNewQuestion.questionHarderBody)
+    const [userEntryBaselineTimerMinutes, setUserEntryBaselineTimerMinutes] = React.useState(statefulNewQuestion.questionBaselineTimer.minutes)
+    const [userEntryEasierTimerMinutes, setUserEntryEasierTimerMinutes] = React.useState(statefulNewQuestion.questionEasierTimer.minutes)
+    const [userEntryHarderTimerMinutes, setUserEntryHarderTimerMinutes] = React.useState(statefulNewQuestion.questionHarderTimer.minutes)
+    const [userEntryBaselineTimerSeconds, setUserEntryBaselineTimerSeconds] = React.useState(statefulNewQuestion.questionBaselineTimer.seconds)
+    const [userEntryEasierTimerSeconds, setUserEntryEasierTimerSeconds] = React.useState(statefulNewQuestion.questionEasierTimer.seconds)
+    const [userEntryHarderTimerSeconds, setUserEntryHarderTimerSeconds] = React.useState(statefulNewQuestion.questionHarderTimer.seconds)
+    const [baselineTimer, setBaselineTimer] = React.useState(statefulNewQuestion.questionBaselineTimer.isAssigned)
+    const [easyTimer, setEasyTimer] = React.useState(statefulNewQuestion.questionEasierTimer.isAssigned)
+    const [hardTimer, setHardTimer] = React.useState(statefulNewQuestion.questionHarderTimer.isAssigned)
+    const [timer, setTimer] = React.useState(false)
+
+    const activateTimer = (event)=>{
+        if(step == 0){
+            if(!baselineTimer && !timer){
+                setBaselineTimer(true)
+            }else if(baselineTimer && timer){
+                setBaselineTimer(false)
+            }
+        }else if(step==1){
+            if(!easyTimer && !timer){
+                setEasyTimer(true)
+            }else if(easyTimer && timer){
+                setEasyTimer(false)
+            }
+            
+        }else if(step == 2){
+            if(!hardTimer && !timer){
+                setHardTimer(true)
+            }else if(hardTimer && timer){
+                setHardTimer(false)
+            }
+        }
+        setTimer(!timer)
+    }
 
     const handleQuestionBodyChange = (event, questionDifficulty)=>{
       let changedBody = event.target.value;
@@ -141,6 +182,37 @@ export default function AddQuestion(props){
        
     }
     
+    const handleTimerMinutesChange = (event, questionDifficulty) =>{
+        let changedBody = event.target.value;
+        let isValid = formValidator.isValidMandatoryText(changedBody);
+
+        if(questionDifficulty==0){  
+            setUserEntryBaselineTimerMinutes(changedBody)
+            setTimerMinutesEntries(isValid);
+        }else if(questionDifficulty==1){
+            setUserEntryEasierTimerMinutes(changedBody)
+            setTimerMinutesEntries(isValid);
+        }else if(questionDifficulty==2){
+            setUserEntryHarderTimerMinutes(changedBody)
+            setTimerMinutesEntries(isValid);
+        }
+    }
+
+    const handleTimerSecondsChange = (event, questionDifficulty) =>{
+        let changedBody = event.target.value;
+        let isValid = formValidator.isValidMandatoryText(changedBody);
+
+        if(questionDifficulty==0){  
+            setUserEntryBaselineTimerSeconds(changedBody)
+            setTimerSecondsEntries(isValid);
+        }else if(questionDifficulty==1){
+            setUserEntryEasierTimerSeconds(changedBody)
+            setTimerSecondsEntries(isValid);
+        }else if(questionDifficulty==1){
+            setUserEntryHarderTimerSeconds(changedBody)
+            setTimerSecondsEntries(isValid);
+        }
+    }
 
     const handleNewQuestionAnswer = () => {
         
@@ -148,27 +220,35 @@ export default function AddQuestion(props){
         const parentQuestionUID = getParentQuestionUID(statefulArrayOfQuestionAnswers);
 
         let copyArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
-
         copyArray.push({id:createNewIndex,parentQuestionId:parentQuestionUID,body:'',isCorrect:false})
-        
-
         setStatefulArrayOfQuestionAnswers(copyArray)
     }
 
     const handlePreviousStep = ()=>{
         if(step==0){
             (setAddQuestionState(false),setStep(0))
-        }else if(step==1){                
+        }else if(step==1){
+            if(userEntryBaselineTimerMinutes == "" || userEntryBaselineTimerMinutes == null){
+                setTimer(false)
+            }else{
+                setTimer(true)
+            }
             setStep(step-1)
 
             let copyOfEasierQuestion = JSON.parse(JSON.stringify(userEntryEasierQuestionBody))
             let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))
             let copyOfEasierAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))     
             let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
-            
+            let copyOfEasierTimerAssigned = JSON.parse(JSON.stringify(easyTimer))
+            let copyOfEasierTimerMinutes = JSON.parse(JSON.stringify(userEntryEasierTimerMinutes))
+            let copyOfEasierTimerSeconds = JSON.parse(JSON.stringify(userEntryEasierTimerSeconds))
+
             copyOfNewQuestion.questionType= copyOfQuestionType
             copyOfNewQuestion.questionEasierBody= copyOfEasierQuestion                
             copyOfNewQuestion.questionEasierAnswers = copyOfEasierAnswersArray
+            copyOfNewQuestion.questionEasierTimer.isAssigned = copyOfEasierTimerAssigned
+            copyOfNewQuestion.questionEasierTimer.minutes = copyOfEasierTimerMinutes
+            copyOfNewQuestion.questionEasierTimer.seconds = copyOfEasierTimerSeconds
 
             //mapping correct answers to each question
 
@@ -181,17 +261,28 @@ export default function AddQuestion(props){
             setMainButtonText('Next')
 
         }else if(step==2){
+            if(userEntryEasierTimerMinutes == "" || userEntryEasierTimerMinutes == null || !easyTimer){
+                setTimer(false)
+            }else{
+                setTimer(true)
+            }
             setStep(step-1)
 
             let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
             let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))
             let copyOfHarderAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
             let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
-                
+            let copyOfHarderTimerAssigned = JSON.parse(JSON.stringify(hardTimer))
+            let copyOfHarderTimerMinutes = JSON.parse(JSON.stringify(userEntryHarderTimerMinutes))
+            let copyOfHarderTimerSeconds = JSON.parse(JSON.stringify(userEntryHarderTimerSeconds))
+
             copyOfNewQuestion.questionType= copyOfQuestionType
             copyOfNewQuestion.questionHarderBody= copyOfHarderQuestion
             copyOfNewQuestion.questionHarderAnswers = copyOfHarderAnswersArray
-    
+            copyOfNewQuestion.questionEasierTimer.isAssigned = copyOfHarderTimerAssigned
+            copyOfNewQuestion.questionHarderTimer.minutes = copyOfHarderTimerMinutes
+            copyOfNewQuestion.questionHarderTimer.econds = copyOfHarderTimerSeconds
+
             setStatefulNewQuestion(JSON.parse(JSON.stringify(copyOfNewQuestion)))
             nonStatefulNewQuestion = JSON.parse(JSON.stringify(copyOfNewQuestion))
             
@@ -269,26 +360,47 @@ export default function AddQuestion(props){
                     }
                     return false;
                 }
+                if(baselineTimer && (userEntryBaselineTimerMinutes == "" || userEntryBaselineTimerMinutes == null)){
+                    setTimerMinutesEntries(false);
+                    setSnackBar({isOpen:true, message:"Timer value cannot be blank", severity:"error"}) 
+                    return false;
+                }else if(baselineTimer && (userEntryBaselineTimerSeconds == "" || userEntryBaselineTimerSeconds == null)){
+                    setTimerSecondsEntries(false);
+                    setSnackBar({isOpen:true, message:"Timer value cannot be blank", severity:"error"}) 
+                    return false;
+                }
                 
                 (setStep(step+1));
+                if(userEntryEasierTimerMinutes == "" || userEntryEasierTimerMinutes == null || !easyTimer){
+                    setTimer(false)
+                }else{
+                    setTimer(true)
+                }
+                
                 // save user changes temporary
                 let copyOfBaselineQuestion = JSON.parse(JSON.stringify(userEntryBaselineQuestionBody))
                 let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))//statefulNewQuestion.questionType
                 let copyOfBaselineAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))                    
                 let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
+                let copyOfBaselineTimerAssigned = JSON.parse(JSON.stringify(baselineTimer))
+                let copyOfBaselineTimerMinutes = JSON.parse(JSON.stringify(userEntryBaselineTimerMinutes))
+                let copyOfBaselineTimerSeconds = JSON.parse(JSON.stringify(userEntryBaselineTimerSeconds))
                 
                 copyOfNewQuestion.questionType= copyOfQuestionType
                 copyOfNewQuestion.questionBaselineBody= copyOfBaselineQuestion
                 copyOfNewQuestion.questionBaselineAnswers = copyOfBaselineAnswersArray
+                copyOfNewQuestion.questionBaselineTimer.isAssigned = copyOfBaselineTimerAssigned
+                copyOfNewQuestion.questionBaselineTimer.minutes = copyOfBaselineTimerMinutes
+                copyOfNewQuestion.questionBaselineTimer.seconds = copyOfBaselineTimerSeconds
 
                 setStatefulNewQuestion(copyOfNewQuestion)
                 nonStatefulNewQuestion = JSON.parse(JSON.stringify(copyOfNewQuestion))
-
+                console.log(copyOfNewQuestion)
                 // change 'active' array of question answers being edited by the user
                 setStatefulArrayOfQuestionAnswers(statefulNewQuestion.questionEasierAnswers)
+            
             }
             else if(step==1){
-                
                 // easy question has body  so we need to perform  validation
                 if(userEntryEasierQuestionBody && !isQuestionValid()){
                     return false;
@@ -301,17 +413,36 @@ export default function AddQuestion(props){
                 }else if(statefulArrayOfQuestionAnswers.length == 0){
                     setEntriesAreValid(true);
                 }
+                if(easyTimer && (userEntryEasierTimerMinutes == "" || userEntryEasierTimerMinutes == null)){
+                    setTimerMinutesEntries(false);
+                    setSnackBar({isOpen:true, message:"Timer value cannot be blank", severity:"error"}) 
+                    return false;
+                }else if(easyTimer && (userEntryEasierTimerSeconds == "" || userEntryEasierTimerSeconds == null)){
+                    setTimerSecondsEntries(false);
+                    setSnackBar({isOpen:true, message:"Timer value cannot be blank", severity:"error"}) 
+                    return false;
+                }
                 setStep(step+1)                
                 // save user changes temporary
-                
+                if(userEntryHarderTimerMinutes == "" || userEntryHarderTimerMinutes == null || !hardTimer){
+                    setTimer(false)
+                }else{
+                    setTimer(true)
+                }
                 let copyOfEasierQuestion = JSON.parse(JSON.stringify(userEntryEasierQuestionBody))
                 let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))//statefulNewQuestion.questionType
                 let copyOfEasierAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))     
                 let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
-                
+                let copyOfEasierTimerAssigned = JSON.parse(JSON.stringify(easyTimer))
+                let copyOfEasierTimerMinutes = JSON.parse(JSON.stringify(userEntryEasierTimerMinutes))
+                let copyOfEasierTimerSeconds = JSON.parse(JSON.stringify(userEntryEasierTimerSeconds))
+
                 copyOfNewQuestion.questionType= copyOfQuestionType
                 copyOfNewQuestion.questionEasierBody= copyOfEasierQuestion                
                 copyOfNewQuestion.questionEasierAnswers = copyOfEasierAnswersArray
+                copyOfNewQuestion.questionEasierTimer.isAssigned = copyOfEasierTimerAssigned
+                copyOfNewQuestion.questionEasierTimer.minutes = copyOfEasierTimerMinutes
+                copyOfNewQuestion.questionEasierTimer.seconds = copyOfEasierTimerSeconds
 
                 //mapping correct answers to each question
 
@@ -336,16 +467,31 @@ export default function AddQuestion(props){
                 }else if(statefulArrayOfQuestionAnswers.length == 0){
                     setEntriesAreValid(true);
                 }
+                if(hardTimer && (userEntryHarderTimerMinutes == "" || userEntryHarderTimerMinutes == null)){
+                    setTimerMinutesEntries(false);
+                    setSnackBar({isOpen:true, message:"Timer value cannot be blank", severity:"error"}) 
+                    return false;
+                }else if(hardTimer && (userEntryHarderTimerSeconds == "" || userEntryHarderTimerSeconds == null)){
+                    setTimerSecondsEntries(false);
+                    setSnackBar({isOpen:true, message:"Timer value cannot be blank", severity:"error"}) 
+                    return false;
+                }
                 //save last changes
                 let copyOfHarderQuestion = JSON.parse(JSON.stringify(userEntryHarderQuestionBody))
                 let copyOfQuestionType = JSON.parse(JSON.stringify(userEntryQuestionType))//statefulNewQuestion.questionType
                 let copyOfHarderAnswersArray = JSON.parse(JSON.stringify(statefulArrayOfQuestionAnswers))
                 let copyOfNewQuestion = JSON.parse(JSON.stringify(statefulNewQuestion))
-                
+                let copyOfHarderTimerAssigned = JSON.parse(JSON.stringify(hardTimer))
+                let copyOfHarderTimerMinutes = JSON.parse(JSON.stringify(userEntryHarderTimerMinutes))
+                let copyOfHarderTimerSeconds = JSON.parse(JSON.stringify(userEntryHarderTimerSeconds))
+
                 copyOfNewQuestion.questionType= copyOfQuestionType
                 copyOfNewQuestion.questionHarderBody= copyOfHarderQuestion
                 copyOfNewQuestion.questionHarderAnswers = copyOfHarderAnswersArray
-    
+                copyOfNewQuestion.questionHarderTimer.isAssigned = copyOfHarderTimerAssigned
+                copyOfNewQuestion.questionHarderTimer.minutes = copyOfHarderTimerMinutes
+                copyOfNewQuestion.questionHarderTimer.seconds = copyOfHarderTimerSeconds
+
                 setStatefulNewQuestion(copyOfNewQuestion)
                 nonStatefulNewQuestion = JSON.parse(JSON.stringify(copyOfNewQuestion))
     
@@ -451,10 +597,55 @@ export default function AddQuestion(props){
                             />}
                             />
                         </Box>
+                        <Box marginBottom="1em">
+                           
+                            <Grid Container columns={12} alignItems='center' justifyContent='flex-start' display={'inline-flex'} style={{left:'0', width:'100%'}} marginBottom="1em" >                    
+
+                                <Grid item textAlign={'center'} paddingRight={'1em'} paddingLeft={'1em'}>
+                                
+                                    <FormGroup>
+                                        <FormControlLabel label="Assign Timer"
+                                        control={
+                                            <Checkbox checked={timer} 
+                                            onClick={activateTimer}
+                                            disabled={(step==0 && userEntryBaselineQuestionBody=="")?true:(step==1&&userEntryEasierQuestionBody=="")?true:(step==2 && userEntryHarderQuestionBody=="")?true:false}
+                                            />
+                                        }  />
+                                    </FormGroup>
+
+                                </Grid>
+                                    <Grid item textAlign={'center'} paddingRight={'1em'} paddingLeft={'1em'}>
+                                        {timer?
+                                            <div>
+                                                <TextField
+                                                 onChange={(e) => setCode(e.target.value),(event)=>{handleTimerMinutesChange(event,(step==0?(0):(step==1?(1):(2))))}} 
+                                                 sx={{ width: '10ch' }} 
+                                                 label="Minutes" 
+                                                 type="number"
+                                                 inputProps={{ min: "0", max: "100", step: "1" }}
+                                                 value={step==0?(userEntryBaselineTimerMinutes):((step==1)?(userEntryEasierTimerMinutes):(userEntryHarderTimerMinutes))}
+                                                 disabled={(step==0 && userEntryBaselineQuestionBody=="")?true:(step==1&&userEntryEasierQuestionBody=="")?true:(step==2 && userEntryHarderQuestionBody=="")?true:false}                                                 error={!timerMinutesEntries}
+                                                 helperText={timerMinutesEntries?'':"Enter minutes"}/>
+
+                                                <TextField
+                                                 onChange={(e) => setCode(e.target.value), (event)=>{handleTimerSecondsChange(event,(step==0?(0):(step==1?(1):(2))))}} 
+                                                 sx={{ width: '11ch' }}
+                                                 label="Seconds" 
+                                                 type="number"
+                                                 inputProps={{ min: "0", max: "59", step: "1" }}
+                                                 value={step==0?(userEntryBaselineTimerSeconds):((step==1)?(userEntryEasierTimerSeconds):(userEntryHarderTimerSeconds))}
+                                                 disabled={(step==0 && userEntryBaselineQuestionBody=="")?true:(step==1&&userEntryEasierQuestionBody=="")?true:(step==2 && userEntryHarderQuestionBody=="")?true:false}                                                 error={!timerSecondsEntries}
+                                                 helperText={timerSecondsEntries?'':"Enter seconds"} />
+                                            </div>
+                                        :
+                                        ""}
+                                    </Grid>
+                                </Grid>
+                        </Box>
                         { (userEntryQuestionType == questionTypes[multipleChoiceQuestionIdx] || userEntryQuestionType == questionTypes[binaryQuestionIdx]) && 
                         <div>
                             <Box marginBottom="0.1em">
-                            <QuestionAnswers  statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
+                            <QuestionAnswers userEntryQuestionType={userEntryQuestionType} statefulArrayOfQuestionAnswers={statefulArrayOfQuestionAnswers} setStatefulArrayOfQuestionAnswers={setStatefulArrayOfQuestionAnswers}>
                             </QuestionAnswers>    
                             </Box>
                             { (statefulArrayOfQuestionAnswers.length < 2 || userEntryQuestionType == questionTypes[multipleChoiceQuestionIdx]) &&

@@ -15,7 +15,10 @@ export default function runQuiz({
     quiz,
     setQuiz,
     updateAnswers,
-    sendQuizToServer
+    sendQuizToServer,
+    timer,
+    timerMin,
+    timerSec
       
   }
   ){
@@ -80,14 +83,16 @@ export default function runQuiz({
     else if (state.currentScreen === 2) 
     {
       var question = getCurrentQuestion()
-      
       return <>
               <RenderQuestion question={question}
                               state={state}
                               setState={setState}
                               updateQuestions ={updateQuestions}
                               goToNextQuestion ={goToNextQuestion}
-                              updateAnswers = {updateAnswers} />
+                              updateAnswers = {updateAnswers}
+                              timer={timer}
+                              timerMin={timerMin}
+                              timerSec={timerSec} />
             </>
     }
     else if (state.currentScreen === 3) 
