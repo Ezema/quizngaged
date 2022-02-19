@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Radio from '@mui/material/Radio';
-
+import { Checkbox } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
@@ -32,6 +32,28 @@ export default function QuestionAnswers(props){
          props.setStatefulArrayOfQuestionAnswers(copyOfArray);
 
          console.log(props.statefulArrayOfQuestionAnswers);
+    }
+
+    const setCorrectAnswers = (event,index) => { 
+        let copyOfArray = JSON.parse(JSON.stringify(props.statefulArrayOfQuestionAnswers))
+                
+        console.log(copyOfArray);
+        console.log(index);
+ 
+        copyOfArray.forEach((el, ind) => {
+
+        if(ind == index && !copyOfArray[ind].isCorrect){
+          copyOfArray[ind].isCorrect = true;
+        }else if(ind == index && copyOfArray[ind].isCorrect){
+         copyOfArray[ind].isCorrect =false;
+        }
+        })
+        
+        console.log(copyOfArray)
+        
+         props.setStatefulArrayOfQuestionAnswers(copyOfArray);
+
+         console.log(props);
     }
 
     const handleQuestionChange = (event,index) => {        
@@ -77,12 +99,18 @@ export default function QuestionAnswers(props){
                     />
                 </Grid>
                 <Grid item style={{right:'',maxWidth:'2em' }}  >
-                   <Radio
-                        checked={questionAnswer.isCorrect}
-                        onChange={(event)=>setCorrectAnswer(event, props.statefulArrayOfQuestionAnswers.indexOf(questionAnswer))}
-                        name="radio-buttons"
-                        
+                    {(props.userEntryQuestionType=="Binary Question"?
+                        <Radio
+                            checked={questionAnswer.isCorrect}
+                            onChange={(event)=>setCorrectAnswer(event, props.statefulArrayOfQuestionAnswers.indexOf(questionAnswer))}
+                            name="radio-buttons"
                         />
+                    :
+                    <Checkbox
+                        checked={questionAnswer.isCorrect}
+                        onChange={(event)=>setCorrectAnswers(event, props.statefulArrayOfQuestionAnswers.indexOf(questionAnswer))}
+                     />
+                    )}
                 </Grid>
                 <Grid item style={{right:'',maxWidth:'0.5em' }} padding={0} margin={0}>
                     <IconButton aria-label="delete" size="small" color='warning' onClick={(event)=>handleQuestionAnswerDeletion(event,props.statefulArrayOfQuestionAnswers.indexOf(questionAnswer))}>

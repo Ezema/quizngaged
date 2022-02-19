@@ -16,7 +16,10 @@ export default function RenderQuestion({
     question,
     updateQuestions,
     goToNextQuestion,
-    updateAnswers
+    updateAnswers,
+    timer,
+    timerMin,
+    timerSec
   }
   ){
  
@@ -45,7 +48,7 @@ export default function RenderQuestion({
      e && e.preventDefault()
     
      // updateAnswers
-     
+     console.log(question)
      updateAnswers( question.id, question.questionType, currentAnswer )
      
      goToNextQuestion( question )
@@ -54,26 +57,44 @@ export default function RenderQuestion({
   switch(state.currentDifficulty) {
     case 'base':  
       questionBody = question.questionBaselineBody;
+      timer = question.questionBaselineTimer.isAssigned
+      if(timer){
+        timerMin = question.questionBaselineTimer.minutes
+        timerSec =question.questionBaselineTimer.seconds
+      }
       questionVariants = question.questionBaselineAnswers;
       break
     case 'easy': 
       questionBody = question.questionEasierBody;
+      timer = question.questionEasierTimer.isAssigned
+      if(timer){
+        timerMin = question.questionEasierTimer.minutes
+        timerSec =question.questionEasierTimer.seconds
+      }
       questionVariants = question.questionEasierAnswers;
       break
     case 'hard':  
       questionBody = question.questionHarderBody;
+      timer = question.questionHarderTimer.isAssigned
+      if(timer){
+        timerMin = question.questionHarderTimer.minutes
+        timerSec =question.questionHarderTimer.seconds
+      }
       questionVariants = question.questionHarderAnswers;
       break
 
     }
-   
+    
   
   switch(question.questionType){
     case 'Multiple Choice':
     case 'Binary Question':  
       return <>
        <RenderMultichoice 
-              questionBody={questionBody} 
+              questionBody={questionBody}
+              timer={timer}
+              timerMin={timerMin}
+              timerSec={timerSec}
               questionVariants={questionVariants}
               updateVariants = {updateVariants}
               setCurrentAnswer = {setCurrentAnswer} />
@@ -85,6 +106,9 @@ export default function RenderQuestion({
       return <>
        <RenderTextQuestion 
               questionBody={ questionBody }
+              timer={timer}
+              timerMin={timerMin}
+              timerSec={timerSec}
               setCurrentAnswer ={ setCurrentAnswer } 
               />
         <Box>
