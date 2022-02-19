@@ -41,7 +41,7 @@ export default function backendQueryUpdateOngoingQuizzes(viewClassroomId,props,c
         backendQuerySaveUserJSON(()=>{})
 
         console.log("finished update")
-        props.callback(false)
+        props.callback(false, modifiedJSON);
         
     }).catch(e => {          
         console.log(e);                                
