@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
+
 /* Custom components */
 import  RenderQuestion   from '../customComponents/renderQuestion.js'
 
@@ -23,6 +24,18 @@ export default function runQuiz({
       
   }
   ){
+
+ const styleActive = {
+	backgroundColor: '#0a3462'
+	} 
+
+  const stylePassive = {
+
+	} 
+  
+  
+   
+
 
   const startQuiz =  () =>{
     var updatedState = { ...state, 
@@ -91,12 +104,13 @@ export default function runQuiz({
       console.log('question', question)
       if(question){
       
+
       return <>
                
               <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                <Button onClick={()=>setDifficulty('easy')}>Easy</Button>
-                <Button onClick={()=>setDifficulty('base')}>Base</Button>
-                <Button onClick={()=>setDifficulty('hard')}>Hard</Button>
+                <Button style={(state.currentDifficulty=='easy')?{...styleActive}:{...stylePassive}} onClick={()=>setDifficulty('easy')}>Easy</Button>
+                <Button style={(state.currentDifficulty=='base')?{...styleActive}:{...stylePassive}}  onClick={()=>setDifficulty('base')}>Base</Button>
+                <Button style={(state.currentDifficulty=='hard')?{...styleActive}:{...stylePassive}}  onClick={()=>setDifficulty('hard')}>Hard</Button>
               </ButtonGroup>
               <RenderQuestion question={question}
                               state={state}
