@@ -64,6 +64,7 @@ import LoadingScreen from './loadingScreen.js';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import * as formValidator from '../customFunctions/formValidation.js';
+import findArrayIndex from '../customFunctions/findArrayIndex.js';
 
 export default function AddClassroom(props){
 
@@ -107,13 +108,13 @@ export default function AddClassroom(props){
     const [checkingValidClassroom, setCheckingValidClassroom] = React.useState(false)
     const [serverResponseForClassroomIDValidity, setServerResponseForClassroomIDValidity] = React.useState("nada")
     
-
+    const [alreadyRegistered, setAlreadyRegistered] = React.useState(false)
     const [showError, setShowError] = React.useState(false)
 
     
     const handleStudentClassroomUniqueUIDChange = (event)=>{
         let changedUID = event.target.value;
-        let isValid = formValidator.isValidMandatoryText(changedUID);
+        let isValid = formValidator.isValidMandatoryText(changedUID) && formValidator.isValidInteger(String(changedUID));
         setStudentClassroomUniqueUID(changedUID);
         setShowError(!isValid);
     }
@@ -151,9 +152,18 @@ export default function AddClassroom(props){
         }
     }
     
-    const handleClassroomIDisValid = ()=>{        
-        setCheckingValidClassroom(true)
-        backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID,true)
+    const handleClassroomIDisValid = ()=>{ 
+        if (findArrayIndex(JSON.parse(localStorage.quizngagedUserData).classrooms, "globalQuizngagedId", studentClassroomUniqueUID, true)){
+            console.log("there is a class already registered")
+            setAlreadyRegistered(true)
+            setShowError(true)
+        } else { 
+            setAlreadyRegistered(false)
+            console.log("there is room for registration")
+            setCheckingValidClassroom(true)
+            backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID,true)
+        }     
+        
         
     }
 
@@ -275,6 +285,7 @@ export default function AddClassroom(props){
                                         required={step>0?false:true}
                                         InputProps={{
                                             disabled: step>0?true:false,
+                                            inputMode: 'numeric', pattern: '[0-9]*'
                                         }}
                                         fullWidth                                               
                                         label="Enter the teacher-provided classroom code"
@@ -282,8 +293,9 @@ export default function AddClassroom(props){
                                         onChange={(event)=>{handleStudentClassroomUniqueUIDChange(event)}}
                                         value={studentClassroomUniqueUID}
                                         error={showError}
-                                        helperText={showError?'Enter the code provided by your teacher':''}
+                                        helperText={showError?(alreadyRegistered?'You are already registered for this course':'Enter the code provided by your teacher'):''}
                                         multiline
+                                        type='number'
                                     />
                                 </Box>
                                 <Box marginBottom="1em">
