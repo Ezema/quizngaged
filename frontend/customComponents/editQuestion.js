@@ -139,7 +139,7 @@ export default function EditQuestion(props){
         }else if(questionDifficulty==1){
             setUserEntryEasierTimerMinutes(changedBody)
             setTimerMinutesEntries(isValid);
-        }else if(questionDifficulty==1){
+        }else if(questionDifficulty==2){
             setTimerMinutesEntries(isValid);
             setUserEntryHarderTimerMinutes(changedBody)
         }
@@ -155,7 +155,7 @@ export default function EditQuestion(props){
         }else if(questionDifficulty==1){
             setUserEntryEasierTimerSeconds(changedBody)
             setTimerSecondsEntries(isValid);
-        }else if(questionDifficulty==1){
+        }else if(questionDifficulty==2){
             setUserEntryHarderTimerSeconds(changedBody)
             setTimerSecondsEntries(isValid);
         }
