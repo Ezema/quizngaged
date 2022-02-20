@@ -56,7 +56,12 @@ export default function RenderQuestion({
   switch(state.currentDifficulty) {
     case 'base':  
       questionBody = question.questionBaselineBody;
-      timer = question.questionBaselineTimer.isAssigned
+      var timer = null
+
+      if(question.questionBaselineTimer && question.questionBaselineTimer.isAssigned){
+         timer = question.questionBaselineTimer.isAssigned
+      } 
+      
       if(timer){
         timerMin = question.questionBaselineTimer.minutes
         timerSec =question.questionBaselineTimer.seconds
@@ -65,7 +70,11 @@ export default function RenderQuestion({
       break
     case 'easy': 
       questionBody = question.questionEasierBody;
-      timer = question.questionEasierTimer.isAssigned
+      
+      var  timer = null 
+      if(question.questionEasierTimer && question.questionEasierTimer.isAssigned){
+         timer = question.questionEasierTimer.isAssigned
+      }
       if(timer){
         timerMin = question.questionEasierTimer.minutes
         timerSec =question.questionEasierTimer.seconds
@@ -74,7 +83,10 @@ export default function RenderQuestion({
       break
     case 'hard':  
       questionBody = question.questionHarderBody;
-      timer = question.questionHarderTimer.isAssigned
+      var  timer = null 
+      if(question.questionHarderTimer && question.questionHarderTimer.isAssigned){
+         timer = question.questionHarderTimer.isAssigned
+      }
       if(timer){
         timerMin = question.questionHarderTimer.minutes
         timerSec =question.questionHarderTimer.seconds
