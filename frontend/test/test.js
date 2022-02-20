@@ -5,7 +5,7 @@ const assert = require('assert');
 const { doesNotMatch } = require('assert');
 const validator = require('../customFunctions/formValidation.js');
 
-describe("Set of tests", () => {
+describe("Set of validation tests", () => {
     
   describe("Mandatory text cannot be null", () => {
     let isValid = validator.isValidMandatoryText();
