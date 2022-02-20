@@ -117,6 +117,7 @@ export default function AddClassroom(props){
         let isValid = formValidator.isValidMandatoryText(changedUID) && formValidator.isValidInteger(String(changedUID));
         setStudentClassroomUniqueUID(changedUID);
         setShowError(!isValid);
+        setAlreadyRegistered(false)
     }
     
 

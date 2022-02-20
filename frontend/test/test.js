@@ -126,4 +126,25 @@ describe("Set of validation tests", () => {
     });
   });
 
+  describe("Numeric entry validator detects valid input", () => {
+    let isValid = validator.isValidInteger('1398');
+    it("should output true to valid numeric input", () => {
+      assert.equal(isValid, true)
+    })
+  })
+  describe("Numeric entry validator detects invalid input", () => {
+    let isValid = validator.isValidInteger('13.98');
+    it("should output false to decimal numeric input", () => {
+      assert.equal(isValid, false)
+    })
+    let isValid2 = validator.isValidInteger('/b?>*')
+    it("should output false to symbols", () => {
+      assert.equal(isValid2, false)
+    })
+    let isValid3 = validator.isValidInteger('1b3d')
+    it("should output false to letters", () => {
+      assert.equal(isValid3, false)
+    })
+  })
+
 });
