@@ -48,7 +48,6 @@ export default function RenderQuestion({
      e && e.preventDefault()
     
      // updateAnswers
-     console.log(question)
      updateAnswers( question.id, question.questionType, currentAnswer )
      
      goToNextQuestion( question )
@@ -97,7 +96,8 @@ export default function RenderQuestion({
               timerSec={timerSec}
               questionVariants={questionVariants}
               updateVariants = {updateVariants}
-              setCurrentAnswer = {setCurrentAnswer} />
+              setCurrentAnswer = {setCurrentAnswer}
+              questionType={question.questionType} />
         <Box>
            <Button variant="contained" onClick={submitAnswer}>Submit Answer</Button>
         </Box>

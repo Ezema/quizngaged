@@ -32,7 +32,7 @@ const [seconds, setSeconds] = React.useState(timerSec);
           setSeconds('0' + (seconds - 1))
         }
         if (seconds === 0 || seconds === '00') {
-            if (minutes === 0) {
+            if (minutes === 0 || minutes === '0') {
                 setSeconds(0)
                 clearInterval(myInterval)
             } else {
@@ -55,7 +55,7 @@ const [seconds, setSeconds] = React.useState(timerSec);
      <Box>
        {timer?
             <div>
-              {(minutes===0 && seconds === "00")?
+              {(minutes === 0 || minutes === '0') && (seconds === 0 || seconds === "00")?
                 <p>Time Expired!</p>
               :
                 <p>Time Left: {minutes}:{seconds}</p>
