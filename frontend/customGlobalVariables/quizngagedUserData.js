@@ -34,6 +34,7 @@ export default {
                 isDeleted:false,
                 questionType:'Multiple Choice',
                 questionBaselineBody:'baseline question',
+                questionBaselineTimer: {isAssigned: false, minutes: null, seconds: null},
                 questionBaselineAnswers:[
                     {   id:0,
                         parentQuestionId:1,
@@ -45,6 +46,7 @@ export default {
                     },
                 ],
                 questionEasierBody:'easy question',
+                questionEasierTimer: {isAssigned: false, minutes: null, seconds: null},
                 questionEasierAnswers:[
                     {   id:0,
                         parentQuestionId:1,
@@ -56,6 +58,7 @@ export default {
                     },
                 ],
                 questionHarderBody:'hard question',
+                questionHarderTimer: {isAssigned: false, minutes: null, seconds: null},
                 questionHarderAnswers:[
                     {   id:0,
                         parentQuestionId:1,
@@ -73,6 +76,7 @@ export default {
                 isDeleted:false,
                 questionType:'Multiple Choice',
                 questionBaselineBody:'baseline question',
+                questionBaselineTimer: {isAssigned: false, minutes: null, seconds: null},
                 questionBaselineAnswers:[
                     {   id:0,
                         parentQuestionId:1,
@@ -84,6 +88,7 @@ export default {
                     },
                 ],
                 questionEasierBody:'easy question',
+                questionEasierTimer: {isAssigned: false, minutes: null, seconds: null},
                 questionEasierAnswers:[
                     {   id:0,
                         parentQuestionId:1,
@@ -95,6 +100,7 @@ export default {
                     },
                 ],
                 questionHarderBody:'hard question',
+                questionHarderTimer: {isAssigned: false, minutes: null, seconds: null},
                 questionHarderAnswers:[
                     {   id:0,
                         parentQuestionId:1,
