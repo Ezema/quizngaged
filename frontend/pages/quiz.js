@@ -82,7 +82,7 @@ export default function Quiz() {
     try{
       let parsedJson = JSON.parse(quiz.quizjson);
       quizData = {
-        "id": parsedJson.launchedquizid,
+        "id": quiz.launchedquizid,
         "isDeleted": false,
         "quizTitle": parsedJson.quizTitle,
         "quizTopic": parsedJson.quizTopic,
