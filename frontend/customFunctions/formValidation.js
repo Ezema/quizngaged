@@ -35,3 +35,12 @@ function isValidEntryChoice(chosenText, entriesArray) {
 
 module.exports.isValidEntryChoice = isValidEntryChoice;
 
+module.exports.isValidInteger = isValidInteger;
+
+function isValidInteger(text){
+  let numbers =  /^[0-9]+$/;
+  if(text.match(numbers)){
+    return true
+  }
+  else return false
+}
