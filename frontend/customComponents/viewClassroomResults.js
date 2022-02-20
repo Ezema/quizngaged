@@ -83,18 +83,21 @@ export default function ViewClassroomResults(props){
                       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography variant='subtitle1'>todo/{JSON.parse(student.answersJson).length} questions, mark: todo%</Typography>
                       </AccordionSummary>
-                      {
-                        JSON.parse(student.answersJson).map((answers)=>
+                      { student.answersJson == "{}" 
+                        ? <AccordionDetails>
+                            <Typography>No responses given yet</Typography>
+                          </AccordionDetails>
+                      : JSON.parse(student.answersJson).map((answers)=> 
                         <AccordionDetails>
-                        <Typography>
-                          {answers.qtype}: 
-                          "{answers.questiondata.questionBaselineBody}"
-                          {/* {console.log('answers',answers)} */}
-                        </Typography>
-                        <Typography>
-                          Answer (todo): {answers.questiondata.questionBaselineAnswers[0].body}
-                        </Typography>
-                      </AccordionDetails>
+                          <Typography>
+                            {answers.qtype}: 
+                            "{answers.questiondata.questionBaselineBody}"
+                            {/* {console.log('answers',answers)} */}
+                          </Typography>
+                          <Typography>
+                            Answer (todo): {answers.questiondata.questionBaselineAnswers[0].body}
+                          </Typography>
+                        </AccordionDetails>
                         )
                       }
                     </Accordion>
