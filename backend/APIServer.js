@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql");
+const scorer = require('./customFunctions/answersScoring.js')
 
 
 /// ********* Below -> Auth functionality *********
@@ -415,11 +416,13 @@ app.post("/API/updatestudentquiz",(req, res)=>{
 
 app.post("/API/studentsquizzesforclassroom",(req, res)=>{
 
+  const scoringMultipliers = { base: 10, easy: 5, hard: 15};
+
   admin.auth().verifyIdToken(req.body.federatedAuthDecodedToken).then(
   () => {
     let studentQuizzes = 
         "select usr.uid, usr.userjson->>'$.name' name, userjson->>'$.classrooms' classrooms,"+
-        " qzs.answersjson, qzs.quiz_state, qzs.launchedquizid, qzs.quizjson->>'$.eventDescription' event, qzs.quizjson->>'$.quizTitle' title"+
+        " qzs.answersjson, qzs.quiz_state, qzs.launchedquizid, qzs.quizjson"+
         " from users as usr"+
         " left join (select uqz.uid, uqz.answersjson, lqz.*"+
         " from user_quizzes uqz, launched_quizzes lqz"+
@@ -445,13 +448,17 @@ app.post("/API/studentsquizzesforclassroom",(req, res)=>{
           // presence of a student id in the request means only want that student's results
           if (results[i].answersjson != null && 
               (req.body.studentUID == null || results[i].uid == req.body.studentUID)) {
+
+            quizJson = JSON.parse(results[i].quizjson);
+
             studentResults.push({
               uid: results[i].uid,
               name: results[i].name,
-              quizTitle: results[i].title,
-              quizDescription: results[i].event,
+              quizTitle: quizJson.quizTitle,
+              quizDescription: quizJson.eventDescription,
+              numQuestions: scorer.countQuestions(quizJson),
               quizState: results[i].quiz_state,
-              answersJson: results[i].answersjson
+              answersJson: scorer.analyseAnswersSet(results[i].answersjson, scoringMultipliers)
             });
           }
           else if (req.body.studentUID == null) {
