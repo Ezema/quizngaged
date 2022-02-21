@@ -3,7 +3,10 @@
 const validator = require('../../frontend/customFunctions/formValidation.js');
 
 function analyseAnswer(answerJson) {
-  let posedBody = answerJson.difficulty == 'base' 
+
+  let isFreeText = answerJson.qtype == 'Text Response';
+
+  let posedBody = answerJson.difficulty == 'base' || isFreeText
       ? answerJson.questiondata.questionBaselineBody
       : answerJson.difficulty == 'easy'
       ? answerJson.questiondata.questionEasierBody
@@ -15,7 +18,6 @@ function analyseAnswer(answerJson) {
   ? answerJson.questiondata.questionEasierAnswers
   : answerJson.questiondata.questionHarderAnswers;
 
-  let isFreeText = answerJson.qtype == 'Text Response';
   var correctAnswer = isFreeText
       ? answerJson.studentanswer
       : null;
@@ -42,10 +44,12 @@ function analyseAnswer(answerJson) {
 
   return {
     posedQuestion: posedBody,
+    questionType: answerJson.qtype,
+    difficulty: isFreeText ? 'base' : answerJson.difficulty,
     correctAnswer: correctAnswer,
-    givenAnswer: givenAnswer,
+    isAnswerGiven: isFreeText ? isGivenCorrect : givenAnswer != null,
     isGivenCorrect: isGivenCorrect,
-    difficulty: answerJson.difficulty,
+    givenAnswer: givenAnswer,
   };
 }
 
@@ -61,3 +65,49 @@ function computeScore(analysedAnswer, difficultyMultipliers) {
 }
 
 module.exports.computeScore = computeScore;
+
+function analyseAnswersSet(quizAnswersString, difficultyMultipliers) {
+  let summary = {
+    numAnswersGiven: 0,
+    numCorrectAnswers: 0,
+    score: 0,
+    analysedAnswers: [],
+  };
+
+  try {
+    if (validator.isValidMandatoryText(quizAnswersString) && validator.isValidMandatoryText(difficultyMultipliers)) {
+      const quizAnswersJson = JSON.parse(quizAnswersString);
+      for (var i = 0; i < quizAnswersJson.length; i++) {
+        let nextAnswer = analyseAnswer(quizAnswersJson[i]);
+        if (!nextAnswer.isAnswerGiven) {
+          continue;
+        }
+        nextAnswer.score = computeScore(nextAnswer, difficultyMultipliers);
+        summary.numAnswersGiven++;
+        summary.analysedAnswers.push(nextAnswer);
+        if (nextAnswer.isGivenCorrect) {
+          summary.numCorrectAnswers++;
+          summary.score += nextAnswer.score;
+        }
+      }
+    }
+  } catch (err) {
+    console.log('Exception error in data');
+  }
+
+  return summary;
+}
+
+module.exports.analyseAnswersSet = analyseAnswersSet;
+
+function countQuestions(quizJson) {
+  let numQuestions = 0;
+  for (var i = 0; i < quizJson.questions.length; i++) {
+    if (!quizJson.questions[i].isDeleted) {
+      numQuestions++;
+    }
+  }  
+  return numQuestions;
+}
+
+module.exports.countQuestions = countQuestions;

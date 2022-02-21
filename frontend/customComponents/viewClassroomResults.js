@@ -81,24 +81,25 @@ export default function ViewClassroomResults(props){
                   ? ""
                   : <Accordion elevation={3}>
                       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography variant='subtitle1'>todo/{JSON.parse(student.answersJson).length} questions, mark: todo%</Typography>
+                        <Typography variant='subtitle1'>{student.answersJson.numAnswersGiven}/{student.numQuestions} questions answered, score: {student.answersJson.score}</Typography>
                       </AccordionSummary>
-                      { student.answersJson == "{}" 
+                      { student.answersJson.numAnswersGiven == 0 
                         ? <AccordionDetails>
                             <Typography>No responses given yet</Typography>
                           </AccordionDetails>
-                      : JSON.parse(student.answersJson).map((answers)=> 
-                        <AccordionDetails>
-                          <Typography>
-                            {answers.qtype}: 
-                            "{answers.questiondata.questionBaselineBody}"
-                            {/* {console.log('answers',answers)} */}
-                          </Typography>
-                          <Typography>
-                            Answer (todo): {answers.questiondata.questionBaselineAnswers[0].body}
-                          </Typography>
-                        </AccordionDetails>
-                        )
+                        : student.answersJson.analysedAnswers.map((answers)=> 
+                            <AccordionDetails>
+                              <Typography>
+                                {answers.questionType}{answers.difficulty == 'base' ? "" : " ("+answers.difficulty+")"}:
+                                "{answers.posedQuestion}"
+                                </Typography>
+                              <Typography>Answer given: "{answers.givenAnswer}"</Typography>
+                              { answers.isGivenCorrect 
+                              ? <Typography>CORRECT! - score: {answers.score}</Typography>
+                              : <Typography>WRONG! Should be: "{answers.correctAnswer}"</Typography>
+                              }
+                            </AccordionDetails>
+                          )
                       }
                     </Accordion>
                 }
