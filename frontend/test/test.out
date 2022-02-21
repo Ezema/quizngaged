@@ -4,7 +4,7 @@
 
 
 
-  Set of tests
+  Set of validation tests
     Mandatory text cannot be null
       ✔ should fail if null
     Mandatory text cannot be empty
@@ -39,7 +39,81 @@
       ✔ should pass with valid choice
     Check option choice is not in the array with many elements
       ✔ should fail with invalid choice
+    Numeric entry validator detects valid input
+      ✔ should output true to valid numeric input
+    Numeric entry validator detects invalid input
+      ✔ should output false to decimal numeric input
+      ✔ should output false to symbols
+      ✔ should output false to letters
+
+  Set of scoring tests
+    Answers contains 3 questions
+      ✔ should be length 3
+    Answers are answer objects with a qid reference
+      ✔ row 0 should be an object with a qid
+      ✔ row 1 should be an object with a qid
+      ✔ row 2 should be an object with a qid
+    Answers have a valid difficulty
+      ✔ row 0 should be base difficulty
+      ✔ row 1 should be base difficulty
+      ✔ row 2 should be base difficulty
+    Answers have a expected type
+      ✔ row 0 should be Multiple Choice
+      ✔ row 1 should be Binary Question
+      ✔ row 2 should be Text Response
+    Answers has correct question posed
+      ✔ row 0 should be 'capital of china?'
+      ✔ row 1 should be 'Birds are descended from dinosaurs'
+      ✔ row 2 should be 'Favourite ice-cream'
+    Answers has correct option
+      ✔ row 0 should be 'beijing'
+      ✔ row 1 should be 'True'
+      ✔ row 2 should be 'Choc chip'
+    Student's answer is found
+      ✔ row 0 should be correct answer 'beijing'
+      ✔ row 1 should be incorrect answer 'False'
+      ✔ row 2 should be 'Choc chip'
+    Student's answer is correct
+      ✔ row 0 should be correct answer
+      ✔ row 1 should be incorrect answer
+      ✔ row 2 should be correct
+    Student's score is correctly computed
+      ✔ row 0 should be 10
+      ✔ row 1 should be 0
+      ✔ row 2 should be 10
+    Free text answer empty is analysed correctly
+      ✔ Empty text returns incorrect
+      ✔ Empty text returns answer not given
+      ✔ Empty text gets 0 score
+    Hard difficulty answer is correctly analysed
+      ✔ Difficulty is hard
+      ✔ Posed question os 'All birds can fly'
+      ✔ Correct answer is 'False'
+      ✔ Given answer matches the correct answer
+      ✔ Is answer given is true
+      ✔ Is score correct for harder answer
+    Easy difficulty answer is correctly analysed
+      ✔ Difficulty is easy
+      ✔ Posed question is 'One is?'
+      ✔ Correct answer is 'An integer'
+      ✔ Given answer matches the correct answer
+      ✔ Is answer given is true
+      ✔ Is score correct for easier answer
+    Correct number of answers in set is detected
+      ✔ empty arguments returns 0 answers
+      ✔ empty 2nd argument returns 0 answers
+      ✔ 3 answers are found
+      ✔ 2 answers are correct
+      ✔ summary score is correct
+      ✔ empty object returns 0 count
+Exception error in data
+      ✔ invalid object returns 0 count
+      ✔ empty array returns 0 count
+Exception error in data
+      ✔ array with empty object returns 0 count
+Exception error in data
+      ✔ array with incomplete data returns 0 count
 
 
-  17 passing (21ms)
+  71 passing (70ms)
 
