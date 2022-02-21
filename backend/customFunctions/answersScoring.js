@@ -1,6 +1,6 @@
 // encapsulates scoring algorithm applied to a set of student answers
 
-const validator = require('./formValidation.js');
+const validator = require('../../frontend/customFunctions/formValidation.js');
 
 function analyseAnswer(answerJson) {
   let posedBody = answerJson.difficulty == 'base' 
