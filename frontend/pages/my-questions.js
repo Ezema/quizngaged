@@ -73,6 +73,9 @@ export default function MyClassrooms(props) {
     let updatedList = listOfQuestions.filter( (el,ix)=> {
         return ix!=ind})
     
+      for(let i= 0; i< updatedList.length; i++){
+        updatedList[i].id = i
+      }
       setListOfQuestions(updatedList)
     
       //create a copy from localstorage
@@ -93,7 +96,7 @@ export default function MyClassrooms(props) {
       
       setNewQuestionUID(parseInt(copyOfStatefulArray[copyOfStatefulArray.length-1].id) + 1 ) 
       } else {
-        setNewQuestionUID(1);
+        setNewQuestionUID(0);
       }
          
       setAddQuestionState(true);
