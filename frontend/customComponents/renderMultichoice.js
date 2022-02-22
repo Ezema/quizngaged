@@ -29,36 +29,10 @@ export default function RenderMultichoice({
     questionBody, questionVariants, updateVariants, setCurrentAnswer, timer, timerMin, timerSec, questionType
   }
   ){
-    const [seconds, setSeconds] = React.useState(timerSec);
-    const [minutes, setMinutes] = React.useState(timerMin);
-    React.useEffect(() => {
-  
-      let myInterval = setInterval(() => {
-        if (seconds > 0) {
-            setSeconds(seconds - 1);
-        }
-        if(seconds <= 10){
-          setSeconds('0' + (seconds - 1))
-        }
-        if (seconds === 0 || seconds === '00') {
-            if (minutes === 0 || minutes === '0') {
-                setSeconds(0)
-                clearInterval(myInterval)
-            } else {
-                setMinutes(minutes - 1);
-                setSeconds(59);
-            }
-        } 
-    }, 1000)
-    return ()=> 
-        clearInterval(myInterval);
-      
-    
-    });
- 
+   
     const selectVariant = (ind) => {
       
-   var newQuestionVariants = questionVariants.map((variant, index) => {
+    var newQuestionVariants = questionVariants.map((variant, index) => {
     
     if(questionType == 'Multiple Choice'){
       if(ind ==index && !variant.isSelected){
@@ -95,18 +69,6 @@ export default function RenderMultichoice({
                  </div>
           })}
     </div>
-    {timer?
-          <div>
-            {(minutes === 0 || minutes === '0') && (seconds === 0 || seconds === "00")?
-            <p>Time Expired!</p>
-            :
-            <p>
-              Time Left: {minutes}:{seconds}
-            </p>
-            }
-          </div>
-          :
-          ""}
    </>
     
 }
