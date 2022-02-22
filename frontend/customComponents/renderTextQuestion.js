@@ -5,65 +5,41 @@ import * as React from 'react';
 /* mui libraries */
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import * as formValidator from '../customFunctions/formValidation.js';
 
 export default function RenderTextQuestion({
     questionBody,
-    setCurrentAnswer,
-    timer,
-    timerMin,
-    timerSec
+    setCurrentAnswer
   }
   ){
- 
-const updateTextAnswer = (ev) =>{
-   ev.preventDefault
-   setCurrentAnswer(ev.target.value)
-}
+    const [entriesAreValid,setEntriesAreValid] = React.useState('true')
 
-const [seconds, setSeconds] = React.useState(timerSec);
-    const [minutes, setMinutes] = React.useState(timerMin);
-    React.useEffect(() => {
-  
-      let myInterval = setInterval(() => {
-        if (seconds > 0) {
-            setSeconds(seconds - 1);
+    const updateTextAnswer = (ev) =>{
+      ev.preventDefault
+      let changedBody = ev.target.value;
+      let quizBodyNotEntered = !formValidator.isValidMandatoryText(changedBody);
+        
+      if(quizBodyNotEntered){
+          setEntriesAreValid(false)
+          setCurrentAnswer(null)
+        }else{
+          setEntriesAreValid(true)
+          setCurrentAnswer(changedBody)
         }
-        if(seconds <= 10){
-          setSeconds('0' + (seconds - 1))
-        }
-        if (seconds === 0 || seconds === '00') {
-            if (minutes === 0 || minutes === '0') {
-                setSeconds(0)
-                clearInterval(myInterval)
-            } else {
-                setMinutes(minutes - 1);
-                setSeconds(59);
-            }
-        } 
-    }, 1000)
-    return ()=> 
-        clearInterval(myInterval);
       
-    
-    });
+    }
 
    return <>
    <h3>{questionBody}</h3>
     <Box className="task-conatiner">
-         <TextField id="outlined-basic" label="Your answer" variant="outlined" onChange={updateTextAnswer} /> 
+         <TextField 
+            id="outlined-basic" 
+            label="Your answer" 
+            variant="outlined" 
+            onChange={updateTextAnswer} 
+            error={!entriesAreValid}
+            helperText={entriesAreValid?'':"Answer body cannot be empty"}/> 
      </Box> 
-     <Box>
-       {timer?
-            <div>
-              {(minutes === 0 || minutes === '0') && (seconds === 0 || seconds === "00")?
-                <p>Time Expired!</p>
-              :
-                <p>Time Left: {minutes}:{seconds}</p>
-              }
-            </div>
-          :
-          ""}
-      </Box>
    </>
     
 }
