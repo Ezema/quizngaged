@@ -162,7 +162,7 @@ export default function AddClassroom(props){
             setAlreadyRegistered(false)
             console.log("there is room for registration")
             setCheckingValidClassroom(true)
-            backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID,true)
+            backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID,false)
         }     
         
         
