@@ -162,28 +162,13 @@ export default function AddClassroom(props){
             setAlreadyRegistered(false)
             console.log("there is room for registration")
             setCheckingValidClassroom(true)
-            backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID,false)
+            backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID,true)
         }     
         
         
     }
 
-    React.useEffect(()=>{
-        if(checkingValidClassroom){
-            if(serverResponseForClassroomIDValidity){   
-                console.log('got valid id');
-                setStep(step+1)
-                setMainButtonText('Finish')
-                setCheckingValidClassroom(false)
-                setServerResponseForClassroomIDValidity("nada")
-            }else{
-                console.log('got invalid id');
-                setCheckingValidClassroom(false)
-                setShowError(true)
-                setServerResponseForClassroomIDValidity("nada")
-            }
-        }
-    },[serverResponseForClassroomIDValidity,])
+
 
     const handleNextStep = ()=>{
         let teacherAddIncomplete = step == 0 && 
@@ -204,9 +189,8 @@ export default function AddClassroom(props){
                     }                    
                 }
                 else if(step==1){
-                    backendQueryCheckClassroomUniqueIDIsValid({callback:()=>{}},studentClassroomUniqueUID, true)
-                    props.setAddClassroomState(false)
-                    setStep(0)
+                    setCheckingValidClassroom(true)
+                    backendQueryCheckClassroomUniqueIDIsValid({callback:setServerResponseForClassroomIDValidity},studentClassroomUniqueUID, false)
                 }
             }else{
                 if(step==0){                                        
@@ -248,6 +232,31 @@ export default function AddClassroom(props){
         }
           
     }
+
+    React.useEffect(()=>{
+        if(checkingValidClassroom){
+            if(serverResponseForClassroomIDValidity){
+                if(step == 0){
+                    console.log('got valid id');
+                    setStep(step+1)
+                    setMainButtonText('Finish')
+                    setCheckingValidClassroom(false)
+                    setServerResponseForClassroomIDValidity("nada")
+                }
+                if(step==1){
+                    props.setAddClassroomState(false)
+                    setStep(0)
+                    setCheckingValidClassroom(false)
+                    setServerResponseForClassroomIDValidity("nada")
+                }
+            }else{
+                console.log('got invalid id');
+                setCheckingValidClassroom(false)
+                setShowError(true)
+                setServerResponseForClassroomIDValidity("nada")
+            }
+        }
+    },[serverResponseForClassroomIDValidity,])
     
     return(
             (props.userIsStudent)?(
