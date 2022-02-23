@@ -204,7 +204,7 @@ export default function AddClassroom(props){
                     }                    
                 }
                 else if(step==1){
-                    backendQueryCheckClassroomUniqueIDIsValid({callback:()=>{}},studentClassroomUniqueUID, false)
+                    backendQueryCheckClassroomUniqueIDIsValid({callback:()=>{}},studentClassroomUniqueUID, true)
                     props.setAddClassroomState(false)
                     setStep(0)
                 }
