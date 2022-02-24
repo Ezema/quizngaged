@@ -15,7 +15,11 @@ describe('teacher can create quiz questions', () =>{
     it('changes to the my questions screen', () => {
         cy.findByTestId('MenuIcon').click()
         cy.findByRole('button', {  name: /my questions/i}).click()
-        cy.findByText(/my questions/i)
+    })
+    it('can create questions', () => {
+        cy.findByText(/my questions/i).should('be.visible')
+        let questionsArray = ["question to be edited"]
+        cy.add_text_response_questions(questionsArray)
     })
     it('selects a question to edit', () => {
         
@@ -31,7 +35,7 @@ describe('teacher can create quiz questions', () =>{
         cy.findByRole('textbox', { name: /enter the question body/i}).type('custom test question 1')
         cy.findByRole('textbox', {  name: /question type/i}).clear().type('{esc}')
         cy.findByRole('button', { name: /next/i}).click()
-        cy.get(/question type is invalid/i)
+        cy.get(/question body cannot be blank/i)
         cy.findByRole('textbox', {  name: /question type/i}).type('{downarrow}{downarrow}{enter}')
         cy.findByRole('button', { name: /next/i}).click()
         cy.findByText(/optional: enter an easier version of the question/i)
@@ -40,6 +44,7 @@ describe('teacher can create quiz questions', () =>{
         cy.findByRole('button', { name: /finish/i}).click()
         cy.get('#__next > div > div').contains('custom test question 1')
     })
+
     it('confirmation dialog is displayed when deletion of a question is requested', () => {
         cy.get('#__next > div > div > div > div > div:nth-child(1) > div')
         .findByRole('button', {name: /delete/i}).click()
@@ -47,15 +52,18 @@ describe('teacher can create quiz questions', () =>{
     it('deletes the question', () => {
         cy.get('#alert-dialog-description')
         cy.findByRole('button', {  name: /delete/i}).click()
+        cy.get('#__next > div > div').should('not.have.value', 'custom test question 1')
     })
-    it('questions view can be empty', () => {
-        cy.get('#__next > div > div > div > div > div:nth-child(1) > div')
-        .findByRole('button', {name: /delete/i}).click()
-        cy.get('#alert-dialog-description')
-        cy.findByRole('button', {  name: /delete/i}).click()
-    })
-    it('can create questions', () => {
-        let questionsArray = ["question1", "question2", "question3", "question4", "question5", "question6", "question7", "question8", "question9", "question10"]
+    it('multiple choice questions form validation works properly', () => {
+        cy.findByText(/my questions/i).should('be.visible')
+        let questionsArray = ["multiple choice question 1"]
         cy.add_text_response_questions(questionsArray)
+        cy.get('#__next > div > div > div > div > div:nth-child(1) > div')
+        .findByRole('button', { name: /edit/i}).click()
+        cy.findByRole('textbox', {  name: /question type/i}).type('{uparrow}{enter}')
     })
+    // it('can create questions', () => {
+    //     let questionsArray = ["question1", "question2", "question3", "question4", "question5", "question6", "question7", "question8", "question9", "question10"]
+    //     cy.add_text_response_questions(questionsArray)
+    // })
 })
