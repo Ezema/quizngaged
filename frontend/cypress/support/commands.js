@@ -29,10 +29,16 @@ import "cypress-localstorage-commands"
 
 Cypress.Commands.add("clear_mysql_and_indexedDB", () => {
     cy.task('queryDb', 'DELETE FROM users;').then(result => {
-        console.log('dropped all users entries drom sql database')
+        console.log('deleted all users entries drom sql database')
     })
     cy.task('queryDb', 'DELETE FROM classrooms;').then(result => {
-        console.log('dropped all classrooms entries in sql database')
+        console.log('deleted all classrooms entries in sql database')
+    })
+    cy.task('queryDb', 'DELETE FROM launched_quizzes;').then(result => {
+        console.log('deleted all entries of launched_quizzes in sql database')
+    })
+    cy.task('queryDb', 'DELETE FROM user_quizzes;').then(result => {
+        console.log('deleted all entries of user_quizzes in sql database')
     })
     var dbDeleteRequest = window.indexedDB.deleteDatabase("firebaseLocalStorageDb");
     dbDeleteRequest.onerror= function(event) {

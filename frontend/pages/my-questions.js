@@ -136,6 +136,9 @@ export default function MyClassrooms(props) {
     else{
       router.push('/my-classrooms')
     }
+    if (editQuestionState==false){
+      setTopBarTitle('My Questions')
+    }
 
   },[addQuestionState, editQuestionState])  
 
