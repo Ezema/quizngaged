@@ -30,6 +30,8 @@ import CustomTopNavBar from '../customComponents/customTopNavBar'
 import AddClassroom from '../customComponents/addClassroom'
 import EditClassroom from '../customComponents/editClassroom'
 import ViewClassroom from '../customComponents/viewClassroom.js';
+import TeacherTutorial from '../customComponents/teacherTutorial.js';
+import StudentTutorial from '../customComponents/studentTutorial.js';
 
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 //import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
@@ -168,21 +170,8 @@ export default function MyClassrooms() {
               {
                 userIsStudent?
                 (
-                  (JSON.parse(localStorage.quizngagedUserData).classrooms.length==0)?
-                  (
-                    <Grid item>
-                      <Grid container display={'grid'} alignContent={'center'} justifyContent={'center'} justifyItems={'center'} justifySelf={'center'}>
-                        <Grid item>
-                            <Typography variant='h5'>
-                              No classrooms joined.                          
-                            </Typography>
-                            <Typography variant='h5'>                          
-                              Click below to join a classroom
-                            </Typography>                          
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  )
+                  JSON.parse(localStorage.quizngagedUserData).classrooms.length==0
+                  ? <StudentTutorial />
                   :
                   (
                   JSON.parse(localStorage.quizngagedUserData).classrooms.map((classroom)=>                 
@@ -201,9 +190,9 @@ export default function MyClassrooms() {
                   )
                   )  
                 ) 
-                :
-                (
-                  JSON.parse(localStorage.quizngagedUserData).classrooms.map((classroom)=>                 
+                : JSON.parse(localStorage.quizngagedUserData).classrooms.length==0
+                ? <TeacherTutorial/>
+                : JSON.parse(localStorage.quizngagedUserData).classrooms.map((classroom)=>                 
                     <Grid item xs={12} md={6} lg={4} key={JSON.parse(localStorage.quizngagedUserData).classrooms.indexOf(classroom)}>              
                       <CustomPaperReactComponent elevation={3}>
                         <Typography variant='subtitle1'>
@@ -217,7 +206,6 @@ export default function MyClassrooms() {
                       </CustomPaperReactComponent>
                     </Grid>      
                   )
-                )
               }
               </Grid>              
             </Box>            
