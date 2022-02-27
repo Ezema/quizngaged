@@ -72,5 +72,6 @@ describe('the app should allow a subsequent login', () => {
     })
     it('confirms that it is in the my classrooms page', () => {
         cy.findByText(/my classroooms/i)
+        cy.end()
     })
 })

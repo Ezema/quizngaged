@@ -127,12 +127,13 @@ Cypress.Commands.add("add_quizz", (questionsArray, quizname) => {
     cy.findByRole('button', {  name: /add/i}).click()
     cy.get('#__next > div > header > div').contains(/add quiz/i)
     cy.findByRole('textbox', {  name: /enter a title for the quiz/i}).scrollIntoView().type(quizname)
-    cy.findByRole('textbox', {  name: /quiz category/i}).type('{downarrow}{enter}')
+    // cy.findByRole('textbox', {  name: /quiz category/i}).type('{downarrow}{downarrow}{enter}')
+    cy.get('#__next > div > div:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(3) > div > div > div').type('{downarrow}{downarrow}{enter}')
         for ( let i = 1; i <questionsArray.length+1; i++){
         cy.get(`:nth-child(${i}) > .MuiPaper-root > .MuiCheckbox-root > .PrivateSwitchBase-input`).click()
     }
     cy.findByRole('button', { name: /next/i}).click()
-    cy.findByRole('button', { name: /finish/i}).click()
+    cy.findByRole('button', { name: /finish/i}).wait(3000).click()
     cy.get('#__next > div > div > div').should('contain', quizname)
 })
 

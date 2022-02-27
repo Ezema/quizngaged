@@ -84,6 +84,15 @@ export default function AddQuiz(props){
 
     const [statefulQuestions, setStatefulQuestions] = React.useState(null)
     const [statefulArrayOfQuestionSelected, setStatefulArrayOfQuestionSelected] = React.useState([])
+    const [serverRespondedToggle, setServerRespondedToggle] = React.useState(false)
+
+    React.useEffect(()=>{
+        if(serverRespondedToggle==true){
+            props.setAddQuizState(false)
+            props.setTopBarTitle("My Quizzes")
+            setStep(0)
+        }
+    }, [serverRespondedToggle])
 
     const handleQuizTitleChange = (event)=>{
       let changedTitle = event.target.value;
@@ -146,11 +155,8 @@ export default function AddQuiz(props){
             localStorage.setItem('quizngagedUserData',JSON.stringify(copyOfQuizngagedUserData))
 
             // call the backend to sync the local changes
-            backendQuerySaveUserJSON(()=>{})
+            backendQuerySaveUserJSON(()=>{setServerRespondedToggle(true)})
 
-            props.setAddQuizState(false)
-            props.setTopBarTitle("My Quizzes")
-            setStep(0)
             }            
             
             

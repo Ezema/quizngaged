@@ -77,6 +77,7 @@ describe('app should let teacher add classrooms', () =>{
         let classroomNames = ["Mathematics 6", "English 6", "Social Studies 6", "Science 6", "Personal Fitness 6", "Computers 6",
                             "Chemistry 11", "Introduction to Law 10", "Accounting 9", "Physics 11"]
         cy.add_classrooms(classroomNames)
+        cy.end()
     })
     
 })
