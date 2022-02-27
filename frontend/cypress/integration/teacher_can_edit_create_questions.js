@@ -115,5 +115,6 @@ describe('teacher can create quiz questions', () =>{
     it('the user interface supports adding multiple questions', () => {
         let questionsArray = ["question1", "question2", "question3", "question4", "question5", "question6", "question7", "question8", "question9", "question10"]
         cy.add_text_response_questions(questionsArray)
+        cy.end()
     })
 })
