@@ -32,7 +32,7 @@ describe('quizz can be administered by teacher and student can take part in it',
         let questionsArray = ["quiz question 1", "quiz question 2", "quiz question 3", "quiz question 4", "quiz question 5"]
         cy.add_quizz(questionsArray, "Quiz Number 1")
         cy.get('#__next > div > div > div > div > div:nth-child(1)')
-        .findByRole('button', { name: /edit/i}).wait(2000).click()
+        .findByRole('button', { name: /edit/i}).wait(3000).click()
         cy.findByRole('button', { name: /back/i}).click()
         cy.findByTestId('MenuIcon').click()
         cy.findByText(/my classrooms/i).click()

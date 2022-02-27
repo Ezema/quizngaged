@@ -38,7 +38,7 @@ describe('teacher can create quiz questions', () =>{
     
     it('finds the quiz title text entry box and enters quiz title', () => {
         cy.findByRole('textbox', {  name: /enter a title for the quiz/i}).type('quiz number 1')
-        cy.get('#__next > div > div:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(3) > div > div > div').type('{downarrow}{enter}')
+        cy.get('#__next > div > div:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(3) > div > div > div').type('{downarrow}{downarrow}{enter}')
     })
     it('the form validation disallows quizzes with no questions', () => {
         cy.findByRole('button', { name: /next/i}).click()
@@ -84,6 +84,7 @@ describe('teacher can create quiz questions', () =>{
         cy.get('#__next > div > div > div > div > div:nth-child(1)')
         .findByRole('button', { name: /delete/i}).click()
         cy.get('.MuiDialogActions-root > .MuiButton-textError').click()
-        cy.get('#__next > div > div > div').should('not.contain', 'editted quiz attempt 2')        
+        cy.get('#__next > div > div > div').should('not.contain', 'editted quiz attempt 2')
+        cy.end()        
     })    
 })
