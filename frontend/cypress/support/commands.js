@@ -55,23 +55,25 @@ Cypress.Commands.add("clear_mysql_and_indexedDB", () => {
     }) 
 })
 
-Cypress.Commands.add("teacher_login", () => {
+Cypress.Commands.add("teacher_login", (registered=false) => {
     cy.visit('/')
     cy.findByRole('button', {  name: /sign in with email/i}).click()
     cy.get('#firebaseui_container > div > form > div:nth-child(2) > div > div:nth-child(1)').type('hello@Cypress.io')
     cy.findByRole('button', {name: /next/i}).click()
     cy.findByLabelText(/password/i).type('testpassword1234')
     cy.findByRole('button', {name: /sign in/i}).click()
-    cy.findByRole('button', {  name: /create teacher acccount/i}).click()
-    cy.findByRole('button', {  name: /next/i}).click()
-    cy.findByRole('button', { name: /confirm/i}).click()
+    if (registered == false) {
+        cy.findByRole('button', {  name: /create teacher acccount/i}).click()
+        cy.findByRole('button', {  name: /next/i}).click()
+        cy.findByRole('button', { name: /confirm/i}).click()
+    }
     cy.findByText(/my classroooms/i)
 })
 
-Cypress.Commands.add("student_login", () => {
+Cypress.Commands.add("student_login", (sim_quiz='hello@Cypress.io') => {
     cy.visit('/')
     cy.findByRole('button', {  name: /sign in with email/i}).click()
-    cy.get('#firebaseui_container > div > form > div:nth-child(2) > div > div:nth-child(1)').type('hello@Cypress.io')
+    cy.get('#firebaseui_container > div > form > div:nth-child(2) > div > div:nth-child(1)').type(sim_quiz)
     cy.findByRole('button', {name: /next/i}).click()
     cy.findByLabelText(/password/i).type('testpassword1234')
     cy.findByRole('button', {name: /sign in/i}).click()
@@ -108,3 +110,29 @@ Cypress.Commands.add("add_text_response_questions", (questions) => {
         cy.get('#__next > div > div').contains(question)
     })
 })
+
+/** assumes is logged in as teacher and in the my classrooms page 
+ * takes in an array of questions, and creates a quiz 
+*/
+Cypress.Commands.add("add_quizz", (questionsArray, quizname) => {
+    // cy.teacher_login()
+    cy.findByTestId('MenuIcon').click()
+    cy.findByRole('button', {  name: /my questions/i}).click()
+    cy.findByText(/my questions/i).should('be.visible')
+    cy.add_text_response_questions(questionsArray)
+    cy.findByTestId('MenuIcon').click()
+    cy.findByRole('button', {  name: /my quizzes/i}).click()
+    cy.get('#__next > div > header:nth-child(1) > div').should("contain.text", "My Quizzes")
+    cy.findByText(/my quizzes/i)
+    cy.findByRole('button', {  name: /add/i}).click()
+    cy.get('#__next > div > header > div').contains(/add quiz/i)
+    cy.findByRole('textbox', {  name: /enter a title for the quiz/i}).scrollIntoView().type(quizname)
+    cy.findByRole('textbox', {  name: /quiz category/i}).type('{downarrow}{enter}')
+        for ( let i = 1; i <questionsArray.length+1; i++){
+        cy.get(`:nth-child(${i}) > .MuiPaper-root > .MuiCheckbox-root > .PrivateSwitchBase-input`).click()
+    }
+    cy.findByRole('button', { name: /next/i}).click()
+    cy.findByRole('button', { name: /finish/i}).click()
+    cy.get('#__next > div > div > div').should('contain', quizname)
+})
+

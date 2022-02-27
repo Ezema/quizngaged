@@ -5,6 +5,9 @@
         "user": "root",
         "password": "password",
         "database": "appdb"
-    }
+    },
+"video": "true",
+"videosfolder": "cypress/viedeo",
+"thrashAssetsBeforeRuns": "true"
 }
 }
