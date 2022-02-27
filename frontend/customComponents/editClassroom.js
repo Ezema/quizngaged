@@ -1,23 +1,22 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-
 import Typography from '@mui/material/Typography';
 import Snackbar from '@mui/material/Snackbar';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
-
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-
-import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-
 import { Alert } from '@mui/material';
+
+/* customFunctions */
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 import * as formValidator from '../customFunctions/formValidation.js';
 
 const steps = [

@@ -1,38 +1,33 @@
 import * as React from 'react';
 
+/* mui libraries */
 import Box from '@mui/material/Box';
-
 import Button from '@mui/material/Button';
-
-
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-
 import Typography from '@mui/material/Typography';
-
 import AppBar from '@mui/material/AppBar';
-
 import Toolbar from '@mui/material/Toolbar';
-
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
- 
-
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
 import AddQuestion from '../customComponents/addQuestion.js'
 import EditQuestion from '../customComponents/editQuestion.js'
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 
+/* firebase, router */
 import 'firebase/compat/auth';
+import { useRouter } from 'next/router'
 
+/* customComponents */
 import LoadingScreen from '../customComponents/loadingScreen.js';
-
-import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
-import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 import DeleteDialog from '../customComponents/deleteDialog.js';
 
-import { useRouter } from 'next/router'
+/* customFunctions */
+import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+
 
 export default function MyClassrooms(props) { 
 

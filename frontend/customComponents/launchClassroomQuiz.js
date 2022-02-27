@@ -1,9 +1,10 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-
 import Typography from '@mui/material/Typography';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -12,9 +13,12 @@ import TextField from '@mui/material/TextField';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import BoltIcon from '@mui/icons-material/Bolt';
+import { Snackbar, Alert } from '@mui/material';
 
+/* customComponents */
 import ListOfQuizzes from './listOfQuizzes.js';
 
+/* customFunctions */
 import backendQueryCreateLaunchQuiz from '../customFunctions/backendQueries/backendQueryCreateLaunchQuiz.js';
 
 const steps = [
@@ -132,9 +136,6 @@ export default function LaunchClassroomQuiz(props){
                     </Box>
                     <Box marginTop="1em">
                         <Box marginBottom="1em">
-                            {/* <Typography variant='subtitle1' padding={0.5} style={{color:'gray'}}>
-                                Question UID
-                            </Typography> */}
                             <TextField     
                                 margin={'0.5em'}
                                 disabled

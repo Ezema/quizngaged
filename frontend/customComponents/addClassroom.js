@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -12,16 +14,15 @@ import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-
-import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-
-import backendQueryCheckClassroomUniqueIDIsValid from '../customFunctions/backendQueries/backendQueryCheckClassroomUniqueIDIsValid.js'
-
-import backendQuerySaveNewUniqueClassroom from '../customFunctions/backendQueries/backendQuerySaveNewUniqueClassroom.js'
-
 import CircularProgress from '@mui/material/CircularProgress';
+
+/* customFunctions */
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+import backendQueryCheckClassroomUniqueIDIsValid from '../customFunctions/backendQueries/backendQueryCheckClassroomUniqueIDIsValid.js'
+import backendQuerySaveNewUniqueClassroom from '../customFunctions/backendQueries/backendQuerySaveNewUniqueClassroom.js'
 import * as formValidator from '../customFunctions/formValidation.js';
 import findArrayIndex from '../customFunctions/findArrayIndex.js';
+
 
 export default function AddClassroom(props){
 

@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -12,13 +14,14 @@ import TextField from '@mui/material/TextField';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import Autocomplete from '@mui/material/Autocomplete';
-
-import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-
 import { Alert } from '@mui/material';
 
-import QuizQuestions from './quizQuestions.js';
+/* customFunctions */
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 import * as formValidator from '../customFunctions/formValidation.js';
+
+/* customComponents */
+import QuizQuestions from './quizQuestions.js';
 
 const steps = [
   'Add Quiz',

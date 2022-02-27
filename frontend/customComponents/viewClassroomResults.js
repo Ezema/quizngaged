@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+/* mui libraries */
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -10,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Typography from '@mui/material/Typography';
 
+/* customFunctions */
 import backendQueryStudentsQuizzesForClassroom from '../customFunctions/backendQueries/backendQueryStudentsQuizzesForClassroom';
 
 export default function ViewClassroomResults(props){

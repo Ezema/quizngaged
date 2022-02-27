@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -9,7 +11,6 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
-
 import LoadingScreen from '../customComponents/loadingScreen.js'
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 import AddClassroom from '../customComponents/addClassroom'
@@ -18,10 +19,9 @@ import ViewClassroom from '../customComponents/viewClassroom.js';
 import TeacherTutorial from '../customComponents/teacherTutorial.js';
 import StudentTutorial from '../customComponents/studentTutorial.js';
 
+/* firebase, customFunctions, router */
 import 'firebase/compat/auth';
-
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
-
 import { useRouter } from 'next/router'
 
 
