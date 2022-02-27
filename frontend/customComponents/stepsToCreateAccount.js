@@ -1,5 +1,7 @@
-import Container from '@mui/material/Container';
 import * as React from 'react';
+
+/* mui libraries */
+import Container from '@mui/material/Container';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -8,16 +10,17 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-
-import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
-
-import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-
-import Router from 'next/router';
-
-
 import TextField from '@mui/material/TextField';
 import { Avatar } from '@mui/material';
+
+/* data, next */
+import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
+import Router from 'next/router';
+
+/* customFunctions */
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+
+/* customComponents */
 import LoadingScreen from './loadingScreen.js';
 
 const steps = ['Add your information', 'Confirm your details'];

@@ -1,12 +1,16 @@
 import * as React from 'react';
 
+/* mui libraries */
 import Skeleton from '@mui/material/Skeleton'
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
+/* customComponents */
 import CustomTopNavBar from '../customComponents/customTopNavBar'
+
+/* firebase, customFunctions */
 import 'firebase/compat/auth';
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON';
-import Typography from '@mui/material/Typography';
 
 export default function MyClassrooms(props) {
 

@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -8,23 +10,21 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 
+/* customComponents */
+import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
 import LoadingScreen from '../customComponents/loadingScreen.js';
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 import EditQuiz from '../customComponents/editQuiz.js';
 import AddQuizz from '../customComponents/addQuizz.js';
-
-//Global variables
-import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
-//Backend communication functions
-import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
-
-import { useRouter } from 'next/router'
-import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-// import AlertDialog from '../customComponents/deleteDialog.js';
 import DeleteDialog from '../customComponents/deleteDialog.js';
+
+/* global variables, customFunctions, router */
+import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
+import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
+import { useRouter } from 'next/router'
 
 function MyQuizzes(props) {  
 

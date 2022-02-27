@@ -1,20 +1,17 @@
-// Import FirebaseAuth and firebase.
+/* Import FirebaseAuth and firebase. */
 import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { Typography } from '@mui/material';
-//import { PinDropSharp } from '@mui/icons-material';
+
 const axios = require('axios');
 import Alert from '@mui/material/Alert';
 
-// import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
 import federatedAuthUserData from '../customGlobalVariables/federatedAuthUserData.js'
 import federatedAuthDecodedToken from '../customGlobalVariables/federatedAuthDecodedToken'
 
 function SignIn(props) {
-
-  // let decokedIdToken = null;  
 
   // Configure Firebase SDK client key.
   const firebaseConfig = {
