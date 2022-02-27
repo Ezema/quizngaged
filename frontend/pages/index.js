@@ -1,20 +1,28 @@
 import * as React from 'react';
+
+/* logo */
 import logo from '../public/logo.gif';
+
+/* mui libraries */
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography'; 
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
+
+/* next */
 import Image from 'next/image'
 
+/* firebase */
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+
+/* customComponents */
+import CheckUserHasQuizngagedAccount from '../customComponents/checkUserHasQuizngagedAccount.js';
+import MyClassrooms from './my-classrooms.js'
 import SignIn from '../customReactScreenViews/signIn.js'
 
-import CheckUserHasQuizngagedAccount from '../customComponents/checkUserHasQuizngagedAccount.js';
-
-import MyClassrooms from './my-classrooms.js'
-
+/* global variables */
 import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
 import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 

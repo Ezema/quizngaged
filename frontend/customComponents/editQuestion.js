@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -16,8 +18,10 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Checkbox, FormGroup, FormControlLabel } from '@mui/material';
 
+/* customComponents */
 import QuestionAnswers from './questionAnswer.js';
 
+/* customFunctions */
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 import * as formValidator from '../customFunctions/formValidation.js';
 

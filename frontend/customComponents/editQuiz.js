@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -14,6 +16,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Alert } from '@mui/material';
 
+/* customFunctions */
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 import QuizQuestions from './quizQuestions.js';
 import findArrayIndex from '../customFunctions/findArrayIndex.js';

@@ -1,8 +1,12 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+
+/* customComponents */
 import StepsToCreateAccount from './stepsToCreateAccount';
 
 export default function CreateQuizngagedAccount(props){        

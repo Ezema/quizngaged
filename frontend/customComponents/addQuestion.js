@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
@@ -13,15 +15,15 @@ import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import Autocomplete from '@mui/material/Autocomplete';
+import { Checkbox, FormGroup, FormControlLabel } from '@mui/material';
 
+/* customComponents */
 import QuestionAnswers from './questionAnswer.js';
 
-import Autocomplete from '@mui/material/Autocomplete';
-
+/* customFunctions */
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 import * as formValidator from '../customFunctions/formValidation.js';
-
-import { Checkbox, FormGroup, FormControlLabel } from '@mui/material';
 
 
 const steps = [

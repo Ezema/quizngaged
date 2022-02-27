@@ -1,7 +1,10 @@
 import * as React from 'react';
+
+/* customComponents */
 import LoadingScreen from './loadingScreen.js';
 import CreateQuizngagedAccount from './createQuizngagedAccount';
 
+/* customFunctions */
 import backendQueryCheckUserHasQuizngagedAccount from '../customFunctions/backendQueries/backendQueryCheckUserHasQuizngagedAccount.js';
 
 export default function CheckUserHasQuizngagedAccount(props){        

@@ -1,23 +1,25 @@
 import * as React from 'react';
+
+/* mui libraries */
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-
-
 import BoltIcon from '@mui/icons-material/Bolt';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import LiveTvIcon from '@mui/icons-material/LiveTv';
+import { Typography } from '@mui/material';
 
+/* customComponents */
 import ViewClassroomResults from './viewClassroomResults.js'
 import ViewClassroomStatistics from './viewClassroomStatistics.js'
 import LaunchClassroomQuiz from './launchClassroomQuiz.js'
 import ViewClassroomOngoingQuizzes from './viewClassroomOngoingQuizzes.js'
 
+/* customFunctions */
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 
-import LiveTvIcon from '@mui/icons-material/LiveTv';
-import { Typography } from '@mui/material';
 
 export default function ViewClassroom(props){
 
