@@ -38,7 +38,7 @@ describe('teacher can create quiz questions', () =>{
     
     it('finds the quiz title text entry box and enters quiz title', () => {
         cy.findByRole('textbox', {  name: /enter a title for the quiz/i}).type('quiz number 1')
-        cy.get('#__next > div > div:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(3) > div > div > div').type('{downarrow}{downarrow}{enter}')
+        cy.get('#__next > div > div:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(3) > div > div > div').type('{downarrow}').wait(1000).type('{enter}')
     })
     it('the form validation disallows quizzes with no questions', () => {
         cy.findByRole('button', { name: /next/i}).click()

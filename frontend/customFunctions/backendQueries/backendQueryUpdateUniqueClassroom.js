@@ -16,8 +16,7 @@ export default function backendQueryUpdateUniqueClassroom(classroomjson,uniquecl
           uniqueclassroomid: uniqueclassroomid
       },
       timeout:10000
-    }).then(async (response) => {        
-        
+    }).then(async (response) => {           
     }).catch(e => {          
         console.log(e);                                
     })

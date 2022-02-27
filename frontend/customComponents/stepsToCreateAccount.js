@@ -1,25 +1,17 @@
 import Container from '@mui/material/Container';
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
 
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-
-import federatedAuthUserData from '../customGlobalVariables/federatedAuthUserData.js';
-
-const axios = require('axios');
 
 import Router from 'next/router';
 

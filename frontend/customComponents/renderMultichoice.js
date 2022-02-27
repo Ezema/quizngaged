@@ -1,11 +1,6 @@
 
 import * as React from 'react';
 
-
-/* mui libraries */
-
-
-
 const styleDefault = {
 	border: '1px dashed gray',
 	padding: '0.5rem 1rem',
@@ -20,10 +15,6 @@ const styleSelected = {
 	marginBottom: '.5rem',
 	backgroundColor: 'lime'
 }
-
-
-
-
 
 export default function RenderMultichoice({
     questionBody, questionVariants, updateVariants, setCurrentAnswer, timer, timerMin, timerSec, questionType

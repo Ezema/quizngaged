@@ -1,17 +1,11 @@
 import * as React from 'react';
 
 import Skeleton from '@mui/material/Skeleton'
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 
 import CustomTopNavBar from '../customComponents/customTopNavBar'
-
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
-
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON';
-
 import Typography from '@mui/material/Typography';
 
 export default function MyClassrooms(props) {
@@ -27,9 +21,7 @@ export default function MyClassrooms(props) {
     }
     if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
       router.push('/')
-    }/* else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
-      router.push('/')
-    } */else{
+    }else{
       setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))      
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
     }

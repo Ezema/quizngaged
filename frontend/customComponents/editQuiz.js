@@ -1,60 +1,21 @@
 import * as React from 'react';
-// import Link from 'next/link'
 import Box from '@mui/material/Box';
-// import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-// import List from '@mui/material/List';
-// import Divider from '@mui/material/Divider';
-// import ListItem from '@mui/material/ListItem';
-// import ListItemIcon from '@mui/material/ListItemIcon';
-// import ListItemText from '@mui/material/ListItemText';
-
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-//import Stack from '@mui/material/Stack';
-
 import Typography from '@mui/material/Typography';
-// import MenuItem from '@mui/material/MenuItem';
-// import Menu from '@mui/material/Menu';
-
-// import AccountCircle from '@mui/icons-material/AccountCircle';
-// import AppBar from '@mui/material/AppBar';
-// import IconButton from '@mui/material/IconButton';
-// import Toolbar from '@mui/material/Toolbar';
-
-// import Fab from '@mui/material/Fab';
-// import AddIcon from '@mui/icons-material/Add';
 import Snackbar from '@mui/material/Snackbar';
-
-// import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
-// import ListIcon from '@mui/icons-material/List';
-// import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-// import PersonIcon from '@mui/icons-material/Person';
-// import LogoutIcon from '@mui/icons-material/Logout';
-// import MenuIcon from '@mui/icons-material/Menu';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
-// import BottomNavigation from '@mui/material/BottomNavigation';
-// import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-
-// import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-
-
-// import QuestionAnswers from './questionAnswer.js';
-
 import Autocomplete from '@mui/material/Autocomplete';
-
-import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-
-// import { width } from '@mui/system';
 import { Alert } from '@mui/material';
 
+import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
 import QuizQuestions from './quizQuestions.js';
-
 import findArrayIndex from '../customFunctions/findArrayIndex.js';
 import * as formValidator from '../customFunctions/formValidation.js';
 

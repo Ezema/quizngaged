@@ -1,28 +1,19 @@
 import * as React from 'react';
-import Link from 'next/link'
+
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+
 import Button from '@mui/material/Button';
 
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import AppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
+
 import Toolbar from '@mui/material/Toolbar';
 
-import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
  
@@ -33,13 +24,9 @@ import AddQuestion from '../customComponents/addQuestion.js'
 import EditQuestion from '../customComponents/editQuestion.js'
 import CustomTopNavBar from '../customComponents/customTopNavBar'
 
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 
-import Index from './index.js';
 import LoadingScreen from '../customComponents/loadingScreen.js';
-import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
 
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
@@ -60,8 +47,6 @@ export default function MyClassrooms(props) {
   const [questionIndexInQuestionsArray,setQuestionIndexInQuestionsArray]= React.useState(null) 
   
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
-  const [userIsAuthenticated,setUserIsAuthenticated] = React.useState(false)  
-  const [authenticationAttemptFinished,setAuthenticationAttemptFinished] = React.useState(false)
   const [statefulQuizngagedUserData, setStatefulQuizngagedUserData] = React.useState({});
   
   const [userIsStudent,setUserIsStudent] = React.useState(true)
@@ -123,9 +108,7 @@ export default function MyClassrooms(props) {
     }
     if((localStorage.federatedAuthUserData)==null || localStorage.federatedAuthUserData==undefined){
       router.push('/')
-    }/* else if(localStorage.quizngagedUserData==null || localStorage.quizngagedUserData==undefined){
-      router.push('/')
-    } */else{
+    }else{
       setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
       backendQueryGetUserJSON({callback:setStatefulQuizngagedUserData})
     }       
@@ -191,11 +174,6 @@ export default function MyClassrooms(props) {
                           {question.questionBaselineBody}
                         </Typography>
                         <Button    size="large" onClick={(event)=>handleEditQuestionState(event,listOfQuestions.indexOf(question))} endIcon={<EditIcon />}>EDIT</Button>
-                        
-                         {/* <Button  size="small" color="error" endIcon={<DeleteIcon />}
-                         onClick={()=>deleteQuestion(listOfQuestions.indexOf(question))}>
-                            Delete
-                          </Button> */}
                         <DeleteDialog dialogTitle = {"Delete Question?"} message="You will be deleting this question." deleteFunction={deleteQuestion} entityId={listOfQuestions.indexOf(question)}/>
                       </CustomPaperReactComponent>
                     </Grid>      
