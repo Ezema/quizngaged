@@ -3,15 +3,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 import { Grid, Typography } from '@mui/material';
 
-
-/* import { styled } from '@mui/styles';
-
-const DisabledText = styled(Typography)({
-    root: {
-      color: "#grey"
-    }
-  }); */
-
 export default function QuizQuestions(props){          
 
     const handleQuestionSelectionChange = (event,questionId) => {

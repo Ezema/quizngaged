@@ -3,11 +3,7 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Image from 'next/image'
 import StepsToCreateAccount from './stepsToCreateAccount';
-import Router from 'next/router'
-
 
 export default function CreateQuizngagedAccount(props){        
 
@@ -22,10 +18,6 @@ export default function CreateQuizngagedAccount(props){
         setuserType('Student')
         setCreateAccount(1)
     }
-
-    /* React.useEffect(()=>{
-        
-    }) */
     
     return(
         (createAccount==0)?(            

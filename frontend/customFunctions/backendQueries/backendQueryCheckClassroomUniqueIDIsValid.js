@@ -1,11 +1,10 @@
-import { useCallback } from 'react';
+// import { useCallback } from 'react';
 
 const axios = require('axios');
 
 import backendQuerySaveUserJSON from './backendQuerySaveUserJSON';
 
 export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroomUniqueId,checkOnly){
-
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
     axios({
       method: "POST",        
@@ -29,15 +28,10 @@ export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroo
         copy.classrooms.push(modifiedJSON)
         localStorage.setItem("quizngagedUserData",JSON.stringify(copy))        
         backendQuerySaveUserJSON(()=>{})
-      }
-        
-        /* response.data.classroomowneruid
-        response.data.uniqueclassroomid */
-        
+      }       
     }).catch(e => {          
         console.log(e);                                
     })
-
   }
 }
 

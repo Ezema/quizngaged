@@ -103,7 +103,7 @@ Cypress.Commands.add("add_text_response_questions", (questions) => {
     questions.forEach(question => {
         cy.findByTestId('AddIcon').click()
         cy.findByRole('textbox', {  name: /enter the question body/i}).type(question)
-        cy.findByRole('textbox', {  name: /question type/i}).type('{downarrow}{enter}')
+        cy.findByRole('textbox', {  name: /question type/i}).type('text').wait(1000).type('{downarrow}{enter}')
         cy.findByRole('button', { name: /next/i}).click()
         cy.findByRole('button', { name: /next/i}).click()
         cy.findByRole('button', { name: /finish/i}).click()
@@ -128,7 +128,7 @@ Cypress.Commands.add("add_quizz", (questionsArray, quizname) => {
     cy.get('#__next > div > header > div').contains(/add quiz/i)
     cy.findByRole('textbox', {  name: /enter a title for the quiz/i}).scrollIntoView().type(quizname)
     // cy.findByRole('textbox', {  name: /quiz category/i}).type('{downarrow}{downarrow}{enter}')
-    cy.get('#__next > div > div:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(3) > div > div > div').type('{downarrow}{downarrow}{enter}')
+    cy.get('#__next > div > div:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(3) > div > div > div').type('{downarrow}').wait(1000).type('{enter}')
         for ( let i = 1; i <questionsArray.length+1; i++){
         cy.get(`:nth-child(${i}) > .MuiPaper-root > .MuiCheckbox-root > .PrivateSwitchBase-input`).click()
     }

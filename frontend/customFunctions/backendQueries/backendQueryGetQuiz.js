@@ -1,8 +1,7 @@
 const axios = require('axios');
 
 export default function backendQueryGetQuiz(quizId,props){
-    console.log("inside backendQueryGetQuiz quizId="+quizId);
-
+  console.log("inside backendQueryGetQuiz quizId="+quizId);
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
     console.log("sending update")
     axios({
@@ -23,7 +22,6 @@ export default function backendQueryGetQuiz(quizId,props){
     }).catch(e => {          
         console.log(e);                                
     })
-
   }
 }
 

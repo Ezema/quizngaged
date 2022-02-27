@@ -2,20 +2,11 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 const axios = require('axios');
 
-import globalUserIsAuthenticated from '../../customGlobalVariables/userIsAuthenticated';
+// import globalUserIsAuthenticated from '../../customGlobalVariables/userIsAuthenticated';
 import federatedAuthUserData from '../../customGlobalVariables/federatedAuthUserData.js'
-import federatedAuthDecodedToken from '../../customGlobalVariables/federatedAuthDecodedToken';
+// import federatedAuthDecodedToken from '../../customGlobalVariables/federatedAuthDecodedToken';
 
 export default function backendQueryCheckUserHasQuizngagedAccount(props){
-
-  //console.log("federatedAuthDecodedToken: ",federatedAuthDecodedToken)
-  //console.log("federatedAuthUserData: ", federatedAuthUserData)
-
-  /* let copyFederatedAuthDecodedToken = null;
-  while(federatedAuthDecodedToken.federatedAuthDecodedToken==null){
-    copyFederatedAuthDecodedToken = JSON.parse(JSON.stringify(federatedAuthDecodedToken))
-  } */
-
   firebase.auth().currentUser.getIdToken(false).then(function(idToken) {    
     axios({
       method: "POST",        
@@ -33,18 +24,10 @@ export default function backendQueryCheckUserHasQuizngagedAccount(props){
         }else if(response.data.hasAccount==false){
           props.setServerConfirmedUserDoesNotHaveAccount(true);          
         }
-  
     }).catch(e => {          
         console.log(e);                                
     })
-
   }).catch(function(error) {
-    //props.setUserIsAuthenticated(false)
-    //props.setUserAuthenticationFailed(true)        
-    //if google's server rejects this user, a notification must be shown
   });
-
-  
-
 }
 

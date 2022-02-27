@@ -1,19 +1,15 @@
 import * as React from 'react';
 import logo from '../public/logo.gif';
-//import '../styles/App.css';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography'; 
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import Alert from '@mui/material/Alert';
 import Image from 'next/image'
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import checkUserIsAuthenticatedWithFirebase from '../customFunctions/checkUserIsAuthenticatedWithFirebase'
 import SignIn from '../customReactScreenViews/signIn.js'
-import LoadingScreen from '../customComponents/loadingScreen.js'
 
 import CheckUserHasQuizngagedAccount from '../customComponents/checkUserHasQuizngagedAccount.js';
 
@@ -82,16 +78,12 @@ export default function Index() {
             </Grid>
           </Grid>  
           <Grid item padding={'0.5em'}>               
-            <Grid Container display='flex' justifyContent='space-evenly'>
-              {/* <Button variant='outlined'>            
-                Sign Up            
-              </Button>      */}            
+            <Grid Container display='flex' justifyContent='space-evenly'>          
               <Button size='small' variant='text'>            
                   Forgot password?
               </Button>
             </Grid>
           </Grid>
-          {/* <Divider></Divider> */}
           <Grid item paddingTop='0.5em'>
             <Typography variant='body2'>
               2022 Quizngaged Inc.

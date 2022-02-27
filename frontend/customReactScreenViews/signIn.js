@@ -8,13 +8,13 @@ import { Typography } from '@mui/material';
 const axios = require('axios');
 import Alert from '@mui/material/Alert';
 
-import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
+// import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
 import federatedAuthUserData from '../customGlobalVariables/federatedAuthUserData.js'
 import federatedAuthDecodedToken from '../customGlobalVariables/federatedAuthDecodedToken'
 
 function SignIn(props) {
 
-  let decokedIdToken = null;  
+  // let decokedIdToken = null;  
 
   // Configure Firebase SDK client key.
   const firebaseConfig = {

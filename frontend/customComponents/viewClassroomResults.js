@@ -17,7 +17,6 @@ export default function ViewClassroomResults(props){
   const parsedUser = JSON.parse(localStorage.quizngagedUserData);
   const classRoomJson = parsedUser.classrooms[props.viewClassroomUID];
   const [studentData, setStudentData] = React.useState([]);
-  const [openDialog, setOpenDialog] = React.useState(false);
 
   React.useEffect(()=>{
     fetchData();

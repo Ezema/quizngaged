@@ -1,40 +1,27 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-
 import Button from '@mui/material/Button';
-
 import AddIcon from '@mui/icons-material/Add';
-
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
 import StyledFab from '../customComponents/styledFab.js';
 
 import LoadingScreen from '../customComponents/loadingScreen.js'
-
-import Index from './index.js'
-
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-
-import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
-import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
-
 import CustomTopNavBar from '../customComponents/customTopNavBar'
-
 import AddClassroom from '../customComponents/addClassroom'
 import EditClassroom from '../customComponents/editClassroom'
 import ViewClassroom from '../customComponents/viewClassroom.js';
 import TeacherTutorial from '../customComponents/teacherTutorial.js';
 import StudentTutorial from '../customComponents/studentTutorial.js';
 
+import 'firebase/compat/auth';
+
 import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQueryGetUserJSON.js';
-//import quizngagedUserData from '../customGlobalVariables/quizngagedUserData.js';
+
 import { useRouter } from 'next/router'
 
 
@@ -52,8 +39,6 @@ export default function MyClassrooms() {
   const [viewClassroomOngoingQuizzesState,setViewClassroomOngoingQuizzesState] = React.useState(false)
   
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
-  
-  const [statefulQuizngagedUserData, setStatefulQuizngagedUserData] = React.useState({});
 
   const [topBarTitle,setTopBarTitle] = React.useState("My Classroooms")
 
@@ -73,9 +58,6 @@ export default function MyClassrooms() {
       if(localStorage.quizngagedUserData==undefined){
         setStatefulUserObject(JSON.parse(localStorage.federatedAuthUserData))
         backendQueryGetUserJSON({callback:(response)=>{console.log(response)}})
-        // the line below seems to want to call on the localStorage record before there is anything in there as the line above
-        // is an asynchronous call to the backend 
-        // console.log("before JSON.parse(localStorage.quizngagedUserData)",JSON.parse(localStorage.quizngagedUserData))
       }else{        
         if(JSON.parse(localStorage.quizngagedUserData).classrooms){
           setCanRender(true)
