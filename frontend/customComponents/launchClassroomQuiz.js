@@ -37,6 +37,8 @@ import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import Snackbar from '@mui/material/Snackbar';
+import { Alert } from '@mui/material';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -77,10 +79,16 @@ export default function LaunchClassroomQuiz(props){
     const [userEntryEventDescription,setUserEntryEventDescription] = React.useState("")
     
     const [statefulQuizSelected, setStatefulQuizSelected] = React.useState(null)
+    const [snackBar, setSnackBar] = React.useState({isOpen:false, message:'Test'})
 
     const handleEventDescriptionChange = (event)=>{
         setUserEntryEventDescription(event.target.value)        
     }
+
+    const snackBarClose = () => {
+    setSnackBar({isOpen:false,message:"", severity:""})
+    }
+
 
     const handlePreviousStep = ()=>{
         if(step==0){
@@ -96,6 +104,10 @@ export default function LaunchClassroomQuiz(props){
     const handleNextStep = ()=>{
         /* if(step<2 && entriesAreValid){ */
             if(step==0){
+                if(statefulQuizSelected == null){
+                    setSnackBar({isOpen:true, message:"Please select a quiz", severity:"error"}) 
+                    return false
+                }
                 (setStep(step+1));
                 // save user changes temporary            
                 setMainButtonText('Launch')                                    
@@ -207,7 +219,14 @@ export default function LaunchClassroomQuiz(props){
                         </Button>
                     </Grid>
                 </Grid>
-            </Container>                
+            </Container>  
+            <Snackbar
+            open={snackBar.isOpen}
+            autoHideDuration={6000}
+            onClose={snackBarClose}
+            >
+              <Alert severity={snackBar.severity}>{snackBar.message}</Alert>
+            </Snackbar>              
         </div>
     )
 }

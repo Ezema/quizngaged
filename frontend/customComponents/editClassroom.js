@@ -103,6 +103,7 @@ export default function EditClassroom(props){
         if(step==0){
             setStep(0)
             props.setEditClassroomState(false)
+            props.setTopBarTitle("My Classrooms")
         }else if(step==1){
             setStep(step-1)
             
@@ -137,6 +138,7 @@ export default function EditClassroom(props){
                 backendQuerySaveUserJSON(()=>{})
 
                 props.setEditClassroomState(false)
+                props.setTopBarTitle("My Classrooms")
                 setStep(0)
             }            
         }
@@ -188,6 +190,7 @@ export default function EditClassroom(props){
                         <Box marginBottom="1em">
                         <TextField     
                                 required={step>0?false:true}
+                                disabled={step>0?true:false}
                                 InputProps={{
                                     readOnly: step>0?true:false,
                                   }}

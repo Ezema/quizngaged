@@ -138,7 +138,7 @@ export default function MyClassrooms() {
           {(editClassroomState)?
           (
             <Box paddingTop="1em">
-              <EditClassroom editClassroomUID={editClassroomUID} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState}></EditClassroom>
+              <EditClassroom editClassroomUID={editClassroomUID} editClassroomState={editClassroomState} setEditClassroomState={setEditClassroomState} setTopBarTitle={setTopBarTitle}></EditClassroom>
             </Box>
           )
           :
@@ -146,7 +146,7 @@ export default function MyClassrooms() {
           (
             
               <Box paddingTop="1em">
-                <AddClassroom userIsStudent={userIsStudent} newClassroomUID={newClassroomUID} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState}></AddClassroom>
+                <AddClassroom userIsStudent={userIsStudent} newClassroomUID={newClassroomUID} addClassroomState={addClassroomState} setAddClassroomState={setAddClassroomState} setTopBarTitle={setTopBarTitle}></AddClassroom>
               </Box>
           )
           :

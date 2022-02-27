@@ -146,6 +146,7 @@ export default function AddClassroom(props){
         if(step==0){
             setStep(0)
             props.setAddClassroomState(false)
+            props.setTopBarTitle("My Classrooms")
         }else if(step==1){
             setStep(step-1)
             setServerResponseForClassroomIDValidity("nada")
@@ -222,6 +223,7 @@ export default function AddClassroom(props){
                     backendQuerySaveUserJSON(()=>{})                    
 
                     props.setAddClassroomState(false)
+                    props.setTopBarTitle("My Classrooms")
                     setStep(0)
                 }
             }                                    
@@ -394,6 +396,7 @@ export default function AddClassroom(props){
                             <Box marginBottom="1em">
                               <TextField     
                                   required={step>0?false:true}
+                                  disabled={step>0?true:false}
                                   InputProps={{
                                       readOnly: step>0?true:false,
                                     }}
