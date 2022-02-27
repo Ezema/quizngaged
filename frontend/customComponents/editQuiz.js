@@ -110,6 +110,7 @@ export default function EditQuiz(props){
         if(step==0){
             setStep(0)
             props.setEditQuizState(false)
+            props.setTopBarTitle("My Quizzes")
         }else if(step==1){
             setStep(step-1)
             
@@ -151,6 +152,7 @@ export default function EditQuiz(props){
         backendQuerySaveUserJSON(()=>{})
 
         props.setEditQuizState(false)
+        props.setTopBarTitle("My Quizzes")
         setStep(0)
       }            
     }

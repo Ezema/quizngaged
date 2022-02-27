@@ -200,13 +200,13 @@ function MyQuizzes(props) {
           <Container>
             {(editQuizState)?(
               <Box paddingTop="1em" paddingBottom="100px">
-                <EditQuiz listOfQuizzes={listOfQuizzes} setListOfQuizzes={setListOfQuizzes} editQuizUID={editQuizUID} setEditQuizState={setEditQuizState} editQuizState={editQuizState}/>
+                <EditQuiz listOfQuizzes={listOfQuizzes} setListOfQuizzes={setListOfQuizzes} editQuizUID={editQuizUID} setEditQuizState={setEditQuizState} editQuizState={editQuizState} setTopBarTitle={setTopBarTitle}/>
               </Box> 
             )
             :
             (addQuizState)?
             (<Box paddingTop="1em" paddingBottom="100px">
-              <AddQuizz listOfQuizzes={listOfQuizzes} setListOfQuizzes={setListOfQuizzes} newQuizUID={newQuizUID} setAddQuizState={setAddQuizState}/>
+              <AddQuizz listOfQuizzes={listOfQuizzes} setListOfQuizzes={setListOfQuizzes} newQuizUID={newQuizUID} setAddQuizState={setAddQuizState} setTopBarTitle={setTopBarTitle}/>
               </Box>)
             : 
             (<Box paddingTop="1em" paddingBottom="100px">
