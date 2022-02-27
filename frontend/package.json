@@ -7,7 +7,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "node_modules/.bin/mocha",
-    "cypress_test": "cypress open"
+    "cypress_test": "cypress open",
+    "cypress_video": "cypress run"
   },
   "dependencies": {
     "@emotion/react": "^11.7.1",
