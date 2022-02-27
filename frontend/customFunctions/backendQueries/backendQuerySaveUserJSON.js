@@ -1,8 +1,6 @@
 const axios = require('axios');
 
 export default function backendQuerySaveUserJSON(callback){  
-
-  
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){  
     console.log("backendpost localstorage: ",JSON.parse(localStorage.quizngagedUserData))
     axios({

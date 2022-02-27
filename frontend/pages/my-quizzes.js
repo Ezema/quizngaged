@@ -1,52 +1,20 @@
 import * as React from 'react';
-import Link from 'next/link'
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import AppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
-
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-
-import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
-import ListIcon from '@mui/icons-material/List';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import PersonIcon from '@mui/icons-material/Person';
-import LogoutIcon from '@mui/icons-material/Logout';
-import MenuIcon from '@mui/icons-material/Menu';
-
 import CustomPaperReactComponent from '../customComponents/customPaperReactComponent.js';
+
 import StyledFab from '../customComponents/styledFab.js';
-
 import LoadingScreen from '../customComponents/loadingScreen.js';
-import Index from '../pages/index.js';
-
-
 import CustomTopNavBar from '../customComponents/customTopNavBar'
-
-import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 import EditQuiz from '../customComponents/editQuiz.js';
 import AddQuizz from '../customComponents/addQuizz.js';
-
-//Firebase
-//import firebase from 'firebase/compat/app';
-//import 'firebase/compat/auth';
 
 //Global variables
 import globalUserIsAuthenticated from '../customGlobalVariables/userIsAuthenticated';
@@ -55,7 +23,7 @@ import backendQueryGetUserJSON from '../customFunctions/backendQueries/backendQu
 
 import { useRouter } from 'next/router'
 import backendQuerySaveUserJSON from '../customFunctions/backendQueries/backendQuerySaveUserJSON.js';
-import AlertDialog from '../customComponents/deleteDialog.js';
+// import AlertDialog from '../customComponents/deleteDialog.js';
 import DeleteDialog from '../customComponents/deleteDialog.js';
 
 function MyQuizzes(props) {  
@@ -63,8 +31,6 @@ function MyQuizzes(props) {
   const router = useRouter()
 
   const [statefulUserObject, setStatefulUserObject] = React.useState({});
-
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);  
 
   const [editQuizState, setEditQuizState] = React.useState(false);
 
@@ -77,13 +43,6 @@ function MyQuizzes(props) {
 
   const [userIsStudent,setUserIsStudent] = React.useState(true)
   
-
-  const toggleSidebar = (openStatus) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    setSidebarOpen(openStatus);
-  };
 
   React.useEffect(()=>{
     if(window.location.pathname.localeCompare("/my-quizzes")!=0){
@@ -160,17 +119,6 @@ function MyQuizzes(props) {
   const handleOpenQuizzState = (event) => {
   }  
 
-
-  /* if(JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Teacher')!=0){
-    router.push('/')
-  } */
-
-  /* (JSON.parse(localStorage.quizngagedUserData).userType.localeCompare('Teacher')!=0)?
-      (
-        router.push('/')
-      )
-      : */
-
   return (    
       
       (statefulQuizngagedUserData.quizzes==undefined || userIsStudent==true)?
@@ -224,12 +172,7 @@ function MyQuizzes(props) {
                         <Typography variant='subtitle1'>                    
                           Number of questions: {quiz.questions.length}
                         </Typography>
-                        {/* <Button size="small" onClick={(event) => handleOpenQuizzState(event, quiz.id)}>VIEW</Button> */}
                         <Button size="large" onClick={(event) => handleEditQuizState(event, quiz.id)} endIcon={<EditIcon />}>EDIT</Button>
-                        {/* <Button  size="small" color="error" endIcon={<DeleteIcon />}
-                         onClick={()=>deleteQuiz(quiz.id)}>
-                            Delete
-                          </Button> */}
                         <DeleteDialog dialogTitle = {"Delete Quiz?"} message="You will be deleting your quiz contents." deleteFunction={deleteQuiz} entityId={quiz.id}/>
                       </CustomPaperReactComponent>
                     </Grid>      

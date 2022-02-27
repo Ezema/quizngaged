@@ -6,11 +6,8 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
-
 import CustomPaperReactComponent from './customPaperReactComponent.js';
-
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { Icon } from '@mui/material';
 
 import findArrayIndex from '../customFunctions/findArrayIndex.js';
 import backendQueryUpdateOngoingQuizzes from '../customFunctions/backendQueries/backendQueryUpdateOngoingQuizzes.js'

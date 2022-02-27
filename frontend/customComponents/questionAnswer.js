@@ -7,10 +7,7 @@ import { Checkbox } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
-import { Button } from '@mui/material';
-
 export default function QuestionAnswers(props){
-    
     
     const setCorrectAnswer = (event,index) => { 
         let copyOfArray = JSON.parse(JSON.stringify(props.statefulArrayOfQuestionAnswers))
@@ -57,17 +54,10 @@ export default function QuestionAnswers(props){
     }
 
     const handleQuestionChange = (event,index) => {        
-        //statefulArrayOfQuestionAnswers[index].body = event.target.value;
-        
         //React's useState hook doesn't 'notice' the changes of the values inside the object/array so a deep copy of the array has to be generated
         let copyOfArray = JSON.parse(JSON.stringify(props.statefulArrayOfQuestionAnswers))
-
-
         copyOfArray[index].body = event.target.value;
-        
         props.setStatefulArrayOfQuestionAnswers(copyOfArray);
-
-        
     };
 
     const handleQuestionAnswerDeletion = (event,index) => {

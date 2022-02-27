@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+// import { useCallback } from 'react';
 
 const axios = require('axios');
 
@@ -36,13 +36,10 @@ export default function backendQueryUpdateOngoingQuizzes(viewClassroomId,props,c
           );
         }
         copy.classrooms[viewClassroomId]=(modifiedJSON)
-        
         localStorage.setItem("quizngagedUserData",JSON.stringify(copy))        
         backendQuerySaveUserJSON(()=>{})
-
         console.log("finished update")
-        props.callback(false, modifiedJSON);
-        
+        props.callback(false, modifiedJSON);    
     }).catch(e => {          
         console.log(e);                                
     })

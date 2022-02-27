@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 export default function backendQueryStudentsQuizzesForClassroom(globalQuizngagedId, studentUID, props){
-    console.log("inside backendQueryStudentsQuizzesForClassroom globalQuizngagedId="+globalQuizngagedId);
+  console.log("inside backendQueryStudentsQuizzesForClassroom globalQuizngagedId="+globalQuizngagedId);
 
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
     console.log("sending update")
@@ -18,13 +18,10 @@ export default function backendQueryStudentsQuizzesForClassroom(globalQuizngaged
       },
       timeout:10000      
     }).then(async (response) => {
-
-      props.callback(response.data.studentResults);
-        
+      props.callback(response.data.studentResults);  
     }).catch(e => {          
         console.log(e);                                
     })
-
   }
 }
 

@@ -1,16 +1,5 @@
 import * as React from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import Paper from '@mui/material/Paper';
-import { Grid, Typography } from '@mui/material';
-
-
-/* import { styled } from '@mui/styles';
-
-const DisabledText = styled(Typography)({
-    root: {
-      color: "#grey"
-    }
-  }); */
+import { Grid, Typography, Checkbox, Paper } from '@mui/material';
 
 export default function ListOfQuizzes(props){          
 
@@ -46,18 +35,9 @@ export default function ListOfQuizzes(props){
                                     onChange={(event)=>handleQuizSelectionChange(event,quiz.id)}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                 />    
-                                {/* {(props.step>0)?
-                                (
-                                <DisabledText>
-                                    {quiz.id+". "+quiz.questionBaselineBody}
-                                </DisabledText>
-                                )
-                                :
-                                ( */}
                                 <Typography display="inline">
                                     {quiz.id+". "+quiz.quizTitle}
                                 </Typography>                            
-                                {/* )} */}
                                                                 
                                                             
                             </Paper>

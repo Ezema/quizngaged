@@ -1,8 +1,5 @@
 import * as React from 'react';
 import LoadingScreen from './loadingScreen.js';
-const axios = require('axios');
-import Router from 'next/router'
-import MyClassrooms from '../pages/my-classrooms.js';
 import CreateQuizngagedAccount from './createQuizngagedAccount';
 
 import backendQueryCheckUserHasQuizngagedAccount from '../customFunctions/backendQueries/backendQueryCheckUserHasQuizngagedAccount.js';

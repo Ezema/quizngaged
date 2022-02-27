@@ -22,7 +22,6 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-//import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -35,7 +34,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import firebaseClientConfig from '../customGlobalVariables/firebaseClientConfig';
 
 import Router from 'next/router'
 
