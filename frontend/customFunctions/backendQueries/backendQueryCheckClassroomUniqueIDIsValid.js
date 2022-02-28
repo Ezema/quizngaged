@@ -2,10 +2,18 @@
 
 const axios = require('axios');
 
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+
 import backendQuerySaveUserJSON from './backendQuerySaveUserJSON';
 
+import forceUpdateFirebaseToken from '../../customFunctions/forceUpdateFirebaseToken'
+
 export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroomUniqueId,checkOnly){
-  if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
+  if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){   
+
+    forceUpdateFirebaseToken()
+
     axios({
       method: "POST",        
       url: 'http://localhost:9090/API/checkclassroomuniqueidisvalid', 

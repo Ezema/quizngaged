@@ -1,9 +1,12 @@
 const axios = require('axios');
 
+import forceUpdateFirebaseToken from '../../customFunctions/forceUpdateFirebaseToken'
+
 export default function backendQueryGetQuiz(quizId,props){
   console.log("inside backendQueryGetQuiz quizId="+quizId);
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
-    console.log("sending update")
+    //console.log("sending update")
+    forceUpdateFirebaseToken()
     axios({
       method: "POST",        
       url: 'http://localhost:9090/API/studentjoinquiz', 

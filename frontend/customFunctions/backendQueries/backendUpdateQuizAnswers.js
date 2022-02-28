@@ -1,10 +1,15 @@
 const axios = require('axios');
 
+import forceUpdateFirebaseToken from '../../customFunctions/forceUpdateFirebaseToken'
+
 export default function backendUpdateQuizAnswers(userquizzid, answersjson){
     console.log("inside backendUpdateQuizAnswers userquizzid="+userquizzid);
 
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
     console.log("sending update")
+
+    forceUpdateFirebaseToken()
+
     axios({
       method: "POST",        
       url: 'http://localhost:9090/API/updatestudentquiz',

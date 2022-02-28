@@ -2,8 +2,13 @@
 const axios = require('axios');
 import backendQuerySaveUserJSON from './backendQuerySaveUserJSON';
 
+import forceUpdateFirebaseToken from '../../customFunctions/forceUpdateFirebaseToken'
+
 export default function backendQuerySaveNewUniqueClassroom (newClassroomUID,classroomjson){    
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){    
+    
+    forceUpdateFirebaseToken()
+    
     axios({
       method: "POST",        
       url: 'http://localhost:9090/API/savenewuniqueclassroom',        
