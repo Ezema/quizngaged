@@ -11,6 +11,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import Link from '@mui/material/Link';
 
 // steps titles
 const steps = [
@@ -69,6 +70,10 @@ export default function TeacherTutorial(props){
                   </Grid>
                   <Typography>First you will create questions for your quiz</Typography>
                   <Typography>Then add them to a quiz and launch it</Typography>
+                  <Typography>Video tutorial here: <Link href="#" underline="hover">
+                  https://youtu.be/uGLymlwfXrY
+                </Link></Typography>
+                
                 </Grid>
               : step == 1
               ? <Grid Container>
