@@ -11,6 +11,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import { Link } from '@mui/material';
 
 // steps titles
 const steps = [
@@ -71,6 +72,9 @@ export default function TeacherTutorial(props){
                     </ol></Typography>
                     <img src='join-classroom.png' alt={steps[step]+" image"} width="600px" style={{border:'1px dotted #000000'}} />
                   </Grid>
+                  <Typography>Video tutorial here: <Link href="#" underline="hover">
+                  https://youtu.be/uGLymlwfXrY
+                  </Link></Typography>
                 </Grid>
               : step == 1
               ? <Grid Container>
