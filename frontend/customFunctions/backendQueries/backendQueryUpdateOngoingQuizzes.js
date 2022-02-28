@@ -4,10 +4,15 @@ const axios = require('axios');
 
 import backendQuerySaveUserJSON from './backendQuerySaveUserJSON';
 
+import forceUpdateFirebaseToken from '../../customFunctions/forceUpdateFirebaseToken'
+
 export default function backendQueryUpdateOngoingQuizzes(viewClassroomId,props,classroomUniqueId){
     console.log("inside")
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
     console.log("sending update")
+
+    forceUpdateFirebaseToken()
+
     axios({
       method: "POST",        
       url: 'http://localhost:9090/API/addlivequizzesforclassroom', 

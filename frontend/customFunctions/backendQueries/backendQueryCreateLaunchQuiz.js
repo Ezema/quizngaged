@@ -1,8 +1,13 @@
 
 const axios = require('axios');
 
+import forceUpdateFirebaseToken from '../../customFunctions/forceUpdateFirebaseToken'
+
 export default function backendQueryCreateLaunchQuiz(quizJson,uniqueclassroomid){    
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){    
+   
+    forceUpdateFirebaseToken()
+
     axios({
       method: "POST",        
       url: 'http://localhost:9090/API/launchquiz',

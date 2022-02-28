@@ -1,7 +1,11 @@
 const axios = require('axios');
 
+import forceUpdateFirebaseToken from '../../customFunctions/forceUpdateFirebaseToken'
+
 export default function backendQueryStudentsQuizzesForClassroom(globalQuizngagedId, studentUID, props){
   console.log("inside backendQueryStudentsQuizzesForClassroom globalQuizngagedId="+globalQuizngagedId);
+
+  forceUpdateFirebaseToken()
 
   if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){        
     console.log("sending update")

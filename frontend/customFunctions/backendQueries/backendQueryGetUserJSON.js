@@ -1,13 +1,14 @@
-// import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
 const axios = require('axios');
 //require('dotenv').config();
 
-// import quizngagedUserData from '../../customGlobalVariables/quizngagedUserData';
+import forceUpdateFirebaseToken from '../../customFunctions/forceUpdateFirebaseToken'
 
 export default function backendQueryGetUserJSON(props){    
 
     if(JSON.parse(localStorage.federatedAuthUserData)!=null && JSON.parse(localStorage.federatedAuthDecodedToken)!=null){
+
+        forceUpdateFirebaseToken()
+        
         axios({
             method: "POST",            
             url: 'http://localhost:9090/API/getuserJSON',        
