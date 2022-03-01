@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import dynamic from "next/dynamic";
 
 function Quizngaged({ Component, pageProps }) {
   return (    
@@ -6,4 +7,8 @@ function Quizngaged({ Component, pageProps }) {
     )
 }
 
-export default Quizngaged
+//export default Quizngaged
+
+export default dynamic(()=> Promise.resolve(Quizngaged),{
+  ssr:false,
+});
