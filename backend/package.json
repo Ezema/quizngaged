@@ -13,6 +13,7 @@
     "express": "^4.17.2",
     "firebase-admin": "^10.0.2",
     "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^2.0.3",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "sequelize": "^6.13.0"
