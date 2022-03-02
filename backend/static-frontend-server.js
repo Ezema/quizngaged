@@ -12,6 +12,13 @@ httpProxy.createServer({
   target: {
     host: 'localhost',
     port: 3000
+  }
+}).listen(80);
+
+httpProxy.createServer({
+  target: {
+    host: 'localhost',
+    port: 3000
   },
   ssl: {
     key: fs.readFileSync('/path/ssl-key.pem', 'utf8'),
