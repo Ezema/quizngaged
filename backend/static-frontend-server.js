@@ -1,31 +1,21 @@
-const express = require("express");
-const cors = require("cors");
-const mysql = require("mysql");
+const httpProxy = require('http-proxy');
+var https = require('https');
+var http = require('http');
+var fs = require('fs');
 
+const proxy = httpProxy.createProxy();
+const options = {
+    '/': 'http://localhost:3000'
+}
 
-/// ********* Below -> Auth functionality *********
-let admin = require("firebase-admin");
-let serviceAccount = require("./secret-key.json");
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
-/// ********* Above -> Auth functionality *********
-
-const app = express();
-
-//allow all origins at least while under development
-var corsOptions = {
-  origin: '*'
-};
-app.use(cors(corsOptions));
-
-//example of GET request
-app.get("/", (req, res) => {  
-  res.send("hi")
-});
-
-// set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+httpProxy.createServer({
+  target: {
+    host: 'localhost',
+    port: 3000
+  },
+  ssl: {
+    key: fs.readFileSync('/path/ssl-key.pem', 'utf8'),
+    cert: fs.readFileSync('/path/ssl-cert.pem', 'utf8'),
+    ca: fs.readFileSync('/path/ca.pem','utf-8')
+  }
+}).listen(443);
