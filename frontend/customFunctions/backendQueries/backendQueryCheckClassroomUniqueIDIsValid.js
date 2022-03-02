@@ -16,7 +16,7 @@ export default function backendQueryCheckClassroomUniqueIDIsValid(props,classroo
 
     axios({
       method: "POST",        
-      url: `http://${process.env.NEXT_PUBLIC_BACKEND_HOST}:9090/API/checkclassroomuniqueidisvalid`, 
+      url: `${process.env.NEXT_PUBLIC_BACKEND_HOST}:9090/API/checkclassroomuniqueidisvalid`, 
       data: {            
           //the idToken is only for Firebase, it is used to check that the user is authentic and not a bot.
           federatedAuthDecodedToken:JSON.parse(localStorage.federatedAuthDecodedToken),
