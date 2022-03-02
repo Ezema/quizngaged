@@ -21,8 +21,7 @@ httpProxy.createServer({
     port: 3000
   },
   ssl: {
-    key: fs.readFileSync('/path/ssl-key.pem', 'utf8'),
-    cert: fs.readFileSync('/path/ssl-cert.pem', 'utf8'),
-    ca: fs.readFileSync('/path/ca.pem','utf-8')
+    key: fs.readFileSync('/etc/letsencrypt/live/www.quizngaged.ml/privkey.pem', 'utf8'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/www.quizngaged.ml/fullchain.pem', 'utf8'),    
   }
 }).listen(443);
