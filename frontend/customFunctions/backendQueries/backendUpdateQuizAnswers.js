@@ -12,7 +12,7 @@ export default function backendUpdateQuizAnswers(userquizzid, answersjson){
 
     axios({
       method: "POST",        
-      url: 'http://localhost:9090/API/updatestudentquiz',
+      url: `http://${process.env.NEXT_PUBLIC_BACKEND_HOST}:9090/API/updatestudentquiz`,
       data: {            
           //the idToken is only for Firebase, it is used to check that the user is authentic and not a bot.
           federatedAuthDecodedToken:JSON.parse(localStorage.federatedAuthDecodedToken),
