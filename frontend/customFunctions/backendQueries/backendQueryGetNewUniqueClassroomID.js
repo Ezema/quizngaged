@@ -10,7 +10,7 @@ export default function backendQueryGetNewUniqueClassroomID(props){
 
     axios({
       method: "POST",        
-      url: `${process.env.NEXT_PUBLIC_BACKEND_HOST}:9090/API/getnewuniqueclassroomid`,        
+      url: `${process.env.NEXT_PUBLIC_BACKEND_HOST}/API/getnewuniqueclassroomid`,        
       data: {            
           //the idToken is only for Firebase, it is used to check that the user is authentic and not a bot.
           federatedAuthDecodedToken:JSON.parse(localStorage.federatedAuthDecodedToken),
