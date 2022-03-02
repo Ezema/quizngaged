@@ -10,7 +10,7 @@ export default function backendQueryCreateLaunchQuiz(quizJson,uniqueclassroomid)
 
     axios({
       method: "POST",        
-      url: `${process.env.NEXT_PUBLIC_BACKEND_HOST}:9090/API/launchquiz`,
+      url: `${process.env.NEXT_PUBLIC_BACKEND_HOST}/API/launchquiz`,
       data: {            
           //the idToken is only for Firebase, it is used to check that the user is authentic and not a bot.
           federatedAuthDecodedToken:JSON.parse(localStorage.federatedAuthDecodedToken),
