@@ -12,6 +12,7 @@ httpProxy.createServer({
   }
 }).listen(80);
 
+/*
 httpProxy.createServer({
   target: {
     host: 'localhost',
@@ -22,8 +23,6 @@ httpProxy.createServer({
     cert: fs.readFileSync('/etc/letsencrypt/live/www.quizngaged.ml/fullchain.pem', 'utf8'),    
   }
 }).listen(443);
-
-/*
 
 const credentials = {
   key: fs.readFileSync('/etc/letsencrypt/live/www.quizngaged.ml/privkey.pem', 'utf8'),
