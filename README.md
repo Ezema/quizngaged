@@ -2,6 +2,10 @@
 
 Agile module group 29 - "QuizNgaged" Application
 
+## Live app
+
+Quizngaged is now live at www.quizngaged.ga
+
 ## Rules
 
 * Only commit to main changes that are finished and don't break the access to the overall app
