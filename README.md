@@ -1,6 +1,6 @@
-# Agile-g29 final deliverable
+# Agile Software Project - Team 29 final deliverable
 
-Agile module group 29 - "QuizNgaged" Application
+QuizNgaged Application
 
 ## Live app
 
