@@ -1,5 +1,5 @@
 module.exports = {
-  BASEPATH: 'http://localhost:9090/API/',
+  BASEPATH: 'http://localhost:2050/API/',
   quizDummy: {
     "id": 0, 
     "isDeleted": false,

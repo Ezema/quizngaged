@@ -3,7 +3,7 @@
     "node-loader": "^2.0.0"
   },
   "scripts": {
-    "servers": "node static-frontend-server.js && node APIServer.js",
+    "servers": "node ./node_modules/pm2/bin/pm2 start --name proxy static-frontend-server.js && node ./node_modules/pm2/bin/pm2 start --name api_server APIServer.js",
     "API": "node APIServer.js",
     "APIServer": "node APIServer.js"
   },
@@ -16,6 +16,7 @@
     "http-proxy-middleware": "^2.0.3",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
+    "pm2": "^5.3.1",
     "sequelize": "^6.13.0"
   }
 }

@@ -2,9 +2,9 @@
   "name": "quizngaged",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "next dev -p 2049",
+    "build": "next build -p 2049",
+    "start": "next start -p 2049",
     "lint": "next lint",
     "test": "node_modules/.bin/mocha",
     "cypress_test": "cypress open",

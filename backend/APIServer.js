@@ -13,6 +13,7 @@ admin.initializeApp({
 
 /// ********* Connect to the Mysql DB running in docker *********
 const db = mysql.createConnection({
+  port: "2051",
   host: "localhost",
   user: "root",
   password: "password",
@@ -570,7 +571,7 @@ getOrInsertStudentAnswers = (studentUid, launchedquizid, callback) => {
 }
 
 // set port, listen for requests
-const PORT = process.env.PORT || 9090;
+const PORT = process.env.PORT || 2050;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
